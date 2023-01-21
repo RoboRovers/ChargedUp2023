@@ -17,8 +17,11 @@ public class SwerveModule extends SubsystemBase {
         
     }
 
-    public void setSpeed(double speed) {
+    public void setSteerSpeed(double speed) {
         steerMotor.set(speed);
+        
+    }
+    public void setDriveSpeed(double speed) {
         driveMotor.set(speed);
     }
 
