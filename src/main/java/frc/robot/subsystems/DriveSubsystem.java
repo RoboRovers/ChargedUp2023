@@ -18,4 +18,17 @@ public class DriveSubsystem extends SubsystemBase{
     public void drive(double foward, double strafe, double omega) {
         
     }
+
+    public static final double kMaxSpeed = 3.0; // 3 meters per second
+    public static final double kMaxAngularSpeed = Math.PI; // 1/2 rotation per second
+  
+
+
+    //All swerve modules brought together
+    //need to be classifed in another file (ie. Swerve Module.java)
+      private static SwerveModule frontLeft;
+      private static SwerveModule backLeft;
+      private static SwerveModule frontRight;
+      private static SwerveModule backRight;
+
 }
