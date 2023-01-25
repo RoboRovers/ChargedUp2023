@@ -1,10 +1,11 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-import java.util.function.Supplier;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -12,18 +13,13 @@ import frc.robot.subsystems.SwerveSubsystem;
 public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
-    private final Supplier<Double> xSpdFunction, ySpdFunction, turningSpdFunction;
-    private final Supplier<Boolean> fieldOrientedFunction;
+    private final OI driveController;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
+    private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem,
-            Supplier<Double> xSpdFunction, Supplier<Double> ySpdFunction, Supplier<Double> turningSpdFunction,
-            Supplier<Boolean> fieldOrientedFunction) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
                 this.swerveSubsystem = swerveSubsystem;
-                this.xSpdFunction = xSpdFunction;
-                this.ySpdFunction = ySpdFunction;
-                this.turningSpdFunction = turningSpdFunction;
-                this.fieldOrientedFunction = fieldOrientedFunction;
+                this.driveController = driveController;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
@@ -37,9 +33,20 @@ public class DriveCommand extends CommandBase {
     @Override
     public void execute() {
         // 1. Get real-time joystick inputs
-        double xSpeed = xSpdFunction.get();
-        double ySpeed = ySpdFunction.get();
-        double turningSpeed = turningSpdFunction.get();
+        double xSpeed = driveController.controller.getLeftX();
+        double ySpeed = driveController.controller.getLeftY();
+        double turningSpeed = driveController.controller.getRightY();
+        
+        if(driveController.buttonA.getAsBoolean())
+        {
+            swerveSubsystem.zeroHeading();
+        }
+
+/* 
+        if(driveController.startButton.getAsBoolean())
+        {
+            fieldOriented = !fieldOriented;
+        } */
 
         // 2. Apply deadband
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
@@ -54,7 +61,7 @@ public class DriveCommand extends CommandBase {
 
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
-        if (fieldOrientedFunction.get()) {
+        if (fieldOriented) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     xSpeed, ySpeed, turningSpeed, swerveSubsystem.geRotation2d());

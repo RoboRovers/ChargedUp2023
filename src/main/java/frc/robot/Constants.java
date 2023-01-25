@@ -6,8 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 
-import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 
