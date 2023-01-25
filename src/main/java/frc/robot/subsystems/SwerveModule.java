@@ -10,9 +10,10 @@ import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+//import edu.wpi.first.math.controller.PIDController;
 import javax.naming.LimitExceededException;
-
 import com.revrobotics.*;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 public class SwerveModule extends SubsystemBase {
@@ -20,6 +21,8 @@ public class SwerveModule extends SubsystemBase {
 
     private CANSparkMax steerMotor;
     private CANSparkMax driveMotor;
+    private Rotation2d lastAngle;
+
 
     private static final double RAMP_RATE = 0.5;//1.5;
     
@@ -38,21 +41,17 @@ public class SwerveModule extends SubsystemBase {
    //Check to see that this value is correct
     public double encoderCountPerRotation = 42;
 
-    private AnalogInput absoluteEncoder;
-    private boolean absoluteEncoderReversed;
-    private double absoluteEncoderOffsetRad;
+   // private AnalogInput absoluteEncoder;
+    //private boolean absoluteEncoderReversed;
+    //private double absoluteEncoderOffsetRad;
 
-    private boolean _driveCorrect;
 
- 
 
-    
- 
 
   //New Swerve Module start
-  public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer, int absoluteEncoderId,
-   double absoluteEncoderOffsetRad, double absoluteEncoderReversed) {
-    
+  //public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer, int absoluteEncoderId,
+  // double absoluteEncoderOffsetRad, double absoluteEncoderReversed) {
+  public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer) {
       //Create and configure a new Drive motor
       driveMotor = new CANSparkMax(driveNum, MotorType.kBrushless);
       driveMotor.restoreFactoryDefaults();
@@ -70,17 +69,10 @@ public class SwerveModule extends SubsystemBase {
     driveMotor.setIdleMode(IdleMode.kBrake);
     driveMotor.setSmartCurrentLimit(55);
     SteerMotorPID = steerMotor.getPIDController();
-    SteerMotorPID.setP(0);
-    SteerMotorPID.setI(0);
-    SteerMotorPID.setD(0);
-    SteerMotorPID.setFF(0);
-    SteerMotorPID.setIZone(0);
     
 
     
-  /* figure out what this does
-    SteerMotorPID.setOutputRange(steerNum, driveNum);*/
-
+    
     //Create the built in motor encoders
  
     //Drive motor encoder
@@ -112,81 +104,49 @@ public class SwerveModule extends SubsystemBase {
     return steerMotorEncoder.getVelocity();
   }
   //Get the absolute encoder values
-  public double getAbsoluteEncoderRad() {
+ /*  public double getAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     angle *= 2.0 * Math.PI;
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
   }
+  */
 public void resetEncoders()  {
    driveMotorEncoder.setPosition(0);
-  steerMotorEncoder.setPosition(getAbsoluteEncoderRad());
+  steerMotorEncoder.setPosition(0);
 
   }
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d()
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition()));
 }
 
+/*public void setDesiredState(SwerveModuleState state) {
+    if (Math.abs(state.speedMetersPerSecond) < 0.001) {
+        stop();
+        return;
+  }
+  state = SwerveModuleState.optimize(state, gState().angle);
+  driveMotor.set(state.speedMetersPerSecond / Constants.kPhysicalMaxSpeedMetersPerSecond);
+  steerMotor.set(SteerMotorPID.calculate(getSteerPosition(), state.angle.getRadians()));
 
 
+  //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
+    
+  }*/
 
-  
- 
- 
-  public void setSwerve(double angle, double speed, boolean driveCorrect) {
+public void setAngle(SwerveModuleState desiredState) {
+    // Prevent rotating module if speed is less then 1%. Prevents jittering.
+    Rotation2d angle =
+        (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 0.01))
+            ? lastAngle
+            : desiredState.angle;
 
-  this._driveCorrect = driveCorrect;
-  
-  //double currentAngle = getAnalogIn() % 360.0; // Use for RoboRio PID
-  //double currentSteerPosition = getSteerMotorEncoder();
-  //double currentAngle = currentSteerPosition % 360.0;
-  //double currentAngle = getSteerMotorEncoder();
-  //double targetAngle = angle; //-angle;
-  //double deltaDegrees = targetAngle - currentAngle;
-  double currentPosition = steerMotor.getEncoder().getPosition();
-  double currentAngle = (currentPosition * 360.0 / this.encoderCountPerRotation) % 360.0;
-  double targetAngle = -angle;
-  double deltaDegrees = targetAngle - currentAngle;
-  // If we need to turn more than 180 degrees, it's faster to turn in the opposite direction
- 
-
-  if (Math.abs(deltaDegrees) > 180.0) {
-    deltaDegrees -= 360.0 * Math.signum(deltaDegrees);
+    SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    lastAngle = angle;
+  }
+  public void stop() {
+    driveMotor.set(0);
+    steerMotor.set(0);
   }
 
-  // If we need to turn more than 90 degrees, we can reverse the wheel direction instead and only rotate by the complement
-  //if (Math.abs(speed) <= MAX_SPEED){
-
-    if (!this._driveCorrect){
-      if (Math.abs(deltaDegrees) > 90.0) {
-        deltaDegrees -= 180.0 * Math.signum(deltaDegrees);
-        speed = -speed;
-      }
-    }
-  //}
-  //Add change in position to current position
-  //double targetPosition = currentAngle + deltaDegrees; 
-  double targetPosition = currentPosition + ((deltaDegrees/360) * encoderCountPerRotation);
-  //Scale the new position to match the motor encoder
-  //double scaledPosition = (targetPosition / (360/STEER_MOTOR_RATIO)); 
-
-
-
-  //check to see it "target position" is what we want to get the number of and set the angle to
-  SteerMotorPID.setReference(targetPosition, CANSparkMax.ControlType.kPosition);
-
-  
-    }
-
-    public void teleopPeriodic() {
-      // read PID coefficients from SmartDashboard
-      double p = SmartDashboard.getNumber("P Gain", 0);
-      double i = SmartDashboard.getNumber("I Gain", 0);
-      double d = SmartDashboard.getNumber("D Gain", 0);
-      double iz = SmartDashboard.getNumber("I Zone", 0);
-      double ff = SmartDashboard.getNumber("Feed Forward", 0);
-      double max = SmartDashboard.getNumber("Max Output", 0);
-      double min = SmartDashboard.getNumber("Min Output", 0);
-      double rotations = SmartDashboard.getNumber("Set Rotations", 0);
-    }
 }
