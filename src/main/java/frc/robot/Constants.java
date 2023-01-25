@@ -98,4 +98,13 @@ public final class Constants {
 
       public static final double kDeadband = 0.05;
   }
+
+
+
+
+  public static final class PullyConstants {
+
+    public static final int pulleyMotorNum = 14;
+
+  }
 }

@@ -37,7 +37,7 @@ public class DriveCommand extends CommandBase {
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightY();
         
-        if(driveController.buttonA.getAsBoolean())
+        if(driveController.buttonX.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
