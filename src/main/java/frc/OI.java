@@ -15,35 +15,37 @@ import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 
 public class OI {
-  public final XboxController controller;
+  public final XboxController drivecontroller;
+  public final XboxController opController;
   public final Joystick flightStick;
   public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper, rightTrigger, leftTrigger;
   public final POVButton povNorth, povEast, povSouth, povWest;
   
   public OI(int constant){
-    controller = new XboxController(constant);
+    drivecontroller = new XboxController(constant);
+    opController = new XboxController(constant);
     // init buttons
-    buttonA = new JoystickButton(controller, Button.kA.value);
-    buttonB = new JoystickButton(controller, Button.kB.value);
-    buttonX = new JoystickButton(controller, Button.kX.value);
-    buttonY = new JoystickButton(controller, Button.kY.value);
+    buttonA = new JoystickButton(opController, Button.kA.value);
+    buttonB = new JoystickButton(opController, Button.kB.value);
+    buttonX = new JoystickButton(opController, Button.kX.value);
+    buttonY = new JoystickButton(opController, Button.kY.value);
     //
-    startButton = new JoystickButton(controller, Button.kStart.value);
-    backButton = new JoystickButton(controller, Button.kBack.value);
+    startButton = new JoystickButton(opController, Button.kStart.value);
+    backButton = new JoystickButton(opController, Button.kBack.value);
     //
-    povNorth = new POVButton(controller, 0);
-    povEast = new POVButton(controller, 90);
-    povSouth = new POVButton(controller, 180);
-    povWest = new POVButton(controller, 270);
+    povNorth = new POVButton(opController, 0);
+    povEast = new POVButton(opController, 90);
+    povSouth = new POVButton(opController, 180);
+    povWest = new POVButton(opController, 270);
     //
-    rightBumper = new JoystickButton(controller, Button.kRightBumper.value);
-    leftBumper = new JoystickButton(controller, Button.kLeftBumper.value);
+    rightBumper = new JoystickButton(opController, Button.kRightBumper.value);
+    leftBumper = new JoystickButton(opController, Button.kLeftBumper.value);
     //
-    leftTrigger = new JoystickButton(controller, Button.kLeftStick.value);
-    rightTrigger = new JoystickButton(controller, Button.kRightStick.value);
+    leftTrigger = new JoystickButton(opController, Button.kLeftStick.value);
+    rightTrigger = new JoystickButton(opController, Button.kRightStick.value);
 
     //flight stick
     flightStick = new Joystick(constant);
-        
+    
   }
 }

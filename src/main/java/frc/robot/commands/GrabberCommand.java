@@ -8,26 +8,28 @@ public class GrabberCommand extends CommandBase {
     
     public final OI drivecontroller;
     public final OI flightStick;
+    public final OI opController;
 
     public final PneumaticsSubsystem pneumaticsSubsystem;
     
-public GrabberCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveController, OI flightStick) {
+public GrabberCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveController, OI flightStick, OI opController) {
     this.pneumaticsSubsystem =  pneumaticsSubsystem;
     this.drivecontroller = driveController;
     this.flightStick = flightStick;
+    this.opController = opController;
 }
 
     @Override
     public void execute() {
 
-if(drivecontroller.rightBumper.getAsBoolean()) {
+if(opController.rightBumper.getAsBoolean()) {
     PneumaticsSubsystem.getInstance().extensionOut();
     }
 
-if(drivecontroller.leftBumper.getAsBoolean()) {
+if(opController.leftBumper.getAsBoolean()) {
     PneumaticsSubsystem.getInstance().extensionClose();
 }
-//if(drivecontroller.rightBumper.getAsBoolean()) {
+//if(opController.rightBumper.getAsBoolean()) {
   //  PneumaticsSubsystem.getInstance().intakeToggle();
 //}
 

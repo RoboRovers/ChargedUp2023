@@ -15,10 +15,11 @@ public class DriveCommand extends CommandBase {
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
     private final OI flightStick;
+    private final OI opController;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI flightStick, OI driveController) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI flightStick, OI driveController, OI opController) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.flightStick = flightStick;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
@@ -26,6 +27,7 @@ public class DriveCommand extends CommandBase {
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
                 this.driveController = driveController;
+                this.opController = opController;
                 
     }
 

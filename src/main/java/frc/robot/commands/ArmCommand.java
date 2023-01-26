@@ -6,22 +6,22 @@ import frc.robot.subsystems.PneumaticsSubsystem;
 
 public class ArmCommand extends CommandBase {
     
-    public final OI drivecontroller;
+    public final OI opController;
     public final PneumaticsSubsystem pneumaticsSubsystem;
     
-public ArmCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveController) {
+public ArmCommand(PneumaticsSubsystem pneumaticsSubsystem, OI opController) {
     this.pneumaticsSubsystem =  pneumaticsSubsystem;
-    this.drivecontroller = driveController;
+    this.opController = opController;
 }
 
     @Override
     public void execute() {
 
-        if(drivecontroller.rightTrigger.getAsBoolean()) {
+        if(opController.rightTrigger.getAsBoolean()) {
             PneumaticsSubsystem.getInstance().intakeOpen();;
             }
         
-        if(drivecontroller.leftTrigger.getAsBoolean()) {
+        if(opController.leftTrigger.getAsBoolean()) {
             PneumaticsSubsystem.getInstance().intakeClose();
         }
        // if(drivecontroller.rightBumper.getAsBoolean()) {

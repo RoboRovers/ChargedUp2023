@@ -90,7 +90,8 @@ public final class Constants {
 //Controller constants
     public static final class OIConstants {
       public static final int kDriverControllerPort = 0;
-      public static final int kDriverStickPort = 1;
+      public static final int kOPControllerPort = 2;
+      public static final int kDriverStickPort = 3;
 
      /*  public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;
