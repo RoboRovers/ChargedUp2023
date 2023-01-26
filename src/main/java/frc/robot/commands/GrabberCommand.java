@@ -7,11 +7,14 @@ import frc.OI;
 public class GrabberCommand extends CommandBase {
     
     public final OI drivecontroller;
+    public final OI flightStick;
+
     public final PneumaticsSubsystem pneumaticsSubsystem;
     
-public GrabberCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveController) {
+public GrabberCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveController, OI flightStick) {
     this.pneumaticsSubsystem =  pneumaticsSubsystem;
     this.drivecontroller = driveController;
+    this.flightStick = flightStick;
 }
 
     @Override
@@ -27,6 +30,8 @@ if(drivecontroller.leftBumper.getAsBoolean()) {
 //if(drivecontroller.rightBumper.getAsBoolean()) {
   //  PneumaticsSubsystem.getInstance().intakeToggle();
 //}
+
+//if(flightStick.
 
 
 }

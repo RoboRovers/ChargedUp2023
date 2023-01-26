@@ -14,16 +14,19 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
+    private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI flightStick, OI driveController) {
                 this.swerveSubsystem = swerveSubsystem;
-                this.driveController = driveController;
+                this.flightStick = flightStick;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
+                this.driveController = driveController;
+                
     }
 
     @Override
@@ -32,17 +35,22 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // 1. Get real-time joystick inputs
-        double xSpeed = driveController.controller.getLeftX();
+        // controller stick drives
+      /*   double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
-        double turningSpeed = driveController.controller.getRightY();
+        double turningSpeed = driveController.controller.getRightY();*/
         
-        if(driveController.leftBumper.getAsBoolean())
+        double xSpeed = flightStick.flightStick.getX();
+        double ySpeed = flightStick.flightStick.getY();
+        double turningSpeed = flightStick.flightStick.getZ();
+
+
+        if(driveController.backButton.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
 
- 
+
         if(driveController.startButton.getAsBoolean())
         {
             fieldOriented = !fieldOriented;

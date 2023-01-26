@@ -36,6 +36,7 @@ public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance(
   // Replace with CommandPS4Controller if needed
   private final OI driverController = new OI(OIConstants.kDriverControllerPort);
   private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  private final OI flightStick = new OI(OIConstants.kDriverStickPort);
 
   public RobotContainer() {
 
@@ -47,7 +48,7 @@ public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance(
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driverController));
+            driverController, flightStick));
 
     // Configure the button bindings
     configureButtonBindings();
