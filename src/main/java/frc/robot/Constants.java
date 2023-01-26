@@ -86,7 +86,7 @@ public final class Constants {
     public static final double kPTurning = 0.5;
 }
 
-//Max speed
+//Controller constants
     public static final class OIConstants {
       public static final int kDriverControllerPort = 0;
       public static final int kDriverStickPort = 1;
@@ -97,5 +97,14 @@ public final class Constants {
       public static final int kDriverFieldOrientedButtonIdx = 1;
 
       public static final double kDeadband = 0.05;
+  }
+
+  //Pneumatics Constants
+  public static final class PneumaticsConstants {
+    public static final int L_INTAKE_IN = 15;
+    public static final int L_INTAKE_OUT = 16;
+    public static final int R_INTAKE_IN = 17;
+    public static final int R_INTAKE_OUT = 18;
+
   }
 }

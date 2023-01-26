@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.PneumaticsSubsystem;
 //import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -26,7 +27,11 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private SendableChooser<Command> autonChooser;
   
-  // all controllers will be refrenced here
+//Pneumatics
+public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
+
+
+
 
   // Replace with CommandPS4Controller if needed
   private final OI driverController = new OI(OIConstants.kDriverControllerPort);

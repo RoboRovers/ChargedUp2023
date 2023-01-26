@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.POVButton;
 
 public class OI {
   public final XboxController controller;
-  public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper;
+  public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper, rightTrigger, leftTrigger;
   public final POVButton povNorth, povEast, povSouth, povWest;
   
   public OI(int constant){
@@ -33,5 +33,7 @@ public class OI {
     rightBumper = new JoystickButton(controller, Button.kRightBumper.value);
     leftBumper = new JoystickButton(controller, Button.kLeftBumper.value);
     //
+    leftTrigger = new JoystickButton(controller, Button.kLeftStick.value);
+    rightTrigger = new JoystickButton(controller, Button.kRightStick.value);
   }
 }
