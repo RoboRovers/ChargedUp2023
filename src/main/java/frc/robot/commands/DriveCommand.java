@@ -37,16 +37,16 @@ public class DriveCommand extends CommandBase {
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightY();
         
-        if(driveController.buttonA.getAsBoolean())
+        if(driveController.leftBumper.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
 
-/* 
+ 
         if(driveController.startButton.getAsBoolean())
         {
             fieldOriented = !fieldOriented;
-        } */
+        } 
 
         // 2. Apply deadband
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
