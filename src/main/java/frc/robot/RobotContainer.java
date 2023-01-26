@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import frc.robot.commands.ArmCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.PneumaticsSubsystem;
 //import frc.robot.commands.ZeroGyro;
@@ -11,8 +12,10 @@ import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.OI;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.ArmCommand;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -27,8 +30,8 @@ public class RobotContainer {
   // The robot's subsystems and commands are defined here...
   private SendableChooser<Command> autonChooser;
   
-//Pneumatics
-public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
+  //Pneumatics
+  public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
 
 
 
@@ -37,6 +40,7 @@ public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance(
   private final OI driverController = new OI(OIConstants.kDriverControllerPort);
   private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
   private final OI flightStick = new OI(OIConstants.kDriverStickPort);
+  private final OI opController = new OI(OIConstants.kOPControllerPort);
 
   public RobotContainer() {
 
@@ -48,14 +52,18 @@ public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance(
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driverController, flightStick));
+            driverController, flightStick, opController));
 
     // Configure the button bindings
     configureButtonBindings();
+
+    
   }
 
   private void configureButtonBindings() {
-    /* Driver Buttons */
+
+
+
   }
 
   public Command getAutonCommand() {
