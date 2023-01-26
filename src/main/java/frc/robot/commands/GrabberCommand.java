@@ -17,16 +17,16 @@ public GrabberCommand(PneumaticsSubsystem pneumaticsSubsystem, OI driveControlle
     @Override
     public void execute() {
 
-if(drivecontroller.rightTrigger.getAsBoolean()) {
-    PneumaticsSubsystem.getInstance().intakeOpen();;
+if(drivecontroller.rightBumper.getAsBoolean()) {
+    PneumaticsSubsystem.getInstance().extensionOut();
     }
 
-if(drivecontroller.leftTrigger.getAsBoolean()) {
-    PneumaticsSubsystem.getInstance().intakeClose();
+if(drivecontroller.leftBumper.getAsBoolean()) {
+    PneumaticsSubsystem.getInstance().extensionClose();
 }
-if(drivecontroller.rightBumper.getAsBoolean()) {
-    PneumaticsSubsystem.getInstance().intakeToggle();
-}
+//if(drivecontroller.rightBumper.getAsBoolean()) {
+  //  PneumaticsSubsystem.getInstance().intakeToggle();
+//}
 
 
 }

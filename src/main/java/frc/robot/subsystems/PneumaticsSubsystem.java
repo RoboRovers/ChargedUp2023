@@ -13,9 +13,13 @@ public class PneumaticsSubsystem extends SubsystemBase {
 
     private static PneumaticsSubsystem instance;
 
-    private DoubleSolenoid _intakeLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_OUT, Constants.PneumaticsConstants.L_INTAKE_IN);
-    private DoubleSolenoid _intakeRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_OUT, Constants.PneumaticsConstants.R_INTAKE_IN);
+    //Grabber pneumatics
+    private DoubleSolenoid _intakeLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_IN, Constants.PneumaticsConstants.L_INTAKE_OUT);
+    private DoubleSolenoid _intakeRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_IN, Constants.PneumaticsConstants.R_INTAKE_OUT);
     
+    //Extension pneumatics
+    private DoubleSolenoid _extension = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.EXTENSION_OUT, Constants.PneumaticsConstants.EXTENSION_IN);
+
     Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
   
     /** Creates a new Pnuematics. */
@@ -25,6 +29,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
       
       _intakeLeft.set(Value.kForward);
       _intakeRight.set(Value.kForward);
+      _extension.set(Value.kForward);
   
     }
   
@@ -49,5 +54,13 @@ public class PneumaticsSubsystem extends SubsystemBase {
       _intakeLeft.set(Value.kForward);
       _intakeRight.set(Value.kForward);
     }
-    
+    public void extensionClose(){
+      _extension.set(Value.kReverse);
+    }
+    public void extensionOut(){
+       _extension.set(Value.kForward);
+    }
+    public void extensionToggle(){
+      _extension.toggle();
+    }
   }
