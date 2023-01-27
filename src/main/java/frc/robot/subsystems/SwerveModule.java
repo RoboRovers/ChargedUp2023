@@ -7,12 +7,16 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
 import edu.wpi.first.wpilibj.RobotController;
 
+import com.ctre.phoenix.ErrorCode;
 import com.ctre.phoenix.sensors.CANCoder;
-
+import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.ctre.phoenix.sensors.CANCoderJNI;
+import com.ctre.phoenix.sensors.SensorTimeBase;
 //import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
 public class SwerveModule extends SubsystemBase {
 
 
@@ -23,7 +27,6 @@ public class SwerveModule extends SubsystemBase {
 
     private static final double RAMP_RATE = 0.5;//1.5;
     
-    private SparkMaxPIDController SteerMotorPID;
      /*  PID coefficients
      kP = 0.1; 
      kI = 1e-4;
@@ -38,7 +41,7 @@ public class SwerveModule extends SubsystemBase {
    //Check to see that this value is correct
     public double encoderCountPerRotation = 42;
 
-   private CANCoder absoluteEncoder;
+   public CANCoder absoluteEncoder;
   private boolean absoluteEncoderReversed;
   private double absoluteEncoderOffsetRad;
 
@@ -64,8 +67,6 @@ public class SwerveModule extends SubsystemBase {
     steerMotor.setOpenLoopRampRate(RAMP_RATE);
     steerMotor.setIdleMode(IdleMode.kBrake);
     steerMotor.setSmartCurrentLimit(55);
-    SteerMotorPID = steerMotor.getPIDController();
-    
 
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
     this.absoluteEncoderReversed = absoluteEncoderReversed;
@@ -83,6 +84,10 @@ public class SwerveModule extends SubsystemBase {
     steerMotorEncoder.setPositionConversionFactor(Constants.ModuleConstants.kTurningEncoderRot2Rad);
     steerMotorEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
+    CANCoder absoluteEncoder = new CANCoder(absoluteEncoderId);
+
+   
+ 
     resetEncoders();
   }
 
@@ -103,48 +108,71 @@ public class SwerveModule extends SubsystemBase {
   }
   
   //Get the absolute encoder values
-   public double getAbsoluteEncoderRad() {
+    public double getAbsoluteEncoderRad() {
+    //double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     double angle = absoluteEncoder.getBusVoltage() / RobotController.getVoltage5V();
-    //double angle = absoluteEncoder.getAbsolutePosition();
     angle *= 2.0 * Math.PI;
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
   }
-  
-public void resetEncoders()  {
-   driveMotorEncoder.setPosition(0);
-  steerMotorEncoder.setPosition(0);
 
-  }
+  public void resetEncoders()  {
+    driveMotorEncoder.setPosition(0);
+   steerMotorEncoder.setPosition(0);
+   }
+   //configs to rads
+   /*public double getAbsoluteEncoderRad() {
+    CANCoderConfiguration config = new CANCoderConfiguration();
+
+   config.sensorCoefficient = 2 * Math.PI / 4096.0;
+   config.unitString = "rad";
+   config.sensorTimeBase = SensorTimeBase.PerSecond;
+   absoluteEncoder.configAllSettings(config);
+  double angle = absoluteEncoder.getBusVoltage() / RobotController.getVoltage5V();
+  return angle * (absoluteEncoderReversed ? -1 : 1);
+
+   }*/
+  
+
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition()));
 }
 
-/*public void setDesiredState(SwerveModuleState state) {
+public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.001) {
         stop();
         return;
   }
   state = SwerveModuleState.optimize(state, gState().angle);
-  driveMotor.set(state.speedMetersPerSecond / Constants.kPhysicalMaxSpeedMetersPerSecond);
-  steerMotor.set(SteerMotorPID.calculate(getSteerPosition(), state.angle.getRadians()));
+  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
+  steerMotor.set(state.angle.getRadians());
+  //steerMotor.set(absoluteEncoder.getAbsolutePosition());
 
 
   //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
-    
-  }*/
+  }
 
-public void setAngle(SwerveModuleState desiredState) {
+ 
+
+  /*public void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     Rotation2d angle =
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 0.01))
             ? lastAngle
             : desiredState.angle;
 
-    SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    //SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    CANCoder.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
     lastAngle = angle;
+  }*/
 
-  }
+
+  public double getPosition() {
+    return CANCoderJNI.GetPosition(0);
+}
+
+  
   public void stop() {
     driveMotor.set(0);
     steerMotor.set(0);

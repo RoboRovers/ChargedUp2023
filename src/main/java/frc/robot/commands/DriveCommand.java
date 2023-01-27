@@ -15,7 +15,7 @@ public class DriveCommand extends CommandBase {
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=true;
+    private boolean fieldOriented=false;
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
                 this.swerveSubsystem = swerveSubsystem;

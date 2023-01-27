@@ -57,16 +57,16 @@ public class SwerveSubsystem extends SubsystemBase{
 
 
     public double frontLeftPosition() {
-        return frontLeftModule.getAbsoluteEncoderRad();
+        return frontLeftModule.absoluteEncoder.getAbsolutePosition();
     }
     public double frontRightPosition() {
-        return frontRightModule.getAbsoluteEncoderRad();
+        return frontRightModule.absoluteEncoder.getAbsolutePosition();
     }
     public double backLeftPosition() {
-        return backLeftModule.getAbsoluteEncoderRad();
+        return backLeftModule.absoluteEncoder.getAbsolutePosition();
     }
     public double backRightPosition() {
-        return backRightModule.getAbsoluteEncoderRad();
+        return backRightModule.absoluteEncoder.getAbsolutePosition();
     }
 
     //module stops
@@ -80,11 +80,17 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public void setModuleStates(SwerveModuleState[] desiStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-        frontLeftModule.setAngle(desiStates[0]);
-        frontRightModule.setAngle(desiStates[1]);
-        backLeftModule.setAngle(desiStates[2]);
-        backRightModule.setAngle(desiStates[3]);
+         frontLeftModule.setDesiredState(desiStates[0]);
+        frontRightModule.setDesiredState(desiStates[1]);
+        backLeftModule.setDesiredState(desiStates[2]);
+        backRightModule.setDesiredState(desiStates[3]);
     }
+
+   /*  public void setModuleStates(SwerveModuleState[] controllerStates) {
+
+
+    }*/
+    
 
 
 
