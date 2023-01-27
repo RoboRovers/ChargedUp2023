@@ -50,10 +50,10 @@ public final class Constants {
     public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackRightDriveEncoderReversed = false;
 
-   /*  public static final int kFrontLeftDriveAbsoluteEncoderPort = 0;
-    public static final int kBackLeftDriveAbsoluteEncoderPort = 2;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 1;
-    public static final int kBackRightDriveAbsoluteEncoderPort = 3;
+     public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;
+    public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 6;
+    public static final int kBackRightDriveAbsoluteEncoderPort = 8;
 
     
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
@@ -61,11 +61,11 @@ public final class Constants {
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -0.254;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -1.252;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = -1.816;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.811;
-*/
+    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0;
+
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
@@ -90,8 +90,8 @@ public final class Constants {
 //Controller constants
     public static final class OIConstants {
       public static final int kDriverControllerPort = 0;
-      public static final int kOPControllerPort = 2;
-      public static final int kDriverStickPort = 3;
+      public static final int kOPControllerPort = 1;
+      public static final int kDriverStickPort = 2;
 
      /*  public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;

@@ -37,11 +37,13 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-        // controller stick drives
+        // controller stick drive
       /*   double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightY();*/
         
+
+        // Flight stick drive
         double xSpeed = flightStick.flightStick.getX();
         double ySpeed = flightStick.flightStick.getY();
         double turningSpeed = flightStick.flightStick.getZ();

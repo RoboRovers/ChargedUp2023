@@ -12,27 +12,15 @@ import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
 
 public class SwerveSubsystem extends SubsystemBase{
-    private final SwerveModule frontLeftModule = new SwerveModule(
-        2, 
-        3, 
-        false, 
-        false);
+    private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-    private final SwerveModule frontRightModule = new SwerveModule(
-        7, 
-        6, 
-        false, 
-        false);
-    private final SwerveModule backLeftModule = new SwerveModule(
-        12,
-        11,
-        false,
-        false);
-    private final SwerveModule backRightModule = new SwerveModule(
-        10,
-        9,
-        false,
-        false);
+    private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+
+    private final SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
+
+    private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
+
+
 
 
 //gyro int and heading code

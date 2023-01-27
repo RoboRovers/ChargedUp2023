@@ -4,6 +4,8 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.RobotController;
+
 //import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -33,17 +35,17 @@ public class SwerveModule extends SubsystemBase {
    //Check to see that this value is correct
     public double encoderCountPerRotation = 42;
 
-   // private AnalogInput absoluteEncoder;
-    //private boolean absoluteEncoderReversed;
-    //private double absoluteEncoderOffsetRad;
+    private AnalogInput absoluteEncoder;
+    private boolean absoluteEncoderReversed;
+    private double absoluteEncoderOffsetRad;
 
 
 
 
   //New Swerve Module start
-  //public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer, int absoluteEncoderId,
-  // double absoluteEncoderOffsetRad, double absoluteEncoderReversed) {
-  public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer) {
+  public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer, int absoluteEncoderId,
+   double absoluteEncoderOffsetRad, Boolean absoluteEncoderReversed) {
+  //public SwerveModule(int steerNum, int driveNum, boolean invertDrive, boolean invertSteer) {
       //Create and configure a new Drive motor
       driveMotor = new CANSparkMax(driveNum, MotorType.kBrushless);
       driveMotor.restoreFactoryDefaults();
@@ -54,12 +56,12 @@ public class SwerveModule extends SubsystemBase {
 
 
     //Create and configure a new steer motor
-    driveMotor = new CANSparkMax(driveNum, MotorType.kBrushless);
-    driveMotor.restoreFactoryDefaults();
-    driveMotor.setInverted(invertSteer);
-    driveMotor.setOpenLoopRampRate(RAMP_RATE);
-    driveMotor.setIdleMode(IdleMode.kBrake);
-    driveMotor.setSmartCurrentLimit(55);
+    steerMotor = new CANSparkMax(driveNum, MotorType.kBrushless);
+    steerMotor.restoreFactoryDefaults();
+    steerMotor.setInverted(invertSteer);
+    steerMotor.setOpenLoopRampRate(RAMP_RATE);
+    steerMotor.setIdleMode(IdleMode.kBrake);
+    steerMotor.setSmartCurrentLimit(55);
     SteerMotorPID = steerMotor.getPIDController();
     
 
@@ -96,13 +98,13 @@ public class SwerveModule extends SubsystemBase {
     return steerMotorEncoder.getVelocity();
   }
   //Get the absolute encoder values
- /*  public double getAbsoluteEncoderRad() {
+   public double getAbsoluteEncoderRad() {
     double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     angle *= 2.0 * Math.PI;
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
   }
-  */
+  
 public void resetEncoders()  {
    driveMotorEncoder.setPosition(0);
   steerMotorEncoder.setPosition(0);
