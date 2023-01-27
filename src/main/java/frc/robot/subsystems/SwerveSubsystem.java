@@ -45,7 +45,7 @@ public class SwerveSubsystem extends SubsystemBase{
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
-
+ 
     @Override
     public void periodic() {
         SmartDashboard.putNumber("Robot Heading", getHeading());
@@ -55,7 +55,7 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
     }
 
-
+ 
     public double frontLeftPosition() {
         return frontLeftModule.absoluteEncoder.getAbsolutePosition();
     }
