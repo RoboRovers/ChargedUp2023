@@ -56,7 +56,7 @@ public class SwerveModule extends SubsystemBase {
 
 
     //Create and configure a new steer motor
-    steerMotor = new CANSparkMax(driveNum, MotorType.kBrushless);
+    steerMotor = new CANSparkMax(steerNum, MotorType.kBrushless);
     steerMotor.restoreFactoryDefaults();
     steerMotor.setInverted(invertSteer);
     steerMotor.setOpenLoopRampRate(RAMP_RATE);

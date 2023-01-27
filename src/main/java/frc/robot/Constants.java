@@ -50,9 +50,9 @@ public final class Constants {
     public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackRightDriveEncoderReversed = false;
 
-     public static final int kFrontLeftDriveAbsoluteEncoderPort = 5;
+     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
-    public static final int kFrontRightDriveAbsoluteEncoderPort = 6;
+    public static final int kFrontRightDriveAbsoluteEncoderPort = 5;
     public static final int kBackRightDriveAbsoluteEncoderPort = 8;
 
     
