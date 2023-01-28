@@ -107,11 +107,12 @@ public void faceAllFoward() {
     backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad);
     */
     
-     frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
+      frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
     frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
     backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
-  
+    System.out.println("exacuted faceAll");
+
 
 
    /*  frontRightModule.wheelFaceForward(0);

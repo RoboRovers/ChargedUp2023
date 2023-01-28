@@ -31,6 +31,8 @@ public class RobotContainer {
   // Replace with CommandPS4Controller if needed
   private final OI driverController = new OI(OIConstants.kDriverControllerPort);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  private final OI flightStick = new OI(OIConstants.kDriverStickPort);
+
 
   public RobotContainer() {
 
@@ -42,7 +44,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driverController));
+            driverController, flightStick));
 
     // Configure the button bindings
     configureButtonBindings();

@@ -8,11 +8,14 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
+import edu.wpi.first.wpilibj.Joystick;
 
 public class OI {
   public final XboxController controller;
   public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper;
   public final POVButton povNorth, povEast, povSouth, povWest;
+  public final Joystick flightStick;
+
   
   public OI(int constant){
     controller = new XboxController(constant);
@@ -33,5 +36,7 @@ public class OI {
     rightBumper = new JoystickButton(controller, Button.kRightBumper.value);
     leftBumper = new JoystickButton(controller, Button.kLeftBumper.value);
     //
+    flightStick = new Joystick(constant);
+
   }
 }

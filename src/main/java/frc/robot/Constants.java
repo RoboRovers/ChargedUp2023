@@ -105,8 +105,8 @@ public final class Constants {
 
 //Max speed
     public static final class OIConstants {
-      public static final int kDriverControllerPort = 0;
-      public static final int kDriverStickPort = 1;
+      public static final int kDriverControllerPort = 1;
+      public static final int kDriverStickPort = 0;
 
       public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;

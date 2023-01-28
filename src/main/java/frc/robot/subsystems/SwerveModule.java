@@ -125,7 +125,7 @@ public class SwerveModule extends SubsystemBase {
   private int failureCount;
 
 
-
+//good
   public void resetEncoders()  {
     driveMotorEncoder.setPosition(0);
    steerMotorEncoder.setPosition(0);
@@ -148,28 +148,29 @@ public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRad()));
 }
 
-
 public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.01) {
         stop();
         return;
   }
-  state = SwerveModuleState.optimize(state, gState().angle);
-  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  
+  SwerveModuleState optimizedState;
+
+  optimizedState = SwerveModuleState.optimize(state, gState().angle);
+  driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
-  turningPidController.setReference(state.angle.getRadians(), ControlType.kPosition);
+  turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
   //steerMotorEncoder.setPosition(state.angle.getRadians());
 
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
-
-
+ SmartDashboard.putNumber("Radians Value" + steerMotor.getDeviceId(), state.angle.getDegrees());
+  SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
   }
 
- 
 
-  public void setAngle(SwerveModuleState desiredState) {
+ /*  public void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     Rotation2d angle =
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 0.01))
@@ -179,7 +180,7 @@ public void setDesiredState(SwerveModuleState state) {
     //SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
     turningPidController.setReference(angle.getRadians(), CANSparkMax.ControlType.kPosition);
     lastAngle = angle;
-  }
+  }*/
 
 
   public double getPosition() {

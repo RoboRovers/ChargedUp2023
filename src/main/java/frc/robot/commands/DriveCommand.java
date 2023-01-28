@@ -14,16 +14,18 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
+    private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.driveController = driveController;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
+                this.flightStick = flightStick;
     }
 
     @Override
@@ -34,9 +36,15 @@ public class DriveCommand extends CommandBase {
     @Override
     public void execute() {
         // 1. Get real-time joystick inputs
-        double xSpeed = driveController.controller.getLeftX();
+         double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightX();
+         
+       
+       /*   double xSpeed = flightStick.flightStick.getX();
+        double ySpeed = flightStick.flightStick.getY();
+        double turningSpeed = flightStick.flightStick.getZ();
+        */
         
         if(driveController.leftBumper.getAsBoolean())
         {
@@ -55,6 +63,7 @@ public class DriveCommand extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
+        //could be causing a problem
         xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed)
