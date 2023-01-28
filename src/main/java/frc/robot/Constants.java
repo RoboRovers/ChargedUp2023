@@ -48,8 +48,8 @@ public final class Constants {
 
     public static final boolean kFrontLeftDriveEncoderReversed = false;
     public static final boolean kBackLeftDriveEncoderReversed = false;
-    public static final boolean kFrontRightDriveEncoderReversed = false;
-    public static final boolean kBackRightDriveEncoderReversed = false;
+    public static final boolean kFrontRightDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = true;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
@@ -67,7 +67,7 @@ public final class Constants {
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.28;
 */
     public static final double kFLDriveAbsoluteEncoderOffsetRad = 3.35;
-    public static final double kBLDriveAbsoluteEncoderOffsetRad = 2.21;
+    public static final double kBLDriveAbsoluteEncoderOffsetRad = 3.227;
     public static final double kFRDriveAbsoluteEncoderOffsetRad = 2.035;
     public static final double kBRDriveAbsoluteEncoderOffsetRad = 4.28;
 
@@ -94,7 +94,7 @@ public final class Constants {
     public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-    public static final double kPTurning = 0.0015; //test a higher value
+    public static final double kPTurning = 0.002; //test a higher value
     public static final double kEncoderCPRSteer = 1024;
     // One revolution of the relative steering encoder. (Falcon)   
     //public static final int kEncoderCPRSteer = 26214;//it actually 26214.4, do we need the .4?  

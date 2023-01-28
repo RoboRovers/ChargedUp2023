@@ -148,6 +148,7 @@ public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRad()));
 }
 
+
 public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.01) {
         stop();
@@ -156,7 +157,9 @@ public void setDesiredState(SwerveModuleState state) {
   state = SwerveModuleState.optimize(state, gState().angle);
   driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
-  steerMotor.set(state.angle.getRadians());
+  turningPidController.setReference(state.angle.getRadians(), ControlType.kPosition);
+  //steerMotorEncoder.setPosition(state.angle.getRadians());
+
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
 
@@ -166,7 +169,7 @@ public void setDesiredState(SwerveModuleState state) {
 
  
 
-  /*public void setAngle(SwerveModuleState desiredState) {
+  public void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
     Rotation2d angle =
         (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 0.01))
@@ -174,9 +177,9 @@ public void setDesiredState(SwerveModuleState state) {
             : desiredState.angle;
 
     //SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
-    CANCoder.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
+    turningPidController.setReference(angle.getRadians(), CANSparkMax.ControlType.kPosition);
     lastAngle = angle;
-  }*/
+  }
 
 
   public double getPosition() {
@@ -202,26 +205,28 @@ public double rotationValue(){
 
 public void wheelFaceForward(double faceForwardOffset) {
  double currangle = absoluteEncoder.getAbsolutePosition();
- double theta = (360 - (currangle - faceForwardOffset)) % 360;
+double currangleDeg = currangle* 180 /Math.PI;
+ double theta = (360 - (currangleDeg - faceForwardOffset)) % 360;
  double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
   SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
   
   SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), 0); 
-  REVLibError err = turningPidController.setReference(-thetaTicks, ControlType.kPosition);
+  
+  REVLibError err = turningPidController.setReference(thetaTicks, ControlType.kPosition);
   int count = 0;
   while ( err != REVLibError.kOk ) 
   {
     System.out.println("Failed to zero "+steerMotor.getDeviceId()+": "+err); 
   failureCount++; 
   SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), failureCount); 
-  err = turningPidController.setReference(-thetaTicks, ControlType.kPosition); 
+  err = turningPidController.setReference(thetaTicks, ControlType.kPosition); 
   if ( count > 5)
   {
     break;
   }
   count++;
 }
-  turningPidController.setReference(0, ControlType.kPosition);
+  steerMotorEncoder.setPosition(0);
       
       }
 

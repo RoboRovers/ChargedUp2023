@@ -36,7 +36,7 @@ public class DriveCommand extends CommandBase {
         // 1. Get real-time joystick inputs
         double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
-        double turningSpeed = driveController.controller.getRightY();
+        double turningSpeed = driveController.controller.getRightX();
         
         if(driveController.leftBumper.getAsBoolean())
         {
