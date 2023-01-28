@@ -6,7 +6,6 @@ package frc.robot;
 
 import edu.wpi.first.math.util.Units;
 
-import com.ctre.phoenix.sensors.CANCoder;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -67,11 +66,15 @@ public final class Constants {
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.61;
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.28;
 */
-    public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = 0;
+    public static final double kFLDriveAbsoluteEncoderOffsetRad = 3.35;
+    public static final double kBLDriveAbsoluteEncoderOffsetRad = 2.21;
+    public static final double kFRDriveAbsoluteEncoderOffsetRad = 2.035;
+    public static final double kBRDriveAbsoluteEncoderOffsetRad = 4.28;
 
+    public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kFLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kBLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kBRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
@@ -91,7 +94,13 @@ public final class Constants {
     public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
-    public static final double kPTurning = 0.5;
+    public static final double kPTurning = 0.0015; //test a higher value
+    public static final double kEncoderCPRSteer = 1024;
+    // One revolution of the relative steering encoder. (Falcon)   
+    //public static final int kEncoderCPRSteer = 26214;//it actually 26214.4, do we need the .4?  
+    // One revolution of the absolute steering encoder. (CANCoder)  
+    //public static final int kAbsoluteEncoderCPRSteer = 4096; //idk
+      
 }
 
 //Max speed

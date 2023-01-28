@@ -30,7 +30,7 @@ public class RobotContainer {
 
   // Replace with CommandPS4Controller if needed
   private final OI driverController = new OI(OIConstants.kDriverControllerPort);
-  private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  public SwerveSubsystem s_Swerve = new SwerveSubsystem();
 
   public RobotContainer() {
 

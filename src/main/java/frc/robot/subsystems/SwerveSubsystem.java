@@ -8,17 +8,17 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.kauailabs.navx.frc.AHRS;
-
+import com.revrobotics.AbsoluteEncoder;
 import frc.robot.Constants;
 
 public class SwerveSubsystem extends SubsystemBase{
-    private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+    private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-    private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+    private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
-    private final SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
+    private final SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
 
-    private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
+    private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
 
 //gyro int and heading code
@@ -53,6 +53,12 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Front Right AE Value", frontRightPosition());
         SmartDashboard.putNumber("Back Left AE Value", backLeftPosition());
         SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
+       
+        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+
     }
 
  
@@ -68,6 +74,8 @@ public class SwerveSubsystem extends SubsystemBase{
     public double backRightPosition() {
         return backRightModule.absoluteEncoder.getAbsolutePosition();
     }
+
+
 
     //module stops
 
@@ -92,6 +100,25 @@ public class SwerveSubsystem extends SubsystemBase{
     }*/
     
 
+public void faceAllFoward() {
+    /*frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad);
+    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad);
+    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad);
+    backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad);
+    */
+    
+    frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
+    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
+    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
+    backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
+  
 
+
+   /*  frontRightModule.wheelFaceForward(0);
+    frontLeftModule.wheelFaceForward(0);
+    backLeftModule.wheelFaceForward(0);
+    backRightModule.wheelFaceForward(0);
+    */
+}
 
 }

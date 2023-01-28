@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.ModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.AnalogEncoder;
@@ -9,12 +10,14 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.ErrorCode;
+import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.ctre.phoenix.sensors.CANCoderJNI;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 //import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.*;
+import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
@@ -24,23 +27,16 @@ public class SwerveModule extends SubsystemBase {
     private CANSparkMax steerMotor;
     private CANSparkMax driveMotor;
     private Rotation2d lastAngle;
+    private final SparkMaxPIDController turningPidController;
 
 
     private static final double RAMP_RATE = 0.5;//1.5;
     
-     /*  PID coefficients
-     kP = 0.1; 
-     kI = 1e-4;
-     kD = 1; 
-     kIz = 0; 
-     kFF = 0; 
-     kMaxOutput = 1; 
-     kMinOutput = -1;*/
     
     private RelativeEncoder driveMotorEncoder;
     private RelativeEncoder steerMotorEncoder;
    //Check to see that this value is correct
-    public double encoderCountPerRotation = 42;
+    public double encoderCountPerRotation = 4096; //1024 
 
    public CANCoder absoluteEncoder;
   private boolean absoluteEncoderReversed;
@@ -69,7 +65,11 @@ public class SwerveModule extends SubsystemBase {
     steerMotor.setOpenLoopRampRate(RAMP_RATE);
     steerMotor.setIdleMode(IdleMode.kBrake);
     steerMotor.setSmartCurrentLimit(55);
-    
+    turningPidController = steerMotor.getPIDController();
+
+    turningPidController.setP(Constants.ModuleConstants.kPTurning);
+
+
 
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
     this.absoluteEncoderReversed = absoluteEncoderReversed;
@@ -110,6 +110,7 @@ public class SwerveModule extends SubsystemBase {
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
   }
+
   
   //Get the absolute encoder values
    /*  public double getAbsoluteEncoderRad() {
@@ -121,6 +122,7 @@ public class SwerveModule extends SubsystemBase {
   }*/
   
   CANCoderConfiguration config = new CANCoderConfiguration();
+  private int failureCount;
 
 
 
@@ -154,7 +156,7 @@ public void setDesiredState(SwerveModuleState state) {
   state = SwerveModuleState.optimize(state, gState().angle);
   driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
-  steerMotor.set(state.angle.getDegrees());
+  steerMotor.set(state.angle.getRadians());
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
 
@@ -193,5 +195,36 @@ public double rotationValue(){
 
 }
 
+/*public void wheelFaceForward(double faceForwardOffset) {
+   turningPidController.setReference(faceForwardOffset, CANSparkMax.ControlType.kPosition);
+  }*/
+
+
+public void wheelFaceForward(double faceForwardOffset) {
+ double currangle = absoluteEncoder.getAbsolutePosition();
+ double theta = (360 - (currangle - faceForwardOffset)) % 360;
+ double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
+  SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
+  
+  SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), 0); 
+  REVLibError err = turningPidController.setReference(-thetaTicks, ControlType.kPosition);
+  int count = 0;
+  while ( err != REVLibError.kOk ) 
+  {
+    System.out.println("Failed to zero "+steerMotor.getDeviceId()+": "+err); 
+  failureCount++; 
+  SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), failureCount); 
+  err = turningPidController.setReference(-thetaTicks, ControlType.kPosition); 
+  if ( count > 5)
+  {
+    break;
+  }
+  count++;
+}
+  turningPidController.setReference(0, ControlType.kPosition);
+      
+      }
+
+      
 
 }
