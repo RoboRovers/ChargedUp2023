@@ -2,25 +2,20 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.Constants.ModuleConstants;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.AnalogEncoder;
-import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import com.ctre.phoenix.ErrorCode;
-import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.CANCoderJNI;
 import com.ctre.phoenix.sensors.SensorTimeBase;
 //import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import com.revrobotics.SparkMaxAbsoluteEncoder.Type;
+import com.revrobotics.SparkMaxPIDController;
 public class SwerveModule extends SubsystemBase {
 
 
@@ -36,7 +31,7 @@ public class SwerveModule extends SubsystemBase {
     private RelativeEncoder driveMotorEncoder;
     private RelativeEncoder steerMotorEncoder;
    //Check to see that this value is correct
-    public double encoderCountPerRotation = 4096; //1024 
+    public double encoderCountPerRotation = 1024; //1024 
 
    public CANCoder absoluteEncoder;
   private boolean absoluteEncoderReversed;
@@ -54,7 +49,6 @@ public class SwerveModule extends SubsystemBase {
       driveMotor.setInverted(invertDrive);
       driveMotor.setOpenLoopRampRate(RAMP_RATE);
       driveMotor.setIdleMode(IdleMode.kCoast);
-      driveMotor.setSmartCurrentLimit(55);
       
 
 
@@ -64,11 +58,9 @@ public class SwerveModule extends SubsystemBase {
     steerMotor.setInverted(invertSteer);
     steerMotor.setOpenLoopRampRate(RAMP_RATE);
     steerMotor.setIdleMode(IdleMode.kBrake);
-    steerMotor.setSmartCurrentLimit(55);
     turningPidController = steerMotor.getPIDController();
 
     turningPidController.setP(Constants.ModuleConstants.kPTurning);
-
 
 
     this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
@@ -93,6 +85,7 @@ public class SwerveModule extends SubsystemBase {
 
  
     resetEncoders();
+    System.out.println("reset encoders");
   }
 
    //Motor calls
@@ -113,13 +106,14 @@ public class SwerveModule extends SubsystemBase {
 
   
   //Get the absolute encoder values
-   /*  public double getAbsoluteEncoderRad() {
+    public double getAbsoluteEncoderDeg() {
     //double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     double angle = absoluteEncoder.getAbsolutePosition();
-    angle *= 2.0 * Math.PI;
+  //  angle *= 2.0 * Math.PI;
+    angle *= 180 / Math.PI;
     angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
-  }*/
+  }
   
   CANCoderConfiguration config = new CANCoderConfiguration();
   private int failureCount;
@@ -128,10 +122,13 @@ public class SwerveModule extends SubsystemBase {
 //good
   public void resetEncoders()  {
     driveMotorEncoder.setPosition(0);
-   steerMotorEncoder.setPosition(0);
+   steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
    }
+
+
+
    //configs to rads
-   public double getAbsoluteEncoderRad() {
+   /*public double getAbsoluteEncoderRad() {
    config.sensorCoefficient = 2 * Math.PI / 4096.0;
    config.unitString = "rad";
    config.sensorTimeBase = SensorTimeBase.PerSecond;
@@ -141,12 +138,22 @@ public class SwerveModule extends SubsystemBase {
   angle -= absoluteEncoderOffsetRad;
   return angle * (absoluteEncoderReversed ? -1 : 1);
 
-   }
+   }*/
   
 
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getAbsoluteEncoderRad()));
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() % 360 * Math.PI / 180));
 }
+
+
+/*public double SwerveModulePosition(double distanceMeters, Rotation2d angle) {
+  getDrivePosition() = distanceMeters;
+ getSteerPosition() = angle;
+}*/
+
+/*private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
+  new Rotation2d(0), null);
+  */
 
 public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.01) {
@@ -157,18 +164,18 @@ public void setDesiredState(SwerveModuleState state) {
   SwerveModuleState optimizedState;
 
   optimizedState = SwerveModuleState.optimize(state, gState().angle);
+
   driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
   turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
-  //steerMotorEncoder.setPosition(state.angle.getRadians());
+
 
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
  SmartDashboard.putNumber("Radians Value" + steerMotor.getDeviceId(), state.angle.getDegrees());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-  //SmartDashboard.putString("Swerve[" + absoluteEncoder.getChannel() + "] state", state.toString());
   }
-
+  
 
  /*  public void setAngle(SwerveModuleState desiredState) {
     // Prevent rotating module if speed is less then 1%. Prevents jittering.
@@ -183,31 +190,18 @@ public void setDesiredState(SwerveModuleState state) {
   }*/
 
 
-  public double getPosition() {
-    return CANCoderJNI.GetPosition(0);
-}
-
   
   public void stop() {
     driveMotor.set(0);
     steerMotor.set(0);
   }
 
-public double rotationValue(){
-
-  return getAbsoluteEncoderRad();
-
-}
-
-/*public void wheelFaceForward(double faceForwardOffset) {
-   turningPidController.setReference(faceForwardOffset, CANSparkMax.ControlType.kPosition);
-  }*/
 
 
 public void wheelFaceForward(double faceForwardOffset) {
- double currangle = absoluteEncoder.getAbsolutePosition();
-double currangleDeg = currangle* 180 /Math.PI;
- double theta = (360 - (currangleDeg - faceForwardOffset)) % 360;
+ double currangle = getAbsoluteEncoderDeg();
+//double currangleDeg = currangle* 180 /Math.PI;
+ double theta = (360 - (currangle - faceForwardOffset)) % 360;
  double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
   SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
   

@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +21,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
+   
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -63,16 +65,16 @@ public class SwerveSubsystem extends SubsystemBase{
 
  
     public double frontLeftPosition() {
-        return frontLeftModule.absoluteEncoder.getAbsolutePosition();
+        return frontLeftModule.getAbsoluteEncoderDeg();
     }
     public double frontRightPosition() {
-        return frontRightModule.absoluteEncoder.getAbsolutePosition();
+        return frontRightModule.getAbsoluteEncoderDeg();
     }
     public double backLeftPosition() {
-        return backLeftModule.absoluteEncoder.getAbsolutePosition();
+        return backLeftModule.getAbsoluteEncoderDeg();
     }
     public double backRightPosition() {
-        return backRightModule.absoluteEncoder.getAbsolutePosition();
+        return backRightModule.getAbsoluteEncoderDeg();
     }
 
 

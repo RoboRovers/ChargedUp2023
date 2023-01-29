@@ -21,9 +21,9 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 public final class Constants {
   public static final class DriveConstants {
 
-    public static final double kTrackWidth = Units.inchesToMeters(21);
-    // Distance between right and left wheels
-    public static final double kWheelBase = Units.inchesToMeters(25.5);
+    public static final double kTrackWidth = Units.inchesToMeters(24.5);
+    // Distance between right and left wheelsZ
+    public static final double kWheelBase = Units.inchesToMeters(21);
     // Distance between front and back wheels
     public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
             new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
@@ -42,14 +42,14 @@ public final class Constants {
     public static final int kBackRightTurningMotorPort = 10;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
-    public static final boolean kBackLeftTurningEncoderReversed = false;
+    public static final boolean kBackLeftTurningEncoderReversed = true;
     public static final boolean kFrontRightTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = false;
+    public static final boolean kFrontLeftDriveEncoderReversed = true;
     public static final boolean kBackLeftDriveEncoderReversed = false;
     public static final boolean kFrontRightDriveEncoderReversed = true;
-    public static final boolean kBackRightDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 13;

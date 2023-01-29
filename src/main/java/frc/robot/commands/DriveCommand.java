@@ -16,7 +16,7 @@ public class DriveCommand extends CommandBase {
     private final OI driveController;
     private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=true;
+    private boolean fieldOriented=false;
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
                 this.swerveSubsystem = swerveSubsystem;
@@ -45,7 +45,6 @@ public class DriveCommand extends CommandBase {
         double ySpeed = flightStick.flightStick.getY();
         double turningSpeed = flightStick.flightStick.getZ();
         */
-        
         if(driveController.leftBumper.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
