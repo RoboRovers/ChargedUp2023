@@ -38,7 +38,7 @@ public class RobotContainer {
 
     autonChooser = new SendableChooser<>();
    // autonChooser.addOption("AutonTest", autontest);
-    SmartDashboard.putData("AutonChooser", autonChooser);
+    //SmartDashboard.putData("AutonChooser", autonChooser);
 
 
     s_Swerve.setDefaultCommand(

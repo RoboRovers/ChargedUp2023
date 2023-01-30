@@ -28,8 +28,8 @@ public class SwerveModule extends SubsystemBase {
     private static final double RAMP_RATE = 0.5;//1.5;
     
     
-    private RelativeEncoder driveMotorEncoder;
-    private RelativeEncoder steerMotorEncoder;
+    public RelativeEncoder driveMotorEncoder;
+    public RelativeEncoder steerMotorEncoder;
    //Check to see that this value is correct
     public double encoderCountPerRotation = 1024; //1024 
 
@@ -98,7 +98,7 @@ public class SwerveModule extends SubsystemBase {
   }
     //Get the Steer values Value is in motor revolutions.
   public double getSteerPosition() {
-     return steerMotorEncoder.getPosition();
+     return steerMotorEncoder.getPosition() * 0.3515625;
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
@@ -111,7 +111,7 @@ public class SwerveModule extends SubsystemBase {
     double angle = absoluteEncoder.getAbsolutePosition();
   //  angle *= 2.0 * Math.PI;
     angle *= 180 / Math.PI;
-    angle -= absoluteEncoderOffsetRad;
+    //angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
   }
   
@@ -142,8 +142,10 @@ public class SwerveModule extends SubsystemBase {
   
 
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() % 360 * Math.PI / 180));
-}
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() * Math.PI / 180));
+
+  }
+
 
 
 /*public double SwerveModulePosition(double distanceMeters, Rotation2d angle) {
@@ -172,7 +174,7 @@ public void setDesiredState(SwerveModuleState state) {
 
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
- SmartDashboard.putNumber("Radians Value" + steerMotor.getDeviceId(), state.angle.getDegrees());
+ SmartDashboard.putNumber("Degrees value" + steerMotor.getDeviceId(), state.angle.getDegrees());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   }
   
@@ -225,6 +227,14 @@ public void wheelFaceForward(double faceForwardOffset) {
       
       }
 
+     /*  public void wheelFaceForward(double faceForwardOffset) {
+        double currangle = getAbsoluteEncoderDeg();
+        double theta = (currangle - faceForwardOffset);
+        turningPidController.setReference(theta, ControlType.kPosition);
+        SmartDashboard.putNumber("ThetaDeg" + steerMotor.getDeviceId(), (360 - (currangle - faceForwardOffset)) % 360);
+        steerMotorEncoder.setPosition(0);
+
+      }*/
       
 
 }

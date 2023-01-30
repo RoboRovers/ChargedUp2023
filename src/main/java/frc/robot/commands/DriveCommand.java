@@ -5,10 +5,12 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
+import frc.robot.subsystems.SwerveModule;
 
 public class DriveCommand extends CommandBase {
 
@@ -31,7 +33,9 @@ public class DriveCommand extends CommandBase {
     @Override
     public void initialize() {
         swerveSubsystem.faceAllFoward();
+        //swerveSubsystem.ResetAllEncoders();
     }
+
 
     @Override
     public void execute() {
@@ -39,7 +43,9 @@ public class DriveCommand extends CommandBase {
          double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightX();
-         
+        SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
+        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+
        
        /*   double xSpeed = flightStick.flightStick.getX();
         double ySpeed = flightStick.flightStick.getY();
@@ -63,10 +69,9 @@ public class DriveCommand extends CommandBase {
 
         // 3. Make the driving smoother
         //could be causing a problem
-        xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turningSpeed = turningLimiter.calculate(turningSpeed)
-                * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        xSpeed = xLimiter.calculate(xSpeed) ;//* Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        ySpeed = yLimiter.calculate(ySpeed); //* Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
@@ -76,7 +81,9 @@ public class DriveCommand extends CommandBase {
                     xSpeed, ySpeed, turningSpeed, swerveSubsystem.geRotation2d());
         } else {
             // Relative to robot
+           // chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
             chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+
         }
 
         // 5. Convert chassis speeds to individual module states

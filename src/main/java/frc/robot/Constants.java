@@ -42,13 +42,13 @@ public final class Constants {
     public static final int kBackRightTurningMotorPort = 10;
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
-    public static final boolean kBackLeftTurningEncoderReversed = true;
-    public static final boolean kFrontRightTurningEncoderReversed = false;
+    public static final boolean kBackLeftTurningEncoderReversed = false;
+    public static final boolean kFrontRightTurningEncoderReversed = false;//broke auto
     public static final boolean kBackRightTurningEncoderReversed = false;
 
-    public static final boolean kFrontLeftDriveEncoderReversed = true;
+    public static final boolean kFrontLeftDriveEncoderReversed = false;
     public static final boolean kBackLeftDriveEncoderReversed = false;
-    public static final boolean kFrontRightDriveEncoderReversed = true;
+    public static final boolean kFrontRightDriveEncoderReversed = false;
     public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
@@ -58,7 +58,7 @@ public final class Constants {
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
-    public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
+    public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;//broke auto
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
 /*  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -191.15;
@@ -71,10 +71,17 @@ public final class Constants {
     public static final double kFRDriveAbsoluteEncoderOffsetRad = 2.035;
     public static final double kBRDriveAbsoluteEncoderOffsetRad = 4.28;
 
-    public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+  /*   public static final double kFRDegrees = 113.05;
+    public static final double kFLDegrees = 188.51;
+    public static final double kBLDegrees = 181.6;
+    public static final double kBRDegrees = 241.72;
+*/   
+
+     public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kFLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kBLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kBRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+ 
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;

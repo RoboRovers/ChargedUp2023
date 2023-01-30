@@ -12,6 +12,8 @@ import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.AbsoluteEncoder;
 import frc.robot.Constants;
 
+
+
 public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
@@ -22,6 +24,12 @@ public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
    
+public void ResetAllEncoders() {
+    frontLeftModule.resetEncoders();
+    frontRightModule.resetEncoders();
+    backLeftModule.resetEncoders();
+    backRightModule.resetEncoders();
+}
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -56,11 +64,11 @@ public class SwerveSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Back Left AE Value", backLeftPosition());
         SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
        
-        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
-        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-
+        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition()* 0.3515625);
+        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition()* 0.3515625);
+        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition()* 0.3515625);
+        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition()* 0.3515625);
+        
     }
 
  
@@ -94,13 +102,14 @@ public class SwerveSubsystem extends SubsystemBase{
         frontRightModule.setDesiredState(desiStates[1]);
         backLeftModule.setDesiredState(desiStates[2]);
         backRightModule.setDesiredState(desiStates[3]);
+
     }
 
    /*  public void setModuleStates(SwerveModuleState[] controllerStates) {
 
 
     }*/
-    
+   
 
 public void faceAllFoward() {
    /*  frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad);
