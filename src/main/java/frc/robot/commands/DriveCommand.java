@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -40,17 +41,22 @@ public class DriveCommand extends CommandBase {
     @Override
     public void execute() {
         // 1. Get real-time joystick inputs
-         double xSpeed = driveController.controller.getLeftX();
+        double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightX();
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
-
+        SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
-       /*   double xSpeed = flightStick.flightStick.getX();
-        double ySpeed = flightStick.flightStick.getY();
-        double turningSpeed = flightStick.flightStick.getZ();
-        */
+        //double xSpeed = flightStick.flightStick.getX();
+       // double ySpeed = flightStick.flightStick.getY();
+        //double turningSpeed = flightStick.flightStick.getZ();
+       // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
+        //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
+        //SmartDashboard.putNumber("turningSpeed", turningSpeed);
+
+
+
         if(driveController.leftBumper.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
@@ -62,6 +68,9 @@ public class DriveCommand extends CommandBase {
             fieldOriented = !fieldOriented;
         } 
 
+       
+
+
         // 2. Apply deadband
         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
@@ -69,9 +78,9 @@ public class DriveCommand extends CommandBase {
 
         // 3. Make the driving smoother
         //could be causing a problem
-        xSpeed = xLimiter.calculate(xSpeed) ;//* Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        ySpeed = yLimiter.calculate(ySpeed); //* Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        //xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        //ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        //turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
@@ -82,9 +91,10 @@ public class DriveCommand extends CommandBase {
         } else {
             // Relative to robot
            // chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed) ;
 
         }
+
 
         // 5. Convert chassis speeds to individual module states
         SwerveModuleState[] moduleStates = Constants.DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);

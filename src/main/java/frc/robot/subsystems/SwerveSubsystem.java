@@ -64,10 +64,10 @@ public void ResetAllEncoders() {
         SmartDashboard.putNumber("Back Left AE Value", backLeftPosition());
         SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
        
-        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition()* 0.3515625);
-        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition()* 0.3515625);
-        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition()* 0.3515625);
-        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition()* 0.3515625);
+        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
         
     }
 

@@ -103,8 +103,10 @@ public class SwerveModule extends SubsystemBase {
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
   }
+  //2.844444444444444 * 1 = ticks. Degrees to ticks
+  //1 degree equals 2.844444444444444 ticks
 
-  
+
   //Get the absolute encoder values
     public double getAbsoluteEncoderDeg() {
     //double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
@@ -142,8 +144,7 @@ public class SwerveModule extends SubsystemBase {
   
 
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() * Math.PI / 180));
-
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() *( Math.PI / 180)));
   }
 
 
@@ -156,6 +157,7 @@ public SwerveModuleState gState() {
 /*private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
   new Rotation2d(0), null);
   */
+ 
 
 public void setDesiredState(SwerveModuleState state) {
     if (Math.abs(state.speedMetersPerSecond) < 0.01) {
@@ -168,15 +170,15 @@ public void setDesiredState(SwerveModuleState state) {
   optimizedState = SwerveModuleState.optimize(state, gState().angle);
 
   driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-  //steerMotor.set(CANCoder.calculate(getSteerPosition(), state.angle.getRadians()));
+  //turningPidController.set(turningPidController.calculate(getSteerPosition(), state.angle.getRadians()));
   turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
-
+ //see what this does. I changed it to getRadians and then convert it to degrees. Then I might need to convert to ticks.
 
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
- SmartDashboard.putNumber("Degrees value" + steerMotor.getDeviceId(), state.angle.getDegrees());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-  }
+SmartDashboard.putNumber("optimized degrees" + steerMotor.getDeviceId(), optimizedState.angle.getDegrees());
+}
   
 
  /*  public void setAngle(SwerveModuleState desiredState) {
@@ -205,9 +207,9 @@ public void wheelFaceForward(double faceForwardOffset) {
 //double currangleDeg = currangle* 180 /Math.PI;
  double theta = (360 - (currangle - faceForwardOffset)) % 360;
  double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
-  SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
+  //SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
   
-  SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), 0); 
+  //SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), 0); 
   
   REVLibError err = turningPidController.setReference(thetaTicks, ControlType.kPosition);
   int count = 0;
@@ -215,7 +217,7 @@ public void wheelFaceForward(double faceForwardOffset) {
   {
     System.out.println("Failed to zero "+steerMotor.getDeviceId()+": "+err); 
   failureCount++; 
-  SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), failureCount); 
+  //SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), failureCount); 
   err = turningPidController.setReference(thetaTicks, ControlType.kPosition); 
   if ( count > 5)
   {
