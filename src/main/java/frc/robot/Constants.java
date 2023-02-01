@@ -9,6 +9,7 @@ import edu.wpi.first.math.util.Units;
 
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -48,8 +49,8 @@ public final class Constants {
 
     public static final boolean kFrontLeftDriveEncoderReversed = true;
     public static final boolean kBackLeftDriveEncoderReversed = true;
-    public static final boolean kFrontRightDriveEncoderReversed = false;
-    public static final boolean kBackRightDriveEncoderReversed = false;
+    public static final boolean kFrontRightDriveEncoderReversed = true;
+    public static final boolean kBackRightDriveEncoderReversed = true;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
@@ -71,16 +72,17 @@ public final class Constants {
     public static final double kFRDriveAbsoluteEncoderOffsetRad = 2.035;
     public static final double kBRDriveAbsoluteEncoderOffsetRad = 4.28;
 
-  /*   public static final double kFRDegrees = 113.05;
-    public static final double kFLDegrees = 188.51;
-    public static final double kBLDegrees = 181.6;
-    public static final double kBRDegrees = 241.72;
-*/   
-
-     public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kFRDegrees = 116.59;
+    public static final double kFLDegrees = 11.33;
+    public static final double kBLDegrees = 5.27;
+    public static final double kBRDegrees = 245.23;
+    
+/* 
+    public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kFLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kBLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     public static final double kBRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    */
  
 
     public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4196;
@@ -115,5 +117,20 @@ public final class Constants {
       public static final int kDriverFieldOrientedButtonIdx = 1;
 
       public static final double kDeadband = 0.05;
+  }
+  public static final class AutoConstants {
+    public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
+    public static final double kMaxAngularSpeedRadiansPerSecond = //
+            DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
+    public static final double kMaxAccelerationMetersPerSecondSquared = 3;
+    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
+    public static final double kPXController = 1.5;
+    public static final double kPYController = 1.5;
+    public static final double kPThetaController = 3;
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+            new TrapezoidProfile.Constraints(
+                    kMaxAngularSpeedRadiansPerSecond,
+                    kMaxAngularAccelerationRadiansPerSecondSquared);
   }
 }

@@ -18,7 +18,7 @@ public class DriveCommand extends CommandBase {
     private final OI driveController;
     //private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=false;
+    private boolean fieldOriented=true;
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
                 this.swerveSubsystem = swerveSubsystem;
@@ -47,8 +47,8 @@ public class DriveCommand extends CommandBase {
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
 //flight stick init and debugging code. Alt drive method
-        //double xSpeed = flightStick.flightStick.getX();
-       // double ySpeed = flightStick.flightStick.getY();
+       // double xSpeed = flightStick.flightStick.getX();
+        //double ySpeed = flightStick.flightStick.getY();
         //double turningSpeed = flightStick.flightStick.getZ();
        // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
         //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
@@ -74,7 +74,7 @@ public class DriveCommand extends CommandBase {
         } 
 
 //right bumper = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
-       if(driveController.rightBumper.getAsBoolean())
+       if(driveController.buttonB.getAsBoolean())
        {
             swerveSubsystem.ResetAllEncoders();
         }
@@ -103,7 +103,7 @@ public class DriveCommand extends CommandBase {
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
-            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed) ;
+            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, (turningSpeed));
             SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 

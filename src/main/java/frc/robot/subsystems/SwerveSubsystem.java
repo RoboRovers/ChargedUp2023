@@ -1,7 +1,10 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -9,10 +12,12 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants;
+import frc.robot.commands.DriveCommand;
 
 
 
 public class SwerveSubsystem extends SubsystemBase{
+   // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
     private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
@@ -33,6 +38,8 @@ public void ResetAllEncoders() {
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
+    //private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
+   // new Rotation2d(0), frontLeftModule);
     
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -58,7 +65,11 @@ public void ResetAllEncoders() {
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
- 
+   // public void resetOdometry(Pose2d pose) {
+     //   odometer.resetPosition(pose, geRotation2d());
+       // odometer.resetPosition(getHeading(), , pose);
+    //}
+
     @Override
     public void periodic() {
 //multiple debugging values are listed here. Names are self explanitory
@@ -66,39 +77,22 @@ public void ResetAllEncoders() {
         //Gyro heading degrees 
         SmartDashboard.putNumber("Robot Heading", getHeading());
         //AE Degrees Reading
-        SmartDashboard.putNumber("Front Left AE Value", frontLeftPosition());
-        SmartDashboard.putNumber("Front Right AE Value", frontRightPosition());
-        SmartDashboard.putNumber("Back Left AE Value", backLeftPosition());
-        SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
+        SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
        //RE Degrees Reading
         SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
         SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
        //RE Ticks Readings
-        SmartDashboard.putNumber("Back Left Ticks", backLeftPosition()*2.844444444444444);
-        SmartDashboard.putNumber("Back right Ticks", backRightPosition()*2.844444444444444);
-        SmartDashboard.putNumber("front Left Ticks", frontLeftPosition()*2.844444444444444);
-        SmartDashboard.putNumber("Front Right Ticks", frontRightPosition()*2.844444444444444);
+        SmartDashboard.putNumber("Back Left Ticks", backLeftModule.getSteerPosition() *2.844444444444444);
+        SmartDashboard.putNumber("Back right Ticks", backRightModule.getSteerPosition()*2.844444444444444);
+        SmartDashboard.putNumber("front Left Ticks", frontLeftModule.getSteerPosition()*2.844444444444444);
+        SmartDashboard.putNumber("Front Right Ticks", frontRightModule.getSteerPosition()*2.844444444444444);
 
     }
-
- //gets the absolute encoders values in degrees. Used to list the AE values on the dashboard
-
-    public double frontLeftPosition() {
-        return frontLeftModule.getAbsoluteEncoderDeg();
-    }
-    public double frontRightPosition() {
-        return frontRightModule.getAbsoluteEncoderDeg();
-    }
-    public double backLeftPosition() {
-        return backLeftModule.getAbsoluteEncoderDeg();
-    }
-    public double backRightPosition() {
-        return backRightModule.getAbsoluteEncoderDeg();
-    }
-
-
 
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {
@@ -107,7 +101,25 @@ public void ResetAllEncoders() {
         backLeftModule.stop();
         backRightModule.stop();
     }
+/*public double frontLeftModulePosition() {
+    return frontLeftModule.getSteerPosition();
+}
+public SwerveModulePosition frontRightModulePosition() {
+    return frontRightModule.gState();
+}
+public SwerveModulePosition backLeftModulePosition() {
+    return backLeftModule.gState();
+}
+public SwerveModulePosition backRightModulePosition() {
+    return frontLeftModule.gState();
+}
 
+public SwerveSubsystem(SwerveModulePosition[] modulePositions) {
+frontLeftModulePosition();
+frontRightModulePosition();
+backLeftModulePosition();
+backRightModulePosition();
+}*/
     //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class
     public void setModuleStates(SwerveModuleState[] desiStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);

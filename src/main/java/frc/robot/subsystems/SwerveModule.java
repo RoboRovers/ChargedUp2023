@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -16,9 +17,9 @@ import com.revrobotics.SparkMaxPIDController;
 public class SwerveModule extends SubsystemBase {
 
 
-    private CANSparkMax steerMotor;
-    private CANSparkMax driveMotor;
-    private final SparkMaxPIDController turningPidController;
+    public CANSparkMax steerMotor;
+    public CANSparkMax driveMotor;
+    public final SparkMaxPIDController turningPidController;
 
 
     private static final double RAMP_RATE = 0.5;//1.5;
@@ -112,6 +113,7 @@ public class SwerveModule extends SubsystemBase {
   
   //configure our Absolute Encoder for the MK4 drive system
   CANCoderConfiguration config = new CANCoderConfiguration();
+//public SwerveModulePosition[] getstee;
 
 
 //Reset encoder method. Called after init
@@ -123,7 +125,7 @@ public class SwerveModule extends SubsystemBase {
   
 //Creating the current state of the modules. A drive velo and an angle are needed. We use an off set of -90 for the angle
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(-90));
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d());
   }
 //getSteerPosition() *( Math.PI / 180)
  
@@ -138,11 +140,12 @@ public void setDesiredState(SwerveModuleState state) {
   
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-turningPidController.setReference(state.angle.getDegrees()*3, ControlType.kPosition);
+turningPidController.setReference(state.angle.getDegrees()*2.844444444444444, ControlType.kPosition);
 
 //printing out or drive and steer values for debugging
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees()*-1);
 }
   
 //stop method that stops the motors when the stick/s are within the deadzone < 0.01
