@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 
 import edu.wpi.first.math.filter.SlewRateLimiter;
-import edu.wpi.first.math.geometry.Rotation2d;
+// could need this import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,13 +11,12 @@ import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.SwerveSubsystem;
-import frc.robot.subsystems.SwerveModule;
 
 public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
-    private final OI flightStick;
+    //private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=false;
 
@@ -28,7 +27,7 @@ public class DriveCommand extends CommandBase {
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
-                this.flightStick = flightStick;
+                //this.flightStick = flightStick;
     }
 
     @Override
@@ -64,8 +63,9 @@ public class DriveCommand extends CommandBase {
             swerveSubsystem.zeroHeading();
         }
 
-        //To do: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
+        // TO DO: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
         //So its not very reliable
+        //use "toggle on true" or smg and change to a command not a boolean. Look into that
 
 //start button = if field orriented is on or not. Middle right small button
         if(driveController.startButton.getAsBoolean())
@@ -86,11 +86,11 @@ public class DriveCommand extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
- //could be causing a problem. Check if this is a problem and ways to fix or implement this differently
+ // TO DO: could be causing a problem. Check if this is a problem and ways to fix or implement this differently
 
-        //xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        //ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
-        //turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
+        xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
+        turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
@@ -101,8 +101,10 @@ public class DriveCommand extends CommandBase {
         } else {
             // Relative to robot. 
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
-            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed) ;
 
+            // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed) ;
+            SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 
 

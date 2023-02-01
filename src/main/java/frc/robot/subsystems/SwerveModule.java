@@ -18,7 +18,6 @@ public class SwerveModule extends SubsystemBase {
 
     private CANSparkMax steerMotor;
     private CANSparkMax driveMotor;
-    private Rotation2d lastAngle;
     private final SparkMaxPIDController turningPidController;
 
 
@@ -153,12 +152,13 @@ turningPidController.setReference(state.angle.getDegrees()*3, ControlType.kPosit
   }
 
 
-//To do: invert this you could possibly just add the curranngle and the FFOffset. Try this tomorrow
+// TO DO: if you invert this you could possibly just add the curranngle and the FFOffset and have the racks on the outside instead of 
+//the inside. Try this tomorrow
 
 //Auto face forward alg. Takes the current angle and the desired angle, foward, and sets the RE = to the offset needed to set the
 //motors to facefoward. Enabling and disabling zeros the RE values. 
 //YOU MUST 0 THE VALUES BEFORE DRIVING OR THE MOTORS WILL NOT FACE THE RIGHT DIRECTION 
-//I should have made a button that zeros them instead of turning the bot off and on multiple times
+//I should have made a button that zeros them instead of turning the bot off and on multiple times (TEST THIS)
 
 public void wheelFaceForward(double faceForwardOffset) {
  double currangle = getAbsoluteEncoderDeg();

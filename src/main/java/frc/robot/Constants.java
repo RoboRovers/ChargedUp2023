@@ -83,12 +83,11 @@ public final class Constants {
     public static final double kBRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
  
 
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 5;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4196;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 4;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = //
-            kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 }
@@ -96,18 +95,13 @@ public final class Constants {
   public static final class ModuleConstants {
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kDriveMotorGearRatio = 7 / 1;
-    public static final double kTurningMotorGearRatio = 13 / 1;
+    public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
     public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
     public static final double kPTurning = 0.002; //test a higher value
     public static final double kEncoderCPRSteer = 1024;
-    // One revolution of the relative steering encoder. (Falcon)   
-    //public static final int kEncoderCPRSteer = 26214;//it actually 26214.4, do we need the .4?  
-    // One revolution of the absolute steering encoder. (CANCoder)  
-    //public static final int kAbsoluteEncoderCPRSteer = 4096; //idk
-      
 }
 
 //Max speed
