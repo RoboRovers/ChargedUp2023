@@ -2,19 +2,18 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import com.kauailabs.navx.frc.AHRS;
-import com.revrobotics.AbsoluteEncoder;
 import frc.robot.Constants;
 
 
 
 public class SwerveSubsystem extends SubsystemBase{
+    //init all swerve modules 
     private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
     private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
@@ -24,6 +23,7 @@ public class SwerveSubsystem extends SubsystemBase{
     private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
    
+    //reset all method. Used after face foward to then reference all RE values as 0 being the front.
 public void ResetAllEncoders() {
     frontLeftModule.resetEncoders();
     frontRightModule.resetEncoders();
@@ -43,32 +43,39 @@ public void ResetAllEncoders() {
             }
         }).start();
     }
-    
+
+    //used to zero the gyro and used to refrence where the far end of the field is during comp.
     public void zeroHeading() {
         gyro.reset();
     }
 
+    //used for debugging and field centric
     public double getHeading() {
         return Math.IEEEremainder(gyro.getAngle(), 360);
     }
 
+    //used for Field Centric
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
  
     @Override
     public void periodic() {
+//multiple debugging values are listed here. Names are self explanitory
+
+        //Gyro heading degrees 
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        //AE Degrees Reading
         SmartDashboard.putNumber("Front Left AE Value", frontLeftPosition());
         SmartDashboard.putNumber("Front Right AE Value", frontRightPosition());
         SmartDashboard.putNumber("Back Left AE Value", backLeftPosition());
         SmartDashboard.putNumber("Back Right AE Value", backRightPosition());
-       
+       //RE Degrees Reading
         SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
         SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-       //Ticks Readings
+       //RE Ticks Readings
         SmartDashboard.putNumber("Back Left Ticks", backLeftPosition()*2.844444444444444);
         SmartDashboard.putNumber("Back right Ticks", backRightPosition()*2.844444444444444);
         SmartDashboard.putNumber("front Left Ticks", frontLeftPosition()*2.844444444444444);
@@ -76,7 +83,8 @@ public void ResetAllEncoders() {
 
     }
 
- 
+ //gets the absolute encoders values in degrees. Used to list the AE values on the dashboard
+
     public double frontLeftPosition() {
         return frontLeftModule.getAbsoluteEncoderDeg();
     }
@@ -92,8 +100,7 @@ public void ResetAllEncoders() {
 
 
 
-    //module stops
-
+//stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {
         frontLeftModule.stop();
         frontRightModule.stop();
@@ -101,6 +108,7 @@ public void ResetAllEncoders() {
         backRightModule.stop();
     }
 
+    //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class
     public void setModuleStates(SwerveModuleState[] desiStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
          frontLeftModule.setDesiredState(desiStates[0]);
@@ -109,33 +117,13 @@ public void ResetAllEncoders() {
         backRightModule.setDesiredState(desiStates[3]);
 
     }
-
-   /*  public void setModuleStates(SwerveModuleState[] controllerStates) {
-
-
-    }*/
-   
-
+   //face forward method. Called once the bot is enabled
 public void faceAllFoward() {
-   /*  frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad);
-    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad);
-    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad);
-    backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad);
-    */
-    
       frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
     frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
     backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
     System.out.println("exacuted faceAll");
-
-
-
-   /*  frontRightModule.wheelFaceForward(0);
-    frontLeftModule.wheelFaceForward(0);
-    backLeftModule.wheelFaceForward(0);
-    backRightModule.wheelFaceForward(0);
-    */
 }
 
 }

@@ -34,13 +34,12 @@ public class DriveCommand extends CommandBase {
     @Override
     public void initialize() {
         swerveSubsystem.faceAllFoward();
-        //swerveSubsystem.ResetAllEncoders();
     }
 
 
     @Override
     public void execute() {
-        // 1. Get real-time joystick inputs
+//Xbox joystick init and debugging code. Main drive method
         double xSpeed = driveController.controller.getLeftX();
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightX();
@@ -48,6 +47,7 @@ public class DriveCommand extends CommandBase {
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY() * -1);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
+//flight stick init and debugging code. Alt drive method
         //double xSpeed = flightStick.flightStick.getX();
        // double ySpeed = flightStick.flightStick.getY();
         //double turningSpeed = flightStick.flightStick.getZ();
@@ -56,21 +56,27 @@ public class DriveCommand extends CommandBase {
         //SmartDashboard.putNumber("turningSpeed", turningSpeed);
 
 
+//button mappings assiociated with the drive system or aspects of the drive system
 
+//left bumper = reset heading for gyro
         if(driveController.leftBumper.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
 
- 
+        //To do: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
+        //So its not very reliable
+
+//start button = if field orriented is on or not. Middle right small button
         if(driveController.startButton.getAsBoolean())
         {
             fieldOriented = !fieldOriented;
         } 
 
+//right bumper = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
        if(driveController.rightBumper.getAsBoolean())
        {
-        
+            swerveSubsystem.ResetAllEncoders();
         }
 
 
@@ -80,7 +86,8 @@ public class DriveCommand extends CommandBase {
         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
-        //could be causing a problem
+ //could be causing a problem. Check if this is a problem and ways to fix or implement this differently
+
         //xSpeed = xLimiter.calculate(xSpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         //ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         //turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
@@ -90,10 +97,10 @@ public class DriveCommand extends CommandBase {
         if (fieldOriented) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                    xSpeed, ySpeed, turningSpeed, swerveSubsystem.geRotation2d());
+                    ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
         } else {
-            // Relative to robot
-           // chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
+            // Relative to robot. 
+            //Y and X speeds are switched her to make forward on the stick foward. Not left or right
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed) ;
 
         }
