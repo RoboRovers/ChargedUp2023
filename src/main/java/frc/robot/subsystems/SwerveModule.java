@@ -144,9 +144,9 @@ public class SwerveModule extends SubsystemBase {
   
 
 public SwerveModuleState gState() {
-    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(getSteerPosition() *( Math.PI / 180)));
+    return new SwerveModuleState(getDriveVelocity(), new Rotation2d(-90));
   }
-
+//getSteerPosition() *( Math.PI / 180)
 
 
 /*public double SwerveModulePosition(double distanceMeters, Rotation2d angle) {
@@ -165,19 +165,24 @@ public void setDesiredState(SwerveModuleState state) {
         return;
   }
   
-  SwerveModuleState optimizedState;
 
-  optimizedState = SwerveModuleState.optimize(state, gState().angle);
+ driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+turningPidController.setReference(state.angle.getDegrees()*3, ControlType.kPosition);
+//45* 0.3515625
 
-  driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  //SwerveModuleState optimizedState;
+
+  //optimizedState = SwerveModuleState.optimize(state, gState().angle);
+
+ // driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   //turningPidController.set(turningPidController.calculate(getSteerPosition(), state.angle.getRadians()));
-  turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
+  //turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
  //see what this does. I changed it to getRadians and then convert it to degrees. Then I might need to convert to ticks.
 
   //steerMotor.set(absoluteEncoder.getAbsolutePosition());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-SmartDashboard.putNumber("optimized degrees" + steerMotor.getDeviceId(), optimizedState.angle.getDegrees());
+//SmartDashboard.putNumber("optimized degrees" + steerMotor.getDeviceId(), optimizedState.angle.getDegrees());
 }
   
 
@@ -226,8 +231,8 @@ public void wheelFaceForward(double faceForwardOffset) {
   count++;
 }
   steerMotorEncoder.setPosition(0);
-      
-      }
+     
+    }
 
      /*  public void wheelFaceForward(double faceForwardOffset) {
         double currangle = getAbsoluteEncoderDeg();

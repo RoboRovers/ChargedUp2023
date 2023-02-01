@@ -45,7 +45,7 @@ public class DriveCommand extends CommandBase {
         double ySpeed = driveController.controller.getLeftY();
         double turningSpeed = driveController.controller.getRightX();
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
-        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY() * -1);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
         //double xSpeed = flightStick.flightStick.getX();
@@ -68,7 +68,10 @@ public class DriveCommand extends CommandBase {
             fieldOriented = !fieldOriented;
         } 
 
-       
+       if(driveController.rightBumper.getAsBoolean())
+       {
+        
+        }
 
 
         // 2. Apply deadband
@@ -91,7 +94,7 @@ public class DriveCommand extends CommandBase {
         } else {
             // Relative to robot
            // chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed);
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, turningSpeed) ;
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed) ;
 
         }
 

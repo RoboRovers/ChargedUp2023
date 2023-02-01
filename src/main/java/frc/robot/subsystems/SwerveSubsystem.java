@@ -68,7 +68,12 @@ public void ResetAllEncoders() {
         SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
         SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-        
+       //Ticks Readings
+        SmartDashboard.putNumber("Back Left Ticks", backLeftPosition()*2.844444444444444);
+        SmartDashboard.putNumber("Back right Ticks", backRightPosition()*2.844444444444444);
+        SmartDashboard.putNumber("front Left Ticks", frontLeftPosition()*2.844444444444444);
+        SmartDashboard.putNumber("Front Right Ticks", frontRightPosition()*2.844444444444444);
+
     }
 
  
