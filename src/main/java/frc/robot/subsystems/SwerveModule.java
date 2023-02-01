@@ -3,14 +3,11 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
-import com.ctre.phoenix.sensors.SensorTimeBase;
-//import edu.wpi.first.math.controller.PIDController;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -35,7 +32,7 @@ public class SwerveModule extends SubsystemBase {
 
    public CANCoder absoluteEncoder;
   private boolean absoluteEncoderReversed;
-  private double absoluteEncoderOffsetRad;
+  //private double absoluteEncoderOffsetRad;
 
 
 
@@ -63,11 +60,9 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.setP(Constants.ModuleConstants.kPTurning);
 
 
-    this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
+    //this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
     this.absoluteEncoderReversed = absoluteEncoderReversed;
     absoluteEncoder = new CANCoder(absoluteEncoderId);
-
-
     
     //Create the built in motor encoders
  
@@ -81,167 +76,98 @@ public class SwerveModule extends SubsystemBase {
     steerMotorEncoder.setPositionConversionFactor(Constants.ModuleConstants.kTurningEncoderRot2Rad);
     steerMotorEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kTurningEncoderRPM2RadPerSec);
 
-
-
- 
+ //reset encoders after init phase
     resetEncoders();
     System.out.println("reset encoders");
   }
 
    //Motor calls
-  //Get the Drive values Value is in motor revolutions.
+  //Get the Drive values. Value is in ticks.
   public double getDrivePosition() {
     return driveMotorEncoder.getPosition();
   }
   public double getDriveVelocity() {
     return driveMotorEncoder.getVelocity();
   }
-    //Get the Steer values Value is in motor revolutions.
+    //Get the Steer values. Value is in ticks.
   public double getSteerPosition() {
      return steerMotorEncoder.getPosition() * 0.3515625;
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
   }
+ //Motor encoder conversions and useful info
   //2.844444444444444 * 1 = ticks. Degrees to ticks
   //1 degree equals 2.844444444444444 ticks
+  //1 tick equals 0.3515625 degrees. 
+  //Ticks * 0.3515625 equals degrees
+  //Motors are in ticks by default 1024 ticks equals 360 deg
 
 
   //Get the absolute encoder values
     public double getAbsoluteEncoderDeg() {
-    //double angle = absoluteEncoder.getVoltage() / RobotController.getVoltage5V();
     double angle = absoluteEncoder.getAbsolutePosition();
-  //  angle *= 2.0 * Math.PI;
     angle *= 180 / Math.PI;
-    //angle -= absoluteEncoderOffsetRad;
     return angle * (absoluteEncoderReversed ? -1 : 1);
   }
   
+  //configure our Absolute Encoder for the MK4 drive system
   CANCoderConfiguration config = new CANCoderConfiguration();
-  private int failureCount;
 
 
-//good
+//Reset encoder method. Called after init
   public void resetEncoders()  {
     driveMotorEncoder.setPosition(0);
    steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
    }
 
-
-
-   //configs to rads
-   /*public double getAbsoluteEncoderRad() {
-   config.sensorCoefficient = 2 * Math.PI / 4096.0;
-   config.unitString = "rad";
-   config.sensorTimeBase = SensorTimeBase.PerSecond;
-   
-  double angle = absoluteEncoder.getAbsolutePosition();
-  angle *= 2.0 * Math.PI;
-  angle -= absoluteEncoderOffsetRad;
-  return angle * (absoluteEncoderReversed ? -1 : 1);
-
-   }*/
   
-
+//Creating the current state of the modules. A drive velo and an angle are needed. We use an off set of -90 for the angle
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d(-90));
   }
 //getSteerPosition() *( Math.PI / 180)
-
-
-/*public double SwerveModulePosition(double distanceMeters, Rotation2d angle) {
-  getDrivePosition() = distanceMeters;
- getSteerPosition() = angle;
-}*/
-
-/*private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-  new Rotation2d(0), null);
-  */
  
-
+//This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
+//location
 public void setDesiredState(SwerveModuleState state) {
-    if (Math.abs(state.speedMetersPerSecond) < 0.01) {
+  //stick deadzone. No movement will occur if the stick has a value less than 0.01  
+  if (Math.abs(state.speedMetersPerSecond) < 0.01) {
         stop();
         return;
   }
   
-
+//call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 turningPidController.setReference(state.angle.getDegrees()*3, ControlType.kPosition);
-//45* 0.3515625
 
-  //SwerveModuleState optimizedState;
-
-  //optimizedState = SwerveModuleState.optimize(state, gState().angle);
-
- // driveMotor.set(optimizedState.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-  //turningPidController.set(turningPidController.calculate(getSteerPosition(), state.angle.getRadians()));
-  //turningPidController.setReference(optimizedState.angle.getDegrees(), ControlType.kPosition);
- //see what this does. I changed it to getRadians and then convert it to degrees. Then I might need to convert to ticks.
-
-  //steerMotor.set(absoluteEncoder.getAbsolutePosition());
+//printing out or drive and steer values for debugging
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-//SmartDashboard.putNumber("optimized degrees" + steerMotor.getDeviceId(), optimizedState.angle.getDegrees());
 }
   
-
- /*  public void setAngle(SwerveModuleState desiredState) {
-    // Prevent rotating module if speed is less then 1%. Prevents jittering.
-    Rotation2d angle =
-        (Math.abs(desiredState.speedMetersPerSecond) <= (Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond * 0.01))
-            ? lastAngle
-            : desiredState.angle;
-
-    //SteerMotorPID.setReference(angle.getDegrees(), CANSparkMax.ControlType.kPosition);
-    turningPidController.setReference(angle.getRadians(), CANSparkMax.ControlType.kPosition);
-    lastAngle = angle;
-  }*/
-
-
-  
+//stop method that stops the motors when the stick/s are within the deadzone < 0.01
   public void stop() {
     driveMotor.set(0);
     steerMotor.set(0);
   }
 
 
+//To do: invert this you could possibly just add the curranngle and the FFOffset. Try this tomorrow
+
+//Auto face forward alg. Takes the current angle and the desired angle, foward, and sets the RE = to the offset needed to set the
+//motors to facefoward. Enabling and disabling zeros the RE values. 
+//YOU MUST 0 THE VALUES BEFORE DRIVING OR THE MOTORS WILL NOT FACE THE RIGHT DIRECTION 
+//I should have made a button that zeros them instead of turning the bot off and on multiple times
 
 public void wheelFaceForward(double faceForwardOffset) {
  double currangle = getAbsoluteEncoderDeg();
-//double currangleDeg = currangle* 180 /Math.PI;
  double theta = (360 - (currangle - faceForwardOffset)) % 360;
  double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
-  //SmartDashboard.putNumber("SwerveInitTicks"+ steerMotor.getDeviceId(), thetaTicks);
-  
-  //SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), 0); 
-  
-  REVLibError err = turningPidController.setReference(thetaTicks, ControlType.kPosition);
-  int count = 0;
-  while ( err != REVLibError.kOk ) 
-  {
-    System.out.println("Failed to zero "+steerMotor.getDeviceId()+": "+err); 
-  failureCount++; 
-  //SmartDashboard.putNumber("SwerveInitFailureCount" + steerMotor.getDeviceId(), failureCount); 
-  err = turningPidController.setReference(thetaTicks, ControlType.kPosition); 
-  if ( count > 5)
-  {
-    break;
-  }
-  count++;
-}
-  steerMotorEncoder.setPosition(0);
-     
-    }
-
-     /*  public void wheelFaceForward(double faceForwardOffset) {
-        double currangle = getAbsoluteEncoderDeg();
-        double theta = (currangle - faceForwardOffset);
-        turningPidController.setReference(theta, ControlType.kPosition);
-        SmartDashboard.putNumber("ThetaDeg" + steerMotor.getDeviceId(), (360 - (currangle - faceForwardOffset)) % 360);
-        steerMotorEncoder.setPosition(0);
-
-      }*/
-      
-
-}
+turningPidController.setReference(thetaTicks, ControlType.kPosition);
+steerMotorEncoder.setPosition(0);
+}    
+ }
+//end of the module.
+//This module is duplicated 4 times to create 4 swerve modules. Each one runs the same but does different movements based on the inputs
+//given by the operator
