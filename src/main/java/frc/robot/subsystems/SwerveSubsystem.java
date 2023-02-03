@@ -10,15 +10,19 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
+
 import com.kauailabs.navx.frc.AHRS;
+
 import frc.robot.Constants;
-import frc.robot.commands.DriveCommand;
 
 
 
 public class SwerveSubsystem extends SubsystemBase{
    // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
+
+    //private static frc.OI driveController;
+
     private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
     private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
@@ -35,6 +39,7 @@ public void ResetAllEncoders() {
     backLeftModule.resetEncoders();
     backRightModule.resetEncoders();
 }
+
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);

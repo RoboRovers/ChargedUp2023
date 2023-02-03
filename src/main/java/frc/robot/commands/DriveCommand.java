@@ -35,6 +35,7 @@ public class DriveCommand extends CommandBase {
         swerveSubsystem.faceAllFoward();
     }
 
+  
 
     @Override
     public void execute() {
@@ -55,6 +56,8 @@ public class DriveCommand extends CommandBase {
         //SmartDashboard.putNumber("turningSpeed", turningSpeed);
 
 
+       
+
 //button mappings assiociated with the drive system or aspects of the drive system
 
 //left bumper = reset heading for gyro
@@ -74,6 +77,8 @@ public class DriveCommand extends CommandBase {
         } 
 
 //right bumper = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
+
+//doesn't really work
        if(driveController.buttonB.getAsBoolean())
        {
             swerveSubsystem.ResetAllEncoders();
@@ -103,7 +108,7 @@ public class DriveCommand extends CommandBase {
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
-            chassisSpeeds = new ChassisSpeeds(xSpeed, ySpeed, (turningSpeed));
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, (turningSpeed));
             SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 
