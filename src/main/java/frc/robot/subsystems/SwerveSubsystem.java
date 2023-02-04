@@ -74,12 +74,12 @@ public SwerveModulePosition[] frontLefPositions() {
 
     //used for debugging and field centric
     public double getHeading() {
-        return Math.IEEEremainder(gyro.getAngle(), 360);
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
 
     //used for Field Centric
     public Rotation2d geRotation2d() {
-        return Rotation2d.fromDegrees(getHeading()*-1);
+        return Rotation2d.fromDegrees(getHeading());
     }
    // public void resetOdometry(Pose2d pose) {
      //   odometer.resetPosition(pose, geRotation2d());
@@ -92,6 +92,7 @@ public SwerveModulePosition[] frontLefPositions() {
 
         //Gyro heading degrees 
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         //AE Degrees Reading
         SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
         SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
