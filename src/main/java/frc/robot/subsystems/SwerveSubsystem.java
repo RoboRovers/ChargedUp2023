@@ -23,14 +23,15 @@ public class SwerveSubsystem extends SubsystemBase{
 
     //private static frc.OI driveController;
 
-    private final SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+    public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-    private final SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+    public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
-    private final SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
+    public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
 
-    private final SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
+    public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
+    //frontleft, frontRight, backLeft, backRight
    
     //reset all method. Used after face foward to then reference all RE values as 0 being the front.
 public void ResetAllEncoders() {
@@ -40,6 +41,16 @@ public void ResetAllEncoders() {
     backRightModule.resetEncoders();
 }
 
+/*SwerveModuleState frontLeftState = new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.Rotation2d.fromDegrees());
+SwerveModuleState frontRightState = new SwerveModuleState(, Rotation2d.fromDegrees(-39.81));
+SwerveModuleState backLeftState = new SwerveModuleState(, Rotation2d.fromDegrees(-109.44));
+SwerveModuleState backRightState = new SwerveModuleState(, Rotation2d.fromDegrees(-70.56));
+
+public SwerveModulePosition[] frontLefPositions() {
+    return frontLeftModule.getSteerPosition();
+
+  }
+  */
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
@@ -68,7 +79,7 @@ public void ResetAllEncoders() {
 
     //used for Field Centric
     public Rotation2d geRotation2d() {
-        return Rotation2d.fromDegrees(getHeading());
+        return Rotation2d.fromDegrees(getHeading()*-1);
     }
    // public void resetOdometry(Pose2d pose) {
      //   odometer.resetPosition(pose, geRotation2d());
@@ -92,10 +103,10 @@ public void ResetAllEncoders() {
         SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
        //RE Ticks Readings
-        SmartDashboard.putNumber("Back Left Ticks", backLeftModule.getSteerPosition() *2.844444444444444);
-        SmartDashboard.putNumber("Back right Ticks", backRightModule.getSteerPosition()*2.844444444444444);
-        SmartDashboard.putNumber("front Left Ticks", frontLeftModule.getSteerPosition()*2.844444444444444);
-        SmartDashboard.putNumber("Front Right Ticks", frontRightModule.getSteerPosition()*2.844444444444444);
+        SmartDashboard.putNumber("Back Left Ticks", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back right Ticks", backRightModule.getSteerPosition());
+        SmartDashboard.putNumber("front Left Ticks", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right Ticks", frontRightModule.getSteerPosition());
 
     }
 

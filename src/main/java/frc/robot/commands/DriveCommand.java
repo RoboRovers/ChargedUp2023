@@ -18,7 +18,7 @@ public class DriveCommand extends CommandBase {
     private final OI driveController;
     //private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=true;
+    private boolean fieldOriented=false;
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
                 this.swerveSubsystem = swerveSubsystem;
@@ -40,11 +40,11 @@ public class DriveCommand extends CommandBase {
     @Override
     public void execute() {
 //Xbox joystick init and debugging code. Main drive method
-        double xSpeed = driveController.controller.getLeftX();
-        double ySpeed = driveController.controller.getLeftY();
+        double xSpeed = driveController.controller.getLeftX()*-1;
+        double ySpeed = driveController.controller.getLeftY()*-1;
         double turningSpeed = driveController.controller.getRightX();
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
-        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY() * -1);
+        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
 //flight stick init and debugging code. Alt drive method
@@ -108,7 +108,7 @@ public class DriveCommand extends CommandBase {
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
-            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, (turningSpeed));
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
             SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 

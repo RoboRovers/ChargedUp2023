@@ -5,10 +5,13 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
-
-
+import edu.wpi.first.wpilibj.interfaces.Gyro;
+import frc.robot.subsystems.SwerveSubsystem;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 
 /**
@@ -26,12 +29,30 @@ public final class Constants {
     // Distance between right and left wheels
     public static final double kWheelBase = Units.inchesToMeters(21);
     // Distance between front and back wheels
-    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-            new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-            new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+  /* 
+    static Translation2d m_frontLeftPlace = new Translation2d(-12.25, 10.5);
+    static Translation2d m_frontRightPlace = new Translation2d(12.25, 10.5);
+    static Translation2d m_backLeftPlace = new Translation2d(-12.25, -10.5);
+    static Translation2d m_backRightPlace = new Translation2d(12.25, -10.5);
 
+    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+m_frontLeftPlace, m_frontRightPlace, m_backLeftPlace, m_backRightPlace);*/
+
+
+public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
+     
+    new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
+      new Translation2d(kWheelBase / 2, kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
+      new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+
+      /*SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics, new Rotation2d(0),
+  new SwerveModulePosition[] {
+    SwerveSubsystem.frontLeftModule.getSteerPosition(),
+    m_frontRightModule.getPosition(),
+    m_backLeftModule.getPosition(),
+    m_backRightModule.getPosition()
+  }, new Pose2d(5.0, 13.5, new Rotation2d()));*/
 
     public static final int kFrontLeftDriveMotorPort = 3;
     public static final int kBackLeftDriveMotorPort = 11;
@@ -50,8 +71,8 @@ public final class Constants {
 
     public static final boolean kFrontLeftDriveEncoderReversed = true;
     public static final boolean kBackLeftDriveEncoderReversed = true;
-    public static final boolean kFrontRightDriveEncoderReversed = true;
-    public static final boolean kBackRightDriveEncoderReversed = true;
+    public static final boolean kFrontRightDriveEncoderReversed = false;
+    public static final boolean kBackRightDriveEncoderReversed = false;
 
     public static final int kFrontLeftDriveAbsoluteEncoderPort = 4;
     public static final int kBackLeftDriveAbsoluteEncoderPort = 13;
@@ -100,9 +121,9 @@ public final class Constants {
     public static final double kDriveMotorGearRatio = 7 / 1;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-    public static final double kTurningEncoderRot2Rad = kTurningMotorGearRatio * 2 * Math.PI;
+    public static final double kTurningConversionFactor2Deg =  28.4;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
-    public static final double kTurningEncoderRPM2RadPerSec = kTurningEncoderRot2Rad / 60;
+    public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
     public static final double kPTurning = 0.002; //test a higher value
     public static final double kEncoderCPRSteer = 1024;
 }
