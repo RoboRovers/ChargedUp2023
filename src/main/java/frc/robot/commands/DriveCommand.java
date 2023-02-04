@@ -108,7 +108,7 @@ public class DriveCommand extends CommandBase {
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
-            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, (turningSpeed));
+            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
             SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 

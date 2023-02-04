@@ -1,18 +1,10 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.OI;
 import frc.robot.Constants;
-import frc.robot.commands.DriveCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
-import java.util.Set;
-
-import org.ejml.equation.Variable;
-
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.revrobotics.*;
@@ -114,6 +106,7 @@ public class SwerveModule extends SubsystemBase {
   //Motors are in ticks by default 1024 ticks equals 360 deg
 
 
+
   //Get the absolute encoder values
     public double getAbsoluteEncoderDeg() {
     double angle = absoluteEncoder.getAbsolutePosition();
@@ -139,20 +132,7 @@ public class SwerveModule extends SubsystemBase {
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d());
   }
-//getSteerPosition() *( Math.PI / 180)
-/*public double DriveValueChanger; {
-  double xSpeed = driveController.controller.getLeftX();
-  double ySpeed = driveController.controller.getLeftY();
-  double turningSpeed = driveController.controller.getRightX()*-1;
 
-  if ((driveController.controller.getLeftX() > 0.0015) || (driveController.controller.getLeftY() > 0.0015)) {
-    DriveValueChanger = 2.844444444444444;
-  }
-  else if ((driveController.controller.getRightX() > 0.0015) || (driveController.controller.getRightX() < 0.0015)) {
-    DriveValueChanger = 0;
-    SmartDashboard.getNumber("Changer Value", DriveValueChanger);
-  }
-}*/
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
 //location
 public void setDesiredState(SwerveModuleState state) {
@@ -164,15 +144,15 @@ public void setDesiredState(SwerveModuleState state) {
   
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-turningPidController.setReference(state.angle.getDegrees()*3, ControlType.kPosition);
+turningPidController.setReference(state.angle.getDegrees(), ControlType.kPosition);
 
 //printing out or drive and steer values for debugging
   //SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
  // SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees());
-  SmartDashboard.putNumber("Cos value" +steerMotor.getDeviceId(), state.angle.getCos());
-  SmartDashboard.putNumber("Sin Value"+steerMotor.getDeviceId(), state.angle.getSin());
-  SmartDashboard.putNumber("Tan Value"+steerMotor.getDeviceId(), state.angle.getTan());
+  //SmartDashboard.putNumber("Cos value" +steerMotor.getDeviceId(), state.angle.getCos());
+  //SmartDashboard.putNumber("Sin Value"+steerMotor.getDeviceId(), state.angle.getSin());
+  //SmartDashboard.putNumber("Tan Value"+steerMotor.getDeviceId(), state.angle.getTan());
 }
   
 //stop method that stops the motors when the stick/s are within the deadzone < 0.01
