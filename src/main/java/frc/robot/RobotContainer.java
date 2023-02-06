@@ -4,9 +4,9 @@
 
 package frc.robot;
 
-import frc.robot.commands.DriveCommand;
+import frc.robot.commands.PulleyCommand;
+import frc.robot.subsystems.PulleySubsystem;
 //import frc.robot.commands.ZeroGyro;
-import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,8 +29,8 @@ public class RobotContainer {
   // all controllers will be refrenced here
 
   // Replace with CommandPS4Controller if needed
-  private final OI driverController = new OI(OIConstants.kDriverControllerPort);
-  private final SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  private final OI opController = new OI(OIConstants.kDriverControllerPort);
+  public static  PulleySubsystem P_systm = PulleySubsystem.getInstance();
 
   public RobotContainer() {
 
@@ -38,11 +38,9 @@ public class RobotContainer {
    // autonChooser.addOption("AutonTest", autontest);
     SmartDashboard.putData("AutonChooser", autonChooser);
 
+P_systm.setDefaultCommand(
+  new PulleyCommand(P_systm, opController));
 
-    s_Swerve.setDefaultCommand(
-        new DriveCommand(
-            s_Swerve,
-            driverController));
 
     // Configure the button bindings
     configureButtonBindings();
