@@ -32,7 +32,7 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void initialize() {
-        swerveSubsystem.faceAllFoward();
+     swerveSubsystem.faceAllFoward();
     }
 
   

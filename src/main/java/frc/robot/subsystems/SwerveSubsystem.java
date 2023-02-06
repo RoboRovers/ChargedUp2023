@@ -23,15 +23,16 @@ public class SwerveSubsystem extends SubsystemBase{
 
     //private static frc.OI driveController;
 
-    public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
+    public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
-    public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
+    public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kFrontRightTurningMotorPort, Constants.DriveConstants.kFrontRightDriveMotorPort, Constants.DriveConstants.kFrontRightDriveEncoderReversed, Constants.DriveConstants.kFrontRightTurningEncoderReversed, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDegrees, Constants.DriveConstants.kFrontRightDriveAbsoluteEncoderReversed);
 
-    public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
+    public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kBackLeftTurningMotorPort, Constants.DriveConstants.kBackLeftDriveMotorPort, Constants.DriveConstants.kBackLeftDriveEncoderReversed, Constants.DriveConstants.kBackLeftTurningEncoderReversed, Constants.DriveConstants.kBackLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kFLDegrees, Constants.DriveConstants.kBackLeftTurningEncoderReversed);
 
-    public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kBRDriveAbsoluteEncoderOffsetRad, Constants.DriveConstants.kBackRightTurningEncoderReversed);
+    public static SwerveModule frontRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDegrees, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
     //frontleft, frontRight, backLeft, backRight
+    //backleft, backright, frontleft, frontRight
    
     //reset all method. Used after face foward to then reference all RE values as 0 being the front.
 public void ResetAllEncoders() {
@@ -92,23 +93,22 @@ public SwerveModulePosition[] frontLefPositions() {
 
         //Gyro heading degrees 
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("gyro angle", gyro.getAngle());
         //AE Degrees Reading
-        SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Back Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Back Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Front Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
+        SmartDashboard.putNumber("Front Right AE Value", backRightModule.getAbsoluteEncoderDeg());
        //RE Degrees Reading
-        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
-        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Back left RE Value", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back Right RE Value", frontRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Front left RE Value", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right RE Value", backRightModule.getSteerPosition());
        //RE Ticks Readings
-        SmartDashboard.putNumber("Back Left Ticks", backLeftModule.getSteerPosition());
+ /*        SmartDashboard.putNumber("Back Left Ticks", backLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Back right Ticks", backRightModule.getSteerPosition());
         SmartDashboard.putNumber("front Left Ticks", frontLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Front Right Ticks", frontRightModule.getSteerPosition());
-
+*/
     }
 
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
@@ -118,25 +118,7 @@ public SwerveModulePosition[] frontLefPositions() {
         backLeftModule.stop();
         backRightModule.stop();
     }
-/*public double frontLeftModulePosition() {
-    return frontLeftModule.getSteerPosition();
-}
-public SwerveModulePosition frontRightModulePosition() {
-    return frontRightModule.gState();
-}
-public SwerveModulePosition backLeftModulePosition() {
-    return backLeftModule.gState();
-}
-public SwerveModulePosition backRightModulePosition() {
-    return frontLeftModule.gState();
-}
 
-public SwerveSubsystem(SwerveModulePosition[] modulePositions) {
-frontLeftModulePosition();
-frontRightModulePosition();
-backLeftModulePosition();
-backRightModulePosition();
-}*/
     //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class
     public void setModuleStates(SwerveModuleState[] desiStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
@@ -154,5 +136,4 @@ public void faceAllFoward() {
     backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
     System.out.println("exacuted faceAll");
 }
-
 }

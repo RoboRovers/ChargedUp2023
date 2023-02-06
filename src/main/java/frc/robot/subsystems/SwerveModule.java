@@ -7,6 +7,7 @@ import frc.robot.commands.DriveCommand;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory.State;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.Set;
@@ -68,6 +69,10 @@ public class SwerveModule extends SubsystemBase {
     turningPidController = steerMotor.getPIDController();
 
     turningPidController.setP(Constants.ModuleConstants.kPTurning);
+    turningPidController.setPositionPIDWrappingEnabled(true);
+    turningPidController.setPositionPIDWrappingMaxInput(1080); 
+    turningPidController.setPositionPIDWrappingMinInput(720);
+
 
 
     //this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;
@@ -88,7 +93,7 @@ public class SwerveModule extends SubsystemBase {
     steerMotorEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kTurningEncoderRPM2DegPerSec);
 
  //reset encoders after init phase
-    resetEncoders();
+    resetDrive();
     System.out.println("reset encoders");
   }
 
@@ -129,14 +134,19 @@ public class SwerveModule extends SubsystemBase {
   //configure our Absolute Encoder for the MK4 drive system
   CANCoderConfiguration config = new CANCoderConfiguration();
 //public SwerveModulePosition[] getstee;
+  private int failureCount;
 
 
 //Reset encoder method. Called after init
   public void resetEncoders()  {
-    driveMotorEncoder.setPosition(0);
    steerMotorEncoder.setPosition(0);
    //this might need to be on getAbsoluteEncoderDeg() not sure
    //set it to 0 to see if my keybind works
+   }
+   public void resetDrive() {
+    driveMotorEncoder.setPosition(0);
+    steerMotorEncoder.setPosition(0);
+
    }
 
   
@@ -144,6 +154,9 @@ public class SwerveModule extends SubsystemBase {
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d());
   }
+
+
+ public double encoderCorrection;
 
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
 //location
@@ -153,10 +166,24 @@ public void setDesiredState(SwerveModuleState state) {
         stop();
         return;
   }
-  
+  double encoderCorrection; {
+    encoderCorrection = 0;
+    if ((state.angle.getDegrees() < 5) || (state.angle.getDegrees() > -5)) {
+      encoderCorrection = 0;
+    }
+    if (state.angle.getDegrees() > (0)) {
+        encoderCorrection = 5;
+      }
+    if (state.angle.getDegrees() < (0)){
+        encoderCorrection = -5;
+       }
+    }
+
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-turningPidController.setReference(state.angle.getDegrees(), ControlType.kPosition);
+turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, ControlType.kPosition);
+//turningPidController.setReference(-90+encoderCorrection, ControlType.kPosition);
+
 
 
 //SmartDashboard.putNumber("Speed", getDriveVelocity());
@@ -185,13 +212,21 @@ turningPidController.setReference(state.angle.getDegrees(), ControlType.kPositio
 //I should have made a button that zeros them instead of turning the bot off and on multiple times (TEST THIS)
 
 public void wheelFaceForward(double faceForwardOffset) {
- double currangle = getAbsoluteEncoderDeg();
- double theta = (360 - (currangle - faceForwardOffset)) % 360;
- double thetaTicks = (theta/360)*Constants.ModuleConstants.kEncoderCPRSteer; 
-turningPidController.setReference(thetaTicks, ControlType.kPosition);
-steerMotorEncoder.setPosition(0);
-}    
- }
+  double currangle = getAbsoluteEncoderDeg();
+  //steerMotorEncoder.setPosition(currangle);
+
+//repeat this
+  turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
+
+//until steerMotorEncoder +- 2deg
+}
+
+}  
+
+
+
+
+
 //end of the module.
 //This module is duplicated 4 times to create 4 swerve modules. Each one runs the same but does different movements based on the inputs
 //given by the operator

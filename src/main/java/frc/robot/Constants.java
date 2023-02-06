@@ -89,21 +89,17 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.61;
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.28;
 */
-    public static final double kFLDriveAbsoluteEncoderOffsetRad = 3.35;
-    public static final double kBLDriveAbsoluteEncoderOffsetRad = 3.227;
-    public static final double kFRDriveAbsoluteEncoderOffsetRad = 2.035;
-    public static final double kBRDriveAbsoluteEncoderOffsetRad = 4.28;
 
-    public static final double kFRDegrees = 116.59;
-    public static final double kFLDegrees = 11.33;
-    public static final double kBLDegrees = 5.27;
-    public static final double kBRDegrees = 245.23;
+    public static final double kBRDegrees = 63.45;
+    public static final double kBLDegrees = 4.62;
+    public static final double kFLDegrees = 12.392;
+    public static final double kFRDegrees = 298;
     
 /* 
-    public static final double kFRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kFLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kBLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kBRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kBRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kBLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kFLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
+    public static final double kFRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
     */
  
 
