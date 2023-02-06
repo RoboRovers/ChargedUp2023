@@ -46,8 +46,8 @@ public class RobotContainer {
   
   // all controllers will be refrenced here
 
-  // Replace with CommandPS4Controller if needed
-  private final OI driverController = new OI(OIConstants.kDriverControllerPort);
+  // init all our controllers and motors
+  private final OI driveController = new OI(OIConstants.kDriverControllerPort);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
   private final OI flightStick = new OI(OIConstants.kDriverStickPort);
   public CANSparkMax steerMotor;
@@ -59,20 +59,22 @@ public class RobotContainer {
    // autonChooser.addOption("AutonTest", autontest);
     //SmartDashboard.putData("AutonChooser", autonChooser);
 
-
+//set the swerve drive as a default command for the drive command using the driveController and the flightstick
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driverController, flightStick));
+            driveController, flightStick));
 
     // Configure the button bindings
     configureButtonBindings();
   }
 
+  //dont think this is really necessary because we are defining them in the file OI.java
   private void configureButtonBindings() {
     /* Driver Buttons */
   }
 
+  //start of auto commands and cycles that we can use. Still working on this as of 2/6/23
   public Command getAutonCommand() {
     return autonChooser.getSelected();
    /*  turningPidController = steerMotor.getPIDController();

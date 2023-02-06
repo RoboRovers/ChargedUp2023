@@ -33,6 +33,10 @@ public class DriveCommand extends CommandBase {
     @Override
     public void initialize() {
      swerveSubsystem.faceAllFoward();
+
+    //get auto set working then reset all encoders. This might screw up the auto set as the code might be running both commands at
+    //the same time messing with the auto set
+    // swerveSubsystem.ResetAllEncoders();
     }
 
   
@@ -76,7 +80,7 @@ public class DriveCommand extends CommandBase {
             fieldOriented = !fieldOriented;
         } 
 
-//right bumper = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
+//button "B" = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
 
 //doesn't really work
        if(driveController.buttonB.getAsBoolean())

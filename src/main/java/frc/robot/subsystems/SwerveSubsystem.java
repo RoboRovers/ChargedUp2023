@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -71,6 +72,7 @@ public SwerveModulePosition[] frontLefPositions() {
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
     public void zeroHeading() {
         gyro.reset();
+
     }
 
     //used for debugging and field centric
