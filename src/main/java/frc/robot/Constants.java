@@ -111,5 +111,14 @@ public final class Constants {
 //Extension number
 public static final int EXTENSION_IN = 5;
 public static final int EXTENSION_OUT = 6;
+
+
+
+ 
   }
+  public static final class PullyConstants {
+
+    public static final int pulleyMotorNum = 14;
+
+    }
 }

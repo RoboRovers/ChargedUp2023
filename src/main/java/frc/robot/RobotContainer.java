@@ -7,7 +7,8 @@ package frc.robot;
 import frc.robot.commands.ArmCommand;
 import frc.robot.commands.GrabberCommand;
 import frc.robot.subsystems.PneumaticsSubsystem;
-//import frc.robot.commands.ZeroGyro;
+import frc.robot.commands.PulleyCommand;
+import frc.robot.subsystems.PulleySubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -34,8 +35,9 @@ public class RobotContainer {
 
 
   // Replace with CommandPS4Controller if needed
-  private final OI driverController = new OI(OIConstants.kDriverControllerPort);
+  private final OI driveController = new OI(OIConstants.kDriverControllerPort);
   private final OI opController = new OI(OIConstants.kOPControllerPort);
+  public static  PulleySubsystem P_systm = PulleySubsystem.getInstance();
 
   public RobotContainer() {
 
@@ -43,6 +45,8 @@ public class RobotContainer {
    // autonChooser.addOption("AutonTest", autontest);
     SmartDashboard.putData("AutonChooser", autonChooser);
 
+P_systm.setDefaultCommand(
+  new PulleyCommand(P_systm, opController));
 
     _pneumatics.setDefaultCommand(
       new ArmCommand
@@ -54,7 +58,7 @@ public class RobotContainer {
     _pneumatics.setDefaultCommand(
       new GrabberCommand(
         _pneumatics,
-         driverController, opController)
+         driveController, opController)
     );
     
     
