@@ -132,10 +132,10 @@ public SwerveModulePosition[] frontLefPositions() {
     }
    //face forward method. Called once the bot is enabled
 public void faceAllFoward() {
-      frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
-    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
-    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
-    backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
+      frontRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
+    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
+    backLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
+    backRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
     System.out.println("exacuted faceAll");
 }
 }

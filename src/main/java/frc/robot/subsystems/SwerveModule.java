@@ -5,6 +5,11 @@ import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import java.util.concurrent.TimeUnit;
+
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.revrobotics.*;
@@ -183,15 +188,34 @@ turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, Co
 //I should have made a button that zeros them instead of turning the bot off and on multiple times, I need to make this automatic
 
 public void wheelFaceForward(double faceForwardOffset) {
-  double currangle = getAbsoluteEncoderDeg();
-  //steerMotorEncoder.setPosition(currangle);
+steerMotorEncoder.setPosition(0);
 
-//repeat this
-  turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
+double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
 
-//until steerMotorEncoder +- 2deg
-}
-
+   while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 4) {
+    turningPidController.setReference(steerMotorEncoder.getPosition()+200, ControlType.kPosition);
+    SmartDashboard.putNumber("I'm running" + steerMotor.getDeviceId(), steerMotorEncoder.getPosition());
+    SmartDashboard.putNumber("target value"+steerMotor.getDeviceId(), targetAngle);  
+  
+    /*try {
+      TimeUnit.MILLISECONDS.sleep(1000);
+      
+    } catch (InterruptedException e) {
+    }*/
+    targetAngle = getAbsoluteEncoderDeg()-faceForwardOffset;  
+    
+    }
+    steerMotorEncoder.setPosition(0);
+    turningPidController.setReference(0, ControlType.kPosition);
+  
+  
+    while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 0.75) {
+    //turningPidController.setReference(2, ControlType.kVelocity);
+    turningPidController.setReference(steerMotorEncoder.getPosition()+10, ControlType.kPosition);
+  }
+  steerMotorEncoder.setPosition(0);
+  turningPidController.setReference(0, ControlType.kPosition);
+  }
 }  
 
 
@@ -201,3 +225,13 @@ public void wheelFaceForward(double faceForwardOffset) {
 //end of the module.
 //This module is duplicated 4 times to create 4 swerve modules. Each one runs the same but does different movements based on the inputs
 //given by the operator
+
+
+
+
+
+  //currently I'm trying to set the reletive encoders to the value of the absolutes. Just the numbers, not moving them at all.
+  //That works. But setting the motors any value, not even the faceforward offset, does NOT make the motors move to the specified 
+  //value. So if i set the motors to 90deg they will currently go to around 75deg. But nit immediatly either. It takes a few sets to 
+  //get them to settle them. If you enable and disable then enable again over and over again, they will continue to move until they
+  //are about +-15deg off from where you wanted them to be.

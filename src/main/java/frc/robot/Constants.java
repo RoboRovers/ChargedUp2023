@@ -117,7 +117,9 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kDriveMotorGearRatio = 7 / 1;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
     public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
-    public static final double kTurningConversionFactor2Deg =  28.4;
+    
+    //get this a little closer. maybe 28.23
+    public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
     public static final double kPTurning = 0.002; //test a higher value
