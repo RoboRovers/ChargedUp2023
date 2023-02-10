@@ -167,16 +167,44 @@ public void setDesiredState(SwerveModuleState state) {
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, ControlType.kPosition);
-//turningPidController.setReference(-90+encoderCorrection, ControlType.kPosition);
 
-//SmartDashboard debug stuff, printing out our drive and steer values for debugging. Uncomment as needed
-
-/* 
-//SmartDashboard.putNumber("Speed", getDriveVelocity());
+/*SmartDashboard debug stuff, printing out our drive and steer values for debugging. Uncomment as needed
+  SmartDashboard.putNumber("Speed", getDriveVelocity());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
- SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+  SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
   SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees());
   */
+
+
+//see if we need this and how it actually works
+
+ /*  if(desiredAngle>0){desiredAngleSign = true;}
+
+  else {desiredAngleSign = false;}
+
+  if(currentAngle>0){ currentAngleSign = true;}
+
+  else {currentAngleSign = false;}
+
+
+
+  currentAngleInt = (int) currentAngle;
+
+
+
+  if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt > 0){
+
+    m_turningMotor.setSelectedSensorPosition(m_turningMotor.getSelectedSensorPosition()-Constants.ModuleConstants.kEncoderCPRSteer);
+
+  } else if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt < 0){
+
+    m_turningMotor.setSelectedSensorPosition(m_turningMotor.getSelectedSensorPosition()+Constants.ModuleConstants.kEncoderCPRSteer);
+
+  }
+
+  SmartDashboard.putNumber("Difference", desiredAngle-currentAngle);
+*/
+ 
 }
   
 
@@ -190,6 +218,7 @@ turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, Co
 public void wheelFaceForward(double faceForwardOffset) {
 steerMotorEncoder.setPosition(0);
 
+
 double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
 
    while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 4) {
@@ -197,11 +226,6 @@ double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
     SmartDashboard.putNumber("I'm running" + steerMotor.getDeviceId(), steerMotorEncoder.getPosition());
     SmartDashboard.putNumber("target value"+steerMotor.getDeviceId(), targetAngle);  
   
-    /*try {
-      TimeUnit.MILLISECONDS.sleep(1000);
-      
-    } catch (InterruptedException e) {
-    }*/
     targetAngle = getAbsoluteEncoderDeg()-faceForwardOffset;  
     
     }
@@ -210,8 +234,7 @@ double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
   
   
     while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 0.75) {
-    //turningPidController.setReference(2, ControlType.kVelocity);
-    turningPidController.setReference(steerMotorEncoder.getPosition()+10, ControlType.kPosition);
+  turningPidController.setReference(steerMotorEncoder.getPosition()+10, ControlType.kPosition);
   }
   steerMotorEncoder.setPosition(0);
   turningPidController.setReference(0, ControlType.kPosition);
@@ -219,19 +242,6 @@ double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
 }  
 
 
-
-
-
 //end of the module.
 //This module is duplicated 4 times to create 4 swerve modules. Each one runs the same but does different movements based on the inputs
 //given by the operator
-
-
-
-
-
-  //currently I'm trying to set the reletive encoders to the value of the absolutes. Just the numbers, not moving them at all.
-  //That works. But setting the motors any value, not even the faceforward offset, does NOT make the motors move to the specified 
-  //value. So if i set the motors to 90deg they will currently go to around 75deg. But nit immediatly either. It takes a few sets to 
-  //get them to settle them. If you enable and disable then enable again over and over again, they will continue to move until they
-  //are about +-15deg off from where you wanted them to be.
