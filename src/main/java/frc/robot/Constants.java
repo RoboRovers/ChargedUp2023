@@ -13,6 +13,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.constraint.TrajectoryConstraint;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -25,34 +26,22 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 public final class Constants {
   public static final class DriveConstants {
 
-    public static final double kTrackWidth = Units.inchesToMeters(24.5);
-    // Distance between right and left wheels
-    public static final double kWheelBase = Units.inchesToMeters(21);
-    // Distance between front and back wheels
-  /* 
-    static Translation2d m_frontLeftPlace = new Translation2d(-12.25, 10.5);
-    static Translation2d m_frontRightPlace = new Translation2d(12.25, 10.5);
-    static Translation2d m_backLeftPlace = new Translation2d(-12.25, -10.5);
-    static Translation2d m_backRightPlace = new Translation2d(12.25, -10.5);
 
-    public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
-m_frontLeftPlace, m_frontRightPlace, m_backLeftPlace, m_backRightPlace);*/
+
+    public static final double kTrackWidth = Units.inchesToMeters(22.5);
+    // Distance between right and left wheels
+    public static final double kWheelBase = Units.inchesToMeters(23.75);
+    // Distance between front and back wheels
 
 
 public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKinematics(
      
-    new Translation2d(kWheelBase / 2, -kTrackWidth / 2),
-      new Translation2d(kWheelBase / 2, kTrackWidth / 2),
-      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2),
-      new Translation2d(-kWheelBase / 2, kTrackWidth / 2));
+    new Translation2d(kWheelBase / 2, -kTrackWidth / 2), //front left
+      new Translation2d(kWheelBase / 2, kTrackWidth / 2), //front right
+      new Translation2d(-kWheelBase / 2, -kTrackWidth / 2), //back left
+      new Translation2d(-kWheelBase / 2, kTrackWidth / 2)); //back right
 
-      /*SwerveDriveOdometry m_odometry = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics, new Rotation2d(0),
-  new SwerveModulePosition[] {
-    SwerveSubsystem.frontLeftModule.getSteerPosition(),
-    m_frontRightModule.getPosition(),
-    m_backLeftModule.getPosition(),
-    m_backRightModule.getPosition()
-  }, new Pose2d(5.0, 13.5, new Rotation2d()));*/
+
 
     public static final int kFrontLeftDriveMotorPort = 3;
     public static final int kBackLeftDriveMotorPort = 11;
@@ -150,9 +139,32 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kPYController = 1.5;
     public static final double kPThetaController = 3;
 
-    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = //
+    //public static final Trajector
+
+    public static final TrapezoidProfile.Constraints kThetaControllerConstraints = 
             new TrapezoidProfile.Constraints(
                     kMaxAngularSpeedRadiansPerSecond,
                     kMaxAngularAccelerationRadiansPerSecondSquared);
+  }
+
+
+   //Pneumatics Constants
+   public static final class PneumaticsConstants {
+    public static final int L_INTAKE_IN = 0;
+    public static final int L_INTAKE_OUT = 1;
+    public static final int R_INTAKE_IN = 2;
+    public static final int R_INTAKE_OUT = 5;
+   //Extension number
+public static final int EXTENSION_IN = 6;
+public static final int EXTENSION_OUT = 7;
+
+
+
+    //in = 0,1,2
+    //out = 7,6,5
+
+
+
+
   }
 }

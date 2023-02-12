@@ -41,23 +41,18 @@ public void ResetAllEncoders() {
     frontRightModule.resetEncoders();
     backLeftModule.resetEncoders();
     backRightModule.resetEncoders();
+
+    
 }
 
-/*SwerveModuleState frontLeftState = new SwerveModuleState(frontLeftModule.getDriveVelocity(), frontLeftModule.Rotation2d.fromDegrees());
-SwerveModuleState frontRightState = new SwerveModuleState(, Rotation2d.fromDegrees(-39.81));
-SwerveModuleState backLeftState = new SwerveModuleState(, Rotation2d.fromDegrees(-109.44));
-SwerveModuleState backRightState = new SwerveModuleState(, Rotation2d.fromDegrees(-70.56));
 
-public SwerveModulePosition[] frontLefPositions() {
-    return frontLeftModule.getSteerPosition();
 
-  }
-  */
+
 
 //gyro int and heading code
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
-    //private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-   // new Rotation2d(0), frontLeftModule);
+  
+    
     
     public SwerveSubsystem() {
         new Thread(() -> {
@@ -79,15 +74,23 @@ public SwerveModulePosition[] frontLefPositions() {
     public double getHeading() {
         return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
+    //public Pose2d getPose() {
+   //     return odometer.getPoseMeters();
+   // }
 
     //used for Field Centric
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
-   // public void resetOdometry(Pose2d pose) {
-     //   odometer.resetPosition(pose, geRotation2d());
-       // odometer.resetPosition(getHeading(), , pose);
-    //}
+   /*  public void resetOdometry(Pose2d pose) {
+        odometer.resetPosition(geRotation2d(), new SwerveModulePosition[] {
+            frontLeftModule.getPosition(),
+            frontRightModule.getPosition(),
+            backLeftModule.getPosition(),
+           backRightModule.getPosition()},
+pose);
+    }*/
+
 
     @Override
     public void periodic() {
@@ -111,6 +114,8 @@ public SwerveModulePosition[] frontLefPositions() {
         SmartDashboard.putNumber("front Left Ticks", frontLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Front Right Ticks", frontRightModule.getSteerPosition());
 */
+
+
     }
 
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
@@ -120,6 +125,15 @@ public SwerveModulePosition[] frontLefPositions() {
         backLeftModule.stop();
         backRightModule.stop();
     }
+ /*    public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
+    gyro.getRotation2d(), new SwerveModulePosition[] {
+ frontLeftModule.getPosition(),
+ frontRightModule.getPosition(),
+ backLeftModule.getPosition(),
+backRightModule.getPosition()
+    }); */
+
+
 
     //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class
     public void setModuleStates(SwerveModuleState[] desiStates) {

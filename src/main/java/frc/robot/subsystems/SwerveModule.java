@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -20,7 +21,7 @@ import com.revrobotics.SparkMaxPIDController;
 public class SwerveModule extends SubsystemBase {
 
   //initalize all variables
-    public CANSparkMax steerMotor;
+    public static CANSparkMax steerMotor;
     public CANSparkMax driveMotor;
     public final SparkMaxPIDController turningPidController;
     private static final double RAMP_RATE = 0.5;//1.5;
@@ -83,6 +84,10 @@ public class SwerveModule extends SubsystemBase {
     System.out.println("reset encoders");
   }
   
+public static SparkMaxPIDController getPIDController() {
+  return steerMotor.getPIDController();
+}
+
 //Reset encoder method. Called after init
 public void resetEncoders()  {
   steerMotorEncoder.setPosition(0);
@@ -124,6 +129,10 @@ public void stop() {
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
+  }
+
+  public SwerveModulePosition getPosition() {
+    return getPosition();
   }
  //Motor encoder conversions and useful info
   //2.844444444444444 * 1 = ticks. Degrees to ticks

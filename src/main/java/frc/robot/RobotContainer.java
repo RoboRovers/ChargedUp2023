@@ -5,6 +5,8 @@
 package frc.robot;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.subsystems.PneumaticsSubsystem;
+import frc.robot.subsystems.SwerveModule;
 //import frc.robot.commands.ZeroGyro;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -49,11 +51,19 @@ public class RobotContainer {
   // init all our controllers and motors
   private final OI driveController = new OI(OIConstants.kDriverControllerPort);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
   private final OI flightStick = new OI(OIConstants.kDriverStickPort);
   public CANSparkMax steerMotor;
   public SparkMaxPIDController turningPidController;
 
   public RobotContainer() {
+   // turningPidController = steerMotor.getPIDController();
+
+    // 1. Create trajectory settings
+TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+      Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+      Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+              .setKinematics(Constants.DriveConstants.kDriveKinematics);
 
     autonChooser = new SendableChooser<>();
    // autonChooser.addOption("AutonTest", autontest);
@@ -67,6 +77,8 @@ public class RobotContainer {
 
     // Configure the button bindings
     configureButtonBindings();
+
+
   }
 
   //dont think this is really necessary because we are defining them in the file OI.java
@@ -75,15 +87,12 @@ public class RobotContainer {
   }
 
   //start of auto commands and cycles that we can use. Still working on this as of 2/6/23
-  public Command getAutonCommand() {
+ /*  public Command getAutonCommand() {
     return autonChooser.getSelected();
-   /*  turningPidController = steerMotor.getPIDController();
 
-        // 1. Create trajectory settings
-        TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-                Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-                Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                        .setKinematics(Constants.DriveConstants.kDriveKinematics);
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.1,
+     3).setKinematics(Constants.DriveConstants.kDriveKinematics)
+     .addConstraint(Constants.AutoConstants.kThetaControllerConstraints); 
 
         // 2. Generate trajectory
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
@@ -104,23 +113,25 @@ public class RobotContainer {
         // 4. Construct command to follow trajectory
         SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
                 trajectory,
-                SwerveSubsystem::getPose,
+                s_Swerve::getPose,
                 Constants.DriveConstants.kDriveKinematics,
                 xController,
                 yController,
                 thetaController,
-                SwerveSubsystem::setModuleStates,
-                swerveSubsystem);
+                s_Swerve::setModuleStates,
+                s_Swerve);
+
 
         // 5. Add some init and wrap-up, and return everything
         return new SequentialCommandGroup(
-                new InstantCommand(() -> swerveSubsystem.resetOdometry(trajectory.getInitialPose())),
+                new InstantCommand(() -> s_Swerve.resetOdometry(trajectory.getInitialPose())),
                 swerveControllerCommand,
-                new InstantCommand(() -> swerveSubsystem.stopModules()));
+                new InstantCommand(() -> s_Swerve.stopModules()));
                 
         return new SequentialCommandGroup(
-          new InstantCommand(() -> swerveSubsystem.rese
-        )
-    }*/
+          new InstantCommand(() -> s_Swerve.stopModules()));
+        
+    }
+    */
   }
-}
+
