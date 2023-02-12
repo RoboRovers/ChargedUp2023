@@ -6,46 +6,73 @@ package frc;
 
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.Joystick.ButtonType;
-import edu.wpi.first.wpilibj.Joystick.AxisType;
 
 
 public class OI {
   public final XboxController drivecontroller;
-  public final XboxController opController;
-  public final Joystick flightStick;
-  public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper, rightTrigger, leftTrigger;
-  public final POVButton povNorth, povEast, povSouth, povWest;
+  //public final CommandXboxController opController;
   
   public OI(int constant){
     drivecontroller = new XboxController(constant);
-    opController = new XboxController(constant);
+   CommandXboxController opController = new CommandXboxController(constant);
     // init buttons
-    buttonA = new JoystickButton(opController, Button.kA.value);
-    buttonB = new JoystickButton(opController, Button.kB.value);
-    buttonX = new JoystickButton(opController, Button.kX.value);
-    buttonY = new JoystickButton(opController, Button.kY.value);
+    Trigger aButton = opController.a();
+    Trigger bButton = opController.b();
+    Trigger xButton = opController.x();
+    Trigger yButton = opController.y();
     //
-    startButton = new JoystickButton(opController, Button.kStart.value);
-    backButton = new JoystickButton(opController, Button.kBack.value);
+    Trigger startButton = opController.start();
+    Trigger menuButton = opController.button(7);
     //
-    povNorth = new POVButton(opController, 0);
-    povEast = new POVButton(opController, 90);
-    povSouth = new POVButton(opController, 180);
-    povWest = new POVButton(opController, 270);
+    Trigger rTrigger = opController.rightTrigger();
+    Trigger lTrigger = opController.leftTrigger();
     //
-    rightBumper = new JoystickButton(opController, Button.kRightBumper.value);
-    leftBumper = new JoystickButton(opController, Button.kLeftBumper.value);
-    //
-    leftTrigger = new JoystickButton(opController, Button.kLeftStick.value);
-    rightTrigger = new JoystickButton(opController, Button.kRightStick.value);
+    Trigger upButton = opController.povUp();
+    Trigger downButton = opController.povDown();
+    Trigger leftButton = opController.povLeft();
+    Trigger rightButton = opController.povRight();
 
-    //flight stick
-    flightStick = new Joystick(constant);
-    
+    //
+    Trigger rbumper = opController.rightBumper();
+    Trigger lbumper = opController.leftBumper();
+    //
+
   }
+
+
+/* ROBOT BINDINGS FOR OPCONTROLLER-
+ * A- auto mid shelf
+ * B- auto mid pole
+ * X- auto high shelf
+ * Y- auto high pole
+ * LB- Home
+ * RB- (Limelight function)
+ * LT- Extension Toggle
+ * RT- Intake Toggle
+ * DP UP- Extend Out
+ * DP DOWN- Extend In
+ * DP LEFT- Intake Arm Out
+ * DP RIGHT- Intake Arm In
+ * 
+ * ROBOT BINDINGS FOR DRIVECONTROLLER-
+ * L STICK- Strafe 
+ * R STICK- Steer
+ * R MIDDLE- Field Orriented T/F
+ * LB- Reset Gyro
+ * A- Lock Wheels (endgame)
+ * B- 
+ * X- 
+ * Y- 
+ * 
+ * 
+ * 
+ */
+
+
+
 }

@@ -4,14 +4,15 @@
 
 package frc.robot;
 
-import frc.robot.commands.ArmCommand;
-import frc.robot.commands.GrabberCommand;
+import frc.robot.commands.PneumaticsCommand;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.commands.PulleyCommand;
 import frc.robot.subsystems.PulleySubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
 import frc.robot.Constants.OIConstants;
 
@@ -29,15 +30,16 @@ public class RobotContainer {
   private SendableChooser<Command> autonChooser;
   
   //Pneumatics
-  public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
+  //public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
+  public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
 
 
 
 
   // Replace with CommandPS4Controller if needed
   private final OI driveController = new OI(OIConstants.kDriverControllerPort);
-  private final OI opController = new OI(OIConstants.kOPControllerPort);
-  public static  PulleySubsystem P_systm = PulleySubsystem.getInstance();
+  private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+  //public static  PulleySubsystem P_systm = PulleySubsystem.getInstance();
 
   public RobotContainer() {
 
@@ -45,21 +47,22 @@ public class RobotContainer {
    // autonChooser.addOption("AutonTest", autontest);
     SmartDashboard.putData("AutonChooser", autonChooser);
 
-P_systm.setDefaultCommand(
-  new PulleyCommand(P_systm, opController));
+//P_systm.setDefaultCommand(
+ // new PulleyCommand(P_systm, opController));
 
     _pneumatics.setDefaultCommand(
-      new ArmCommand
-      (_pneumatics, 
-      opController)
-    );
+      new PneumaticsCommand(
+        _pneumatics, 
+         opController));
+
+    
 
 
-    _pneumatics.setDefaultCommand(
-      new GrabberCommand(
-        _pneumatics,
-         driveController, opController)
-    );
+    //_pneumatics.setDefaultCommand(
+    //  new GrabberCommand(
+      //  _pneumatics,
+      //   driveController, opController)
+    //);
     
     
     
