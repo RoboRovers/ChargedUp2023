@@ -90,6 +90,7 @@ public CommandBase intakeOpenCommand() {
   return run(
     () -> {
       intakeOpen();
+      System.out.print("Intake Open Command Ran");
     }
   );
 }
@@ -98,6 +99,7 @@ public CommandBase intakeCloseCommand() {
   return run(
     () -> {
       intakeClose();
+      System.out.print("Intake Close Command Ran");
     }
   );
 }   
@@ -106,6 +108,7 @@ public CommandBase intakeToggleCommand() {
   return runOnce(
     () -> {
       intakeToggle();
+      System.out.print("Intake Toggle Command Ran");
     }
   );
 }
@@ -114,6 +117,7 @@ public CommandBase extensionRetractCommand() {
   return run(
     () -> {
       extensionRetract();
+      System.out.print("Extension Retract Command Ran");
     }
   );
 }
@@ -122,6 +126,7 @@ public CommandBase extensionOutCommand() {
   return run(
     () -> {
       extensionOut();
+      System.out.print("Extension Out Command Ran");
     }
   );
 }
@@ -130,6 +135,7 @@ public CommandBase extensionToggleCommand() {
   return runOnce(
     () -> {
         extensionToggle();
+        System.out.print("Extension Toggle Command Ran");
     }
   );
 }
