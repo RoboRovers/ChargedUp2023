@@ -5,11 +5,7 @@
 package frc;
 
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
@@ -50,8 +46,8 @@ public class OI {
  * B- auto mid pole
  * X- auto high shelf
  * Y- auto high pole
- * LB- Home
- * RB- (Limelight function)
+ * LB- (Limelight function)
+ * RB- Home
  * LT- Extension Toggle
  * RT- Intake Toggle
  * DP UP- Extend Out

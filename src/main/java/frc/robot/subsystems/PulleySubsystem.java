@@ -1,6 +1,5 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -8,16 +7,12 @@ import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-
 import frc.robot.Constants;
-import frc.robot.Constants.PullyConstants;
 
 
 
 
 public class PulleySubsystem extends SubsystemBase {
-
-    private static PulleySubsystem instance;
 
 
 private CANSparkMax pulleyMotor;
@@ -26,14 +21,6 @@ private SparkMaxPIDController pulleyPidController;
 DigitalInput extendLimitSwitch;
 DigitalInput retractLimitSwitch;
 
-
- 
-public static PulleySubsystem getInstance() {
-    if (instance == null) {
-      instance = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
-    }
-    return instance;
-  }
 
 public PulleySubsystem(int pulleyMotorNum) {
 
@@ -71,6 +58,7 @@ public void autoHome() {
     }
     pulleyMotor.set(0);
     pulleyEncoder.setPosition(0);
+
 }
 
 
@@ -115,6 +103,7 @@ public CommandBase homeCommand() {
     return runOnce(
         () -> {
             homeCommand();
+            System.out.print("Auto Home Command Ran");
         }
     );
 }
@@ -139,6 +128,7 @@ public CommandBase topPoleCommand() {
     return runOnce(
         () -> {
             topPole();
+            System.out.print("Top Shelf Command Ran");
         }
     );
 }
@@ -147,6 +137,7 @@ public CommandBase midPoleCommand() {
     return runOnce(
         () -> {
             midPole();
+            System.out.print("Mid pole Command Ran");
         }
     );
 }
@@ -155,6 +146,7 @@ public CommandBase topShelfCommand() {
     return runOnce(
         () -> {
             topShelf();
+            System.out.print("Top Shelf Command Ran");
         }
     );
 }
@@ -163,6 +155,7 @@ public CommandBase midShelfCommand() {
     return runOnce(
         () -> {
             midShelf();
+            System.out.print("Mid Shelf Command Ran");
         }
     );
 }

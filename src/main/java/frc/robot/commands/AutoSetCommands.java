@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.PulleySubsystem;
@@ -21,27 +21,9 @@ public class AutoSetCommands extends CommandBase {
         this.opController = opController;
         this.pulleySubsystem = pulleySubsystem;
         this.pneumaticsSubsystem = pneumaticsSubsystem;
+        addRequirements(pulleySubsystem);
+        addRequirements(pneumaticsSubsystem);
     }    
-
-
-
-
-    public void autoHome() {
-        extendLimitSwitch = new DigitalInput(Constants.PullyConstants.extendSwitchstatePort);
-        retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
-        boolean retractSwitchstate = retractLimitSwitch.get();
-        boolean extendSwitchstate = extendLimitSwitch.get();
-
-        if(pneumaticsSubsystem.intakeState = false) {
-            pneumaticsSubsystem.intakeClose();
-           }
-           
-        if(pneumaticsSubsystem.extensionState = true) {
-            pneumaticsSubsystem.extensionRetract();
-           }
-           while(retractSwitchstate != true)
-            pulleySubsystem.liftIntake();
-           }
 
 
     @Override
@@ -66,7 +48,7 @@ public class AutoSetCommands extends CommandBase {
             andThen(pulleySubsystem.homeCommand().
             alongWith(pneumaticsSubsystem.extensionRetractCommand().
             alongWith(pneumaticsSubsystem.intakeCloseCommand())))))));
-       
+
        //mid pole command
        opController.b().onTrue((
             pneumaticsSubsystem.extensionOutCommand().
@@ -96,7 +78,6 @@ public class AutoSetCommands extends CommandBase {
         if((extendSwitchstate = true) || (retractSwitchstate = true)) {
             pulleySubsystem.stopMotor();
         }
-
 
     
     }

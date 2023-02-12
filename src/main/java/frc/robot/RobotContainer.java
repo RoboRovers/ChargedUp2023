@@ -11,9 +11,7 @@ import frc.robot.subsystems.PulleySubsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.OI;
 import frc.robot.Constants.OIConstants;
 
 /**
@@ -32,12 +30,12 @@ public class RobotContainer {
   //Pneumatics
   //public static PneumaticsSubsystem _pneumatics = PneumaticsSubsystem.getInstance();
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
+  public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
 
 
 
 
   // Replace with CommandPS4Controller if needed
-  private final OI driveController = new OI(OIConstants.kDriverControllerPort);
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
   //public static  PulleySubsystem P_systm = PulleySubsystem.getInstance();
 
@@ -47,25 +45,15 @@ public class RobotContainer {
    // autonChooser.addOption("AutonTest", autontest);
     SmartDashboard.putData("AutonChooser", autonChooser);
 
-//P_systm.setDefaultCommand(
- // new PulleyCommand(P_systm, opController));
+    _pulley.setDefaultCommand(
+      new PulleyCommand(
+        _pulley,
+         opController));
 
     _pneumatics.setDefaultCommand(
       new PneumaticsCommand(
         _pneumatics, 
          opController));
-
-    
-
-
-    //_pneumatics.setDefaultCommand(
-    //  new GrabberCommand(
-      //  _pneumatics,
-      //   driveController, opController)
-    //);
-    
-    
-    
     
     // Configure the button bindings
     configureButtonBindings();
