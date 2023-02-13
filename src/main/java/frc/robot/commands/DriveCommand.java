@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
-
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 // could need this import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -65,7 +65,7 @@ public class DriveCommand extends CommandBase {
 //button mappings assiociated with the drive system or aspects of the drive system
 
 //left bumper = reset heading for gyro
-        if(driveController.leftBumper.getAsBoolean())
+        if(driveController.povNorth.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
@@ -75,7 +75,7 @@ public class DriveCommand extends CommandBase {
         //use "toggle on true" or smg and change to a command not a boolean. Look into that
 
 //start button = if field orriented is on or not. Middle right small button
-        if(driveController.startButton.getAsBoolean())
+        if(driveController.povSouth.getAsBoolean())
         {
             fieldOriented = !fieldOriented;
         } 
@@ -83,7 +83,7 @@ public class DriveCommand extends CommandBase {
 //button "B" = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
 
 //doesn't really work
-       if(driveController.buttonB.getAsBoolean())
+       if(driveController.povWest.getAsBoolean())
        {
             swerveSubsystem.ResetAllEncoders();
         }

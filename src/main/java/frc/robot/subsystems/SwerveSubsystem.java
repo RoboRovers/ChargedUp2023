@@ -74,22 +74,22 @@ public void ResetAllEncoders() {
     public double getHeading() {
         return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
-    //public Pose2d getPose() {
-   //     return odometer.getPoseMeters();
-   // }
+    public Pose2d getPose() {
+        return odometer.getPoseMeters();
+    }
 
     //used for Field Centric
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
-   /*  public void resetOdometry(Pose2d pose) {
+     public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(geRotation2d(), new SwerveModulePosition[] {
             frontLeftModule.getPosition(),
             frontRightModule.getPosition(),
             backLeftModule.getPosition(),
            backRightModule.getPosition()},
-pose);
-    }*/
+            pose);
+    }
 
 
     @Override
@@ -125,13 +125,13 @@ pose);
         backLeftModule.stop();
         backRightModule.stop();
     }
- /*    public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
+     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
     gyro.getRotation2d(), new SwerveModulePosition[] {
  frontLeftModule.getPosition(),
  frontRightModule.getPosition(),
  backLeftModule.getPosition(),
 backRightModule.getPosition()
-    }); */
+    }); 
 
 
 

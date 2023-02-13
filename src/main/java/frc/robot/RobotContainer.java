@@ -14,17 +14,21 @@ import java.util.List;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.constraint.DifferentialDriveVoltageConstraint;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
 import frc.robot.Constants.OIConstants;
 
@@ -66,8 +70,8 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
               .setKinematics(Constants.DriveConstants.kDriveKinematics);
 
     autonChooser = new SendableChooser<>();
-   // autonChooser.addOption("AutonTest", autontest);
-    //SmartDashboard.putData("AutonChooser", autonChooser);
+    //autonChooser.addOption("AutonTest", autontest);
+    SmartDashboard.putData("AutonChooser", autonChooser);
 
 //set the swerve drive as a default command for the drive command using the driveController and the flightstick
     s_Swerve.setDefaultCommand(
@@ -86,13 +90,18 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
     /* Driver Buttons */
   }
 
-  //start of auto commands and cycles that we can use. Still working on this as of 2/6/23
- /*  public Command getAutonCommand() {
-    return autonChooser.getSelected();
+   public Command getAutonCommand() {
+    //return autonChooser.getSelected();
 
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(1.1,
-     3).setKinematics(Constants.DriveConstants.kDriveKinematics)
-     .addConstraint(Constants.AutoConstants.kThetaControllerConstraints); 
+    
+
+    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+        Constants.AutoConstants.kMaxSpeedMetersPerSecond,
+        Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(Constants.DriveConstants.kDriveKinematics);
+                
+
+        //TrajectoryConfig trajectoryConfig = new TrajectoryConfig(0, 0);
 
         // 2. Generate trajectory
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
@@ -110,16 +119,16 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
           Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
-        // 4. Construct command to follow trajectory
-        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-                trajectory,
-                s_Swerve::getPose,
-                Constants.DriveConstants.kDriveKinematics,
-                xController,
-                yController,
-                thetaController,
-                s_Swerve::setModuleStates,
-                s_Swerve);
+  // 4. Construct command to follow trajectory
+  SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+        trajectory,
+        s_Swerve::getPose,
+        Constants.DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
+        s_Swerve::setModuleStates,
+        s_Swerve);
 
 
         // 5. Add some init and wrap-up, and return everything
@@ -128,10 +137,8 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                 swerveControllerCommand,
                 new InstantCommand(() -> s_Swerve.stopModules()));
                 
-        return new SequentialCommandGroup(
-          new InstantCommand(() -> s_Swerve.stopModules()));
         
     }
-    */
+    
   }
 
