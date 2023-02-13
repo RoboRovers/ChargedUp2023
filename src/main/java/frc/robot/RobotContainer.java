@@ -103,6 +103,9 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
 
         //TrajectoryConfig trajectoryConfig = new TrajectoryConfig(0, 0);
 
+//these line are where the robot will go. (110-116) I need to figure out how to make multiple of these and to have the code implement
+//different one of my choosing each time as well as figuring out how to do commands like picking up stuff and such.
+
         // 2. Generate trajectory
         Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
                 new Pose2d(0, 0, new Rotation2d(0)),
@@ -111,6 +114,8 @@ TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
                         new Translation2d(1, -1)),
                 new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
                 trajectoryConfig);
+
+
 
         // 3. Define PID controllers for tracking trajectory
         PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);

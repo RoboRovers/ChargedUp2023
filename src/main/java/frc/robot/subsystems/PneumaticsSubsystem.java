@@ -11,8 +11,6 @@ import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 public class PneumaticsSubsystem extends SubsystemBase {
     
 
-    private static PneumaticsSubsystem instance;
-
     //Grabber pneumatics
     private static DoubleSolenoid _intakeLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_IN, Constants.PneumaticsConstants.L_INTAKE_OUT);
     private static DoubleSolenoid _intakeRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_IN, Constants.PneumaticsConstants.R_INTAKE_OUT);
