@@ -126,9 +126,11 @@ public void stop() {
     return steerMotorEncoder.getVelocity();
   }
 
-  public SwerveModulePosition getPosition() {
-    return getPosition();
+  public double getPositionMeters() {
+    return driveMotorEncoder.getPosition() * 4;
   }
+  
+ 
  //Motor encoder conversions and useful info
   //2.844444444444444 * 1 = ticks. Degrees to ticks
   //1 degree equals 2.844444444444444 ticks
@@ -142,6 +144,10 @@ public void stop() {
 public SwerveModuleState gState() {
     return new SwerveModuleState(getDriveVelocity(), new Rotation2d());
   }
+  public SwerveModulePosition getPosition() {
+    return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
+  }
+
   //it seems that all encoders values are +- 5 degrees off. this variable tries to correct that.
 public double encoderCorrection;
 
@@ -153,6 +159,8 @@ public void setDesiredState(SwerveModuleState state) {
         stop();
         return;
   }
+ 
+  
 
   //this is what encoderCorrection is. it adds 5 if the encoder is positive and subtracts 5 if the value is negitive
   double encoderCorrection; {
