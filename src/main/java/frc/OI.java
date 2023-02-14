@@ -4,40 +4,15 @@
 
 package frc;
 
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
 
 
 public class OI {
-  public final XboxController drivecontroller;
-  //public final CommandXboxController opController;
+  public final CommandXboxController opController;
   
   public OI(int constant){
-    drivecontroller = new XboxController(constant);
-   CommandXboxController opController = new CommandXboxController(constant);
+    opController = new CommandXboxController(constant);
     // init buttons
-    Trigger aButton = opController.a();
-    Trigger bButton = opController.b();
-    Trigger xButton = opController.x();
-    Trigger yButton = opController.y();
-    //
-    Trigger startButton = opController.start();
-    Trigger menuButton = opController.button(7);
-    //
-    Trigger rTrigger = opController.rightTrigger();
-    Trigger lTrigger = opController.leftTrigger();
-    //
-    Trigger upButton = opController.povUp();
-    Trigger downButton = opController.povDown();
-    Trigger leftButton = opController.povLeft();
-    Trigger rightButton = opController.povRight();
-
-    //
-    Trigger rbumper = opController.rightBumper();
-    Trigger lbumper = opController.leftBumper();
-    //
-
   }
 
 

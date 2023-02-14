@@ -33,7 +33,7 @@ pulleyMotor.setSmartCurrentLimit(40);
 
 //int encoder
 pulleyEncoder = pulleyMotor.getEncoder();
-pulleyEncoder.setVelocityConversionFactor(1/60);
+//pulleyEncoder.setVelocityConversionFactor(1/60);
 
 
 pulleyPidController = pulleyMotor.getPIDController();
@@ -49,7 +49,7 @@ public void idleBrake() {
     pulleyMotor.set(0);
 }
 
-public void autoHome() {
+/*public void autoHome() {
     retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
     boolean retractSwitchstate = retractLimitSwitch.get();
 
@@ -59,7 +59,7 @@ public void autoHome() {
     pulleyMotor.set(0);
     pulleyEncoder.setPosition(0);
 
-}
+}*/
 
 
 public void liftIntake() {
@@ -98,6 +98,13 @@ public void midPole() {
     pulleyPidController.setReference(12240, ControlType.kPosition);
 }
 
+public CommandBase StopCommand() {
+    return runOnce(
+        () -> {
+            stopMotor();
+        }
+    );
+}
 
 public CommandBase homeCommand() {
     return runOnce(

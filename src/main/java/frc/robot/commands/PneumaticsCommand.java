@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.subsystems.PneumaticsSubsystem;
@@ -24,6 +25,10 @@ public PneumaticsCommand(PneumaticsSubsystem pneumaticsSubsystem, CommandXboxCon
     //up+downs
     opController.povUp().onTrue(pneumaticsSubsystem.extensionOutCommand());
     opController.povDown().onTrue(pneumaticsSubsystem.extensionRetractCommand());
+
+    SmartDashboard.putBoolean("extension state", pneumaticsSubsystem.extensionState);
+    SmartDashboard.putBoolean("intake state", pneumaticsSubsystem.intakeState);
+
     }
 
 

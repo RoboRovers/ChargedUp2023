@@ -5,32 +5,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class PneumaticsSubsystem extends SubsystemBase {
     
 
-
     //Grabber pneumatics
-    private static DoubleSolenoid _intakeLeft = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_IN, Constants.PneumaticsConstants.L_INTAKE_OUT);
-    private static DoubleSolenoid _intakeRight = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_IN, Constants.PneumaticsConstants.R_INTAKE_OUT);
-    
+    private static DoubleSolenoid _intakeLeft = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_IN, Constants.PneumaticsConstants.L_INTAKE_OUT);
+    private static DoubleSolenoid _intakeRight = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_IN, Constants.PneumaticsConstants.R_INTAKE_OUT);
     //Extension pneumatics
-    private DoubleSolenoid _extension = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.EXTENSION_OUT, Constants.PneumaticsConstants.EXTENSION_IN);
+    private static DoubleSolenoid _extension = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.EXTENSION_OUT, Constants.PneumaticsConstants.EXTENSION_IN);
 
-    Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
-  
+    private Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
     /** Creates a new Pnuematics. */
     public PneumaticsSubsystem() {
       pcmCompressor.enableDigital();
       //pcmCompressor.disable();
-      
       _intakeLeft.set(Value.kForward);
       _intakeRight.set(Value.kForward);
       _extension.set(Value.kForward);
-  
     }
   
     
@@ -39,14 +36,14 @@ public class PneumaticsSubsystem extends SubsystemBase {
   
     public void intakeToggle() {
         _intakeLeft.toggle(); 
-        _intakeRight.toggle();
+       // _intakeRight.toggle();
        
        if(intakeState = true) {
         intakeState = false;
        }
        else if(intakeState = false) {
         intakeState = true;
-       }
+       }       
     }
   
     public void intakeOpen(){
@@ -87,7 +84,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
 //all commands for the pneumatic subsystem
 
 public CommandBase intakeOpenCommand() {
-  return run(
+  return runOnce(
     () -> {
       intakeOpen();
       System.out.print("Intake Open Command Ran");
@@ -96,7 +93,7 @@ public CommandBase intakeOpenCommand() {
 }
 
 public CommandBase intakeCloseCommand() {
-  return run(
+  return runOnce(
     () -> {
       intakeClose();
       System.out.print("Intake Close Command Ran");
@@ -114,7 +111,7 @@ public CommandBase intakeToggleCommand() {
 }
 
 public CommandBase extensionRetractCommand() {
-  return run(
+  return runOnce(
     () -> {
       extensionRetract();
       System.out.print("Extension Retract Command Ran");
@@ -123,7 +120,7 @@ public CommandBase extensionRetractCommand() {
 }
 
 public CommandBase extensionOutCommand() {
-  return run(
+  return runOnce(
     () -> {
       extensionOut();
       System.out.print("Extension Out Command Ran");
