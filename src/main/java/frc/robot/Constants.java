@@ -103,18 +103,15 @@ public final class Constants {
 
   //Pneumatics Constants
   public static final class PneumaticsConstants {
-    public static final int L_INTAKE_IN = 0;
-    public static final int L_INTAKE_OUT = 1;
-    public static final int R_INTAKE_IN = 2;
-    public static final int R_INTAKE_OUT = 5;
-   //Extension number
-public static final int EXTENSION_IN = 6;
-public static final int EXTENSION_OUT = 7;
+   //Intake numbers 5+1
+    public static final int L_INTAKE_IN = 5;
+    public static final int L_INTAKE_OUT = 1; //correct //1
+ 
+   //Extension number 7+2
+public static final int EXTENSION_IN = 7;
+public static final int EXTENSION_OUT = 2;
 
 
-
-    //in = 0,1,2
-    //out = 7,6,5
 
 
 

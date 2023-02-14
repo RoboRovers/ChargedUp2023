@@ -3,12 +3,9 @@ package frc.robot.subsystems;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsControlModule;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 
 public class PneumaticsSubsystem extends SubsystemBase {
@@ -16,18 +13,13 @@ public class PneumaticsSubsystem extends SubsystemBase {
 
     //Grabber pneumatics
     private static DoubleSolenoid _intakeLeft = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.L_INTAKE_IN, Constants.PneumaticsConstants.L_INTAKE_OUT);
-    private static DoubleSolenoid _intakeRight = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.R_INTAKE_IN, Constants.PneumaticsConstants.R_INTAKE_OUT);
     //Extension pneumatics
     private static DoubleSolenoid _extension = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.EXTENSION_OUT, Constants.PneumaticsConstants.EXTENSION_IN);
 
-    private Compressor pcmCompressor = new Compressor(0, PneumaticsModuleType.CTREPCM);
     /** Creates a new Pnuematics. */
     public PneumaticsSubsystem() {
-      pcmCompressor.enableDigital();
-      //pcmCompressor.disable();
       _intakeLeft.set(Value.kForward);
-      _intakeRight.set(Value.kForward);
-      _extension.set(Value.kForward);
+      _extension.set(Value.kReverse);
     }
   
     
@@ -36,7 +28,6 @@ public class PneumaticsSubsystem extends SubsystemBase {
   
     public void intakeToggle() {
         _intakeLeft.toggle(); 
-       // _intakeRight.toggle();
        
        if(intakeState = true) {
         intakeState = false;
@@ -48,13 +39,11 @@ public class PneumaticsSubsystem extends SubsystemBase {
   
     public void intakeOpen(){
       _intakeLeft.set(Value.kReverse);
-      _intakeRight.set(Value.kReverse);
       intakeState = false;
     }
   
     public void intakeClose(){
       _intakeLeft.set(Value.kForward);
-      _intakeRight.set(Value.kForward);
       intakeState = true;
     }
 
@@ -84,7 +73,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
 //all commands for the pneumatic subsystem
 
 public CommandBase intakeOpenCommand() {
-  return runOnce(
+  return run(
     () -> {
       intakeOpen();
       System.out.print("Intake Open Command Ran");
@@ -93,7 +82,7 @@ public CommandBase intakeOpenCommand() {
 }
 
 public CommandBase intakeCloseCommand() {
-  return runOnce(
+  return run(
     () -> {
       intakeClose();
       System.out.print("Intake Close Command Ran");

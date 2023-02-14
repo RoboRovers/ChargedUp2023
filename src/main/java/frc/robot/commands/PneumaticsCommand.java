@@ -20,12 +20,14 @@ public PneumaticsCommand(PneumaticsSubsystem pneumaticsSubsystem, CommandXboxCon
     public void execute() {
        
     //toggles
-    opController.rightBumper().onTrue(pneumaticsSubsystem.intakeToggleCommand());
-    opController.leftTrigger().onTrue(pneumaticsSubsystem.extensionToggleCommand());
+    //opController.rightTrigger().toggleOnTrue(pneumaticsSubsystem.intakeToggleCommand());
+    //opController.leftTrigger().toggleOnTrue(pneumaticsSubsystem.extensionToggleCommand());
     //up+downs
-    opController.povUp().onTrue(pneumaticsSubsystem.extensionOutCommand());
-    opController.povDown().onTrue(pneumaticsSubsystem.extensionRetractCommand());
-
+    opController.leftTrigger().toggleOnTrue(pneumaticsSubsystem.extensionOutCommand());
+    opController.leftBumper().toggleOnTrue(pneumaticsSubsystem.extensionRetractCommand());
+    opController.rightTrigger().whileTrue(pneumaticsSubsystem.intakeOpenCommand());
+    opController.rightTrigger().whileFalse(pneumaticsSubsystem.intakeCloseCommand());
+    
     SmartDashboard.putBoolean("extension state", pneumaticsSubsystem.extensionState);
     SmartDashboard.putBoolean("intake state", pneumaticsSubsystem.intakeState);
 
