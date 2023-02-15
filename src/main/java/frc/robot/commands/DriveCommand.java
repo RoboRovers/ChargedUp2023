@@ -16,7 +16,7 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
-    //private final OI flightStick;
+    private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=false;
 
@@ -27,7 +27,7 @@ public class DriveCommand extends CommandBase {
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
-                //this.flightStick = flightStick;
+                this.flightStick = flightStick;
     }
 
     @Override
@@ -46,15 +46,15 @@ public class DriveCommand extends CommandBase {
 //Xbox joystick init and debugging code. Main drive method
         double xSpeed = driveController.controller.getLeftX()*-1;
         double ySpeed = driveController.controller.getLeftY()*-1;
-        double turningSpeed = driveController.controller.getRightX();
+        double turningSpeed = driveController.controller.getRightX()*0.5;
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
 //flight stick init and debugging code. Alt drive method
-       // double xSpeed = flightStick.flightStick.getX();
-        //double ySpeed = flightStick.flightStick.getY();
-        //double turningSpeed = flightStick.flightStick.getZ();
+       // double xSpeed = flightStick.flightStick.getX()*-1;
+       // double ySpeed = flightStick.flightStick.getY()*-1;
+       // double turningSpeed = flightStick.flightStick.getZ();
        // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
         //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
         //SmartDashboard.putNumber("turningSpeed", turningSpeed);
@@ -83,10 +83,10 @@ public class DriveCommand extends CommandBase {
 //button "B" = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
 
 //doesn't really work
-       if(driveController.povWest.getAsBoolean())
-       {
-            swerveSubsystem.ResetAllEncoders();
-        }
+       //if(driveController.povWest.getAsBoolean())
+       //{
+          //  swerveSubsystem.ResetAllEncoders();
+        //}
 
 
         // 2. Apply deadband

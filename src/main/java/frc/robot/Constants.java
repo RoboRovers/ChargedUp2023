@@ -64,7 +64,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
     public static final boolean kFrontLeftDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackLeftDriveAbsoluteEncoderReversed = false;
-    public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;//broke auto
+    public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
 /*  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -191.15;
@@ -92,7 +92,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
     //4 is medium, 2.75 is pretty fast, >2 is to fast. <4 is to slow
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 2.75;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 4;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 3;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 }
@@ -107,13 +107,14 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
-    public static final double kPTurning = 0.002; //test a higher value
+    public static final double kPTurning = 0.0035; //test a higher value
     public static final double kEncoderCPRSteer = 1024;
 }
 
 //Max speed
     public static final class OIConstants {
       public static final int kDriverControllerPort = 1;
+      public static final int kOPControllerPort = 1;
       public static final int kDriverStickPort = 0;
 
       public static final int kDriverYAxis = 1;
@@ -128,9 +129,9 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
     public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-    public static final double kPXController = 0.002;
-    public static final double kPYController = 0.002;
-    public static final double kPThetaController = 3;
+    public static final double kPXController = 0.0035;
+    public static final double kPYController = 0.0035;
+    public static final double kPThetaController = 0.0035;
 
     //public static final Trajector
 
@@ -141,23 +142,27 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
   }
 
 
-   //Pneumatics Constants
-   public static final class PneumaticsConstants {
-    public static final int L_INTAKE_IN = 0;
-    public static final int L_INTAKE_OUT = 1;
-    public static final int R_INTAKE_IN = 2;
-    public static final int R_INTAKE_OUT = 5;
-   //Extension number
-public static final int EXTENSION_IN = 6;
-public static final int EXTENSION_OUT = 7;
-
-
-
-    //in = 0,1,2
-    //out = 7,6,5
-
-
-
-
-  }
+ 
+  //Pneumatics Constants
+  public static final class PneumaticsConstants {
+    //Intake numbers 5+1
+     public static final int L_INTAKE_IN = 5;
+     public static final int L_INTAKE_OUT = 1; //correct //1
+  
+    //Extension number 7+2
+ public static final int EXTENSION_IN = 2;
+ public static final int EXTENSION_OUT = 7;
+ 
+ public static final int FLIPPER_IN = 0;
+ public static final int FLIPPER_OUT = 6;
+ 
+   }
+   public static final class PullyConstants {
+ 
+     public static final int pulleyMotorNum = 14;
+     public static final int extendSwitchstatePort = 1;
+     public static final int retractSwitchstatePort = 2;
+     public static final double pulleyPIDControllerPVal = 0.005;
+     public static final double pulleyEncoder2deg = 28.25;
+     }
 }

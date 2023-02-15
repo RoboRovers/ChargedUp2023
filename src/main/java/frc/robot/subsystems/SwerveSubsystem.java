@@ -20,9 +20,6 @@ import frc.robot.Constants;
 public class SwerveSubsystem extends SubsystemBase{
    // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
-    private final Module[] modules = new Module[4];
-
-    //private static frc.OI driveController;
 
     public static SwerveModule backLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
