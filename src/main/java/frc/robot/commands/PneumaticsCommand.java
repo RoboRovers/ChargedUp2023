@@ -27,6 +27,7 @@ public PneumaticsCommand(PneumaticsSubsystem pneumaticsSubsystem, CommandXboxCon
     opController.leftBumper().toggleOnTrue(pneumaticsSubsystem.extensionRetractCommand());
     opController.rightTrigger().whileTrue(pneumaticsSubsystem.intakeOpenCommand());
     opController.rightTrigger().whileFalse(pneumaticsSubsystem.intakeCloseCommand());
+
     
     SmartDashboard.putBoolean("extension state", pneumaticsSubsystem.extensionState);
     SmartDashboard.putBoolean("intake state", pneumaticsSubsystem.intakeState);

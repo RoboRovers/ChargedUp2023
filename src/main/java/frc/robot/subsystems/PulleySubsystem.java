@@ -30,6 +30,7 @@ pulleyMotor = new CANSparkMax(pulleyMotorNum, MotorType.kBrushless);
 pulleyMotor.restoreFactoryDefaults();
 pulleyMotor.setIdleMode(IdleMode.kBrake);
 pulleyMotor.setSmartCurrentLimit(40);
+pulleyMotor.setOpenLoopRampRate(2);
 
 
 //int encoder

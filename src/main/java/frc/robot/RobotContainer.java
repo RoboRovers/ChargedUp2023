@@ -112,10 +112,9 @@ public class RobotContainer {
 
     
         //full close reset
-       /* opController.button(8).toggleOnTrue(
-                _pulley.homeCommand().
-                alongWith(_pneumatics.extensionRetractCommand(), _pneumatics.intakeCloseCommand()));
-    
+        //opController.button(8).onTrue(_pneumatics.extensionRetractCommand().alongWith(_pneumatics.flipperCloseCommand()).andThen(_pulley.homeCommand()));
+               
+    /* 
           
                  //auto mid shelf then reset
            opController.a().toggleOnTrue((
