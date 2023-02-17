@@ -32,36 +32,6 @@ public void initialize() {
 
     @Override
     public void execute() {
-
-       // boolean extendSwitchstate = m_extendlimitSwitch.get();
-       // boolean retractSwitchstate = m_retractlimitSwitch.get();
-
-       // m_extendlimitSwitch = new DigitalInput(Constants.PullyConstants.extendSwitchstatePort); //use DIO 1
-       // m_retractlimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort); //use DIO 2
-      //  SmartDashboard.putBoolean("Extension Switch State", extendSwitchstate);
-       // SmartDashboard.putBoolean("Retraction Switch State", retractSwitchstate);
-
-//if the extend switch is pressed then you can only retract
-       // if(extendSwitchstate = true) {
-            //pulleySubsystem.stopMotor();
-           // System.out.print("Fully Extended");
-           //opController.povRight().whileTrue(pulleySubsystem.dropIntakeCommand());
-       // }
-
-//if the retract switch is pressed then you can only extend
-        //if(retractSwitchstate = true) {
-            //pulleySubsystem.stopMotor();
-            //System.out.print("Fully Retracted");
-          // opController.povLeft().whileTrue(pulleySubsystem.liftIntakeCommand());
-        //}
-
-//if both switches are not being pressed then you can go either way
-        //if((retractSwitchstate = false) && (extendSwitchstate = false)) {
-           
-
-        //}   
-    
-
         SmartDashboard.putNumber("Pulley Encoder Value", pulleySubsystem.pulleyEncoderValue());
     }
 

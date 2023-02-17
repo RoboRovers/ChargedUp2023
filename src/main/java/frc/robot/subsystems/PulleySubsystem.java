@@ -30,7 +30,7 @@ pulleyMotor = new CANSparkMax(pulleyMotorNum, MotorType.kBrushless);
 pulleyMotor.restoreFactoryDefaults();
 pulleyMotor.setIdleMode(IdleMode.kBrake);
 pulleyMotor.setSmartCurrentLimit(40);
-pulleyMotor.setOpenLoopRampRate(2);
+pulleyMotor.setOpenLoopRampRate(1);
 
 
 //int encoder
@@ -51,17 +51,17 @@ public void idleBrake() {
     pulleyMotor.set(0);
 }
 
-/*public void autoHome() {
-    retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
-    boolean retractSwitchstate = retractLimitSwitch.get();
+public void autoHome() {
+    // retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
+    // boolean retractSwitchstate = retractLimitSwitch.get();
 
-    while(retractSwitchstate != true) {
-    pulleyMotor.set(-2);
-    }
-    pulleyMotor.set(0);
-    pulleyEncoder.setPosition(0);
+    // while(retractSwitchstate != true) {
+    // pulleyMotor.set(-2);
+    // }
+    // pulleyMotor.set(0);
+    // pulleyEncoder.setPosition(0);
 
-}*/
+}
 
 public double pulleyEncoderValue() {
     return pulleyEncoder.getPosition();
@@ -104,7 +104,7 @@ public CommandBase StopCommand() {
 public CommandBase homeCommand() {
     return runOnce(
         () -> {
-            homeCommand();
+            autoHome();
             System.out.print("Auto Home Command Ran");
         }
     );

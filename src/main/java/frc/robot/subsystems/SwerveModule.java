@@ -22,8 +22,6 @@ public class SwerveModule extends SubsystemBase {
     private static final double RAMP_RATE = 0.5;//1.5;
     public RelativeEncoder driveMotorEncoder;
     public RelativeEncoder steerMotorEncoder;
-   //Check to see that this value is correct
-    public double encoderCountPerRotation = 1024; //1024 
     public CANCoder absoluteEncoder;
     private boolean absoluteEncoderReversed;
 
@@ -51,6 +49,8 @@ public class SwerveModule extends SubsystemBase {
     turningPidController = steerMotor.getPIDController();
 
     turningPidController.setP(Constants.ModuleConstants.kPTurning);
+    //turningPidController.setI(0.00007);
+    //turningPidController.setD(0.2);
     turningPidController.setPositionPIDWrappingEnabled(true);
     turningPidController.setPositionPIDWrappingMaxInput(1080); 
     turningPidController.setPositionPIDWrappingMinInput(720);
@@ -178,7 +178,7 @@ public void setDesiredState(SwerveModuleState state) {
 
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, ControlType.kPosition);
+turningPidController.setReference(state.angle.getDegrees(), ControlType.kPosition);
 
 /*SmartDashboard debug stuff, printing out our drive and steer values for debugging. Uncomment as needed
   SmartDashboard.putNumber("Speed", getDriveVelocity());
@@ -189,8 +189,14 @@ turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, Co
 
 
 //see if we need this and how it actually works
+/*double desiredAngle;
+boolean desiredAngleSign;
+double currentAngle = steerMotorEncoder.getPosition();
+boolean currentAngleSign;
+int currentAngleInt;
+desiredAngle = state.angle.getDegrees();
 
- /*  if(desiredAngle>0){desiredAngleSign = true;}
+   if(desiredAngle>0){desiredAngleSign = true;}
 
   else {desiredAngleSign = false;}
 
@@ -198,19 +204,16 @@ turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, Co
 
   else {currentAngleSign = false;}
 
-
-
   currentAngleInt = (int) currentAngle;
 
 
 
   if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt > 0){
-
-    m_turningMotor.setSelectedSensorPosition(m_turningMotor.getSelectedSensorPosition()-Constants.ModuleConstants.kEncoderCPRSteer);
+  turningPidController.setReference(state.angle.getDegrees()-360, ControlType.kPosition);
 
   } else if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt < 0){
+    turningPidController.setReference(state.angle.getDegrees()+360, ControlType.kPosition);
 
-    m_turningMotor.setSelectedSensorPosition(m_turningMotor.getSelectedSensorPosition()+Constants.ModuleConstants.kEncoderCPRSteer);
 
   }
 
@@ -228,30 +231,40 @@ turningPidController.setReference(state.angle.getDegrees()+encoderCorrection, Co
 //I should have made a button that zeros them instead of turning the bot off and on multiple times, I need to make this automatic
 
 public void wheelFaceForward(double faceForwardOffset) {
-steerMotorEncoder.setPosition(0);
+//steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
+turningPidController.setReference(90, ControlType.kPosition);
+ if((steerMotorEncoder.getPosition() - faceForwardOffset) > 2 || (steerMotorEncoder.getPosition() - faceForwardOffset) < -2) {
+   //turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
+ {
+   //steerMotorEncoder.setPosition(0);
+ }
+ }
 
 
-double targetAngle = Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset);
+}
 
-   while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 4) {
+   /*while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 4) {
     turningPidController.setReference(steerMotorEncoder.getPosition()+200, ControlType.kPosition);
-    SmartDashboard.putNumber("I'm running" + steerMotor.getDeviceId(), steerMotorEncoder.getPosition());
-    SmartDashboard.putNumber("target value"+steerMotor.getDeviceId(), targetAngle);  
-  
-    targetAngle = getAbsoluteEncoderDeg()-faceForwardOffset;  
-    
     }
     steerMotorEncoder.setPosition(0);
     turningPidController.setReference(0, ControlType.kPosition);
-  
-  
-    while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 0.75) {
+    while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 0.5) {
   turningPidController.setReference(steerMotorEncoder.getPosition()+10, ControlType.kPosition);
-  }
+}
   steerMotorEncoder.setPosition(0);
   turningPidController.setReference(0, ControlType.kPosition);
-  }
-}  
+  }*/
+
+
+  /*  public void wheelFaceForward(double faceForwardOffset) {
+    double currangle = getAbsoluteEncoderDeg();
+ double theta = (360 - (currangle - faceForwardOffset)) % 360;
+turningPidController.setReference(theta, ControlType.kPosition);
+}  */
+
+ }
+
+  
 
 
 //end of the module.

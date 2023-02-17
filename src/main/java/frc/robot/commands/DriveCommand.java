@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DriveCommand extends CommandBase {
@@ -49,6 +50,7 @@ public class DriveCommand extends CommandBase {
         double turningSpeed = driveController.controller.getRightX()*0.5;
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX()*0.5);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
 //flight stick init and debugging code. Alt drive method
@@ -57,7 +59,7 @@ public class DriveCommand extends CommandBase {
        // double turningSpeed = flightStick.flightStick.getZ();
        // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
         //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
-        //SmartDashboard.putNumber("turningSpeed", turningSpeed);
+        // SmartDashboard.putNumber("turningSpeed", turningSpeed);
 
 
        
@@ -65,7 +67,7 @@ public class DriveCommand extends CommandBase {
 //button mappings assiociated with the drive system or aspects of the drive system
 
 //left bumper = reset heading for gyro
-        if(driveController.povNorth.getAsBoolean())
+        if(driveController.povEast.getAsBoolean())
         {
             swerveSubsystem.zeroHeading();
         }
@@ -75,24 +77,22 @@ public class DriveCommand extends CommandBase {
         //use "toggle on true" or smg and change to a command not a boolean. Look into that
 
 //start button = if field orriented is on or not. Middle right small button
-        if(driveController.povSouth.getAsBoolean())
+        if(driveController.povWest.getAsBoolean())
         {
             fieldOriented = !fieldOriented;
         } 
 
-//button "B" = reset all relitive encoders to 0. MUST USE THIS AFTER A FACE FOWARD SO THE MATH IS CORRECT FOR DRIVING
 
-//doesn't really work
-       //if(driveController.povWest.getAsBoolean())
-       //{
-          //  swerveSubsystem.ResetAllEncoders();
-        //}
+       if(driveController.startButton.getAsBoolean())
+       {
+            swerveSubsystem.ResetAllEncoders();
+        }
 
 
         // 2. Apply deadband
-        xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-        turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+        // xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+        // ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+        // turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
  // TO DO: could be causing a problem. Check if this is a problem and ways to fix or implement this differently
@@ -101,12 +101,20 @@ public class DriveCommand extends CommandBase {
         ySpeed = yLimiter.calculate(ySpeed) * Constants.DriveConstants.kTeleDriveMaxSpeedMetersPerSecond;
         turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
+
+        // 2. Apply deadband
+        xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+        ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+        turningSpeed = Math.abs(turningSpeed) > 0.08 ? turningSpeed : 0.0;
+
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
         if (fieldOriented) {
             // Relative to field
+            SmartDashboard.putNumber("turningSpeed", turningSpeed);
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
+                    
         } else {
             // Relative to robot. 
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right

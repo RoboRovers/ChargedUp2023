@@ -15,25 +15,5 @@ public PneumaticsCommand(PneumaticsSubsystem pneumaticsSubsystem, CommandXboxCon
     addRequirements(pneumaticsSubsystem);
 
 }
-
-    @Override
-    public void execute() {
-       
-    //toggles
-    //opController.rightTrigger().toggleOnTrue(pneumaticsSubsystem.intakeToggleCommand());
-    //opController.leftTrigger().toggleOnTrue(pneumaticsSubsystem.extensionToggleCommand());
-    //up+downs
-    opController.leftTrigger().toggleOnTrue(pneumaticsSubsystem.extensionOutCommand());
-    opController.leftBumper().toggleOnTrue(pneumaticsSubsystem.extensionRetractCommand());
-    opController.rightTrigger().whileTrue(pneumaticsSubsystem.intakeOpenCommand());
-    opController.rightTrigger().whileFalse(pneumaticsSubsystem.intakeCloseCommand());
-
-    
-    SmartDashboard.putBoolean("extension state", pneumaticsSubsystem.extensionState);
-    SmartDashboard.putBoolean("intake state", pneumaticsSubsystem.intakeState);
-
-    }
-
-
 }
 

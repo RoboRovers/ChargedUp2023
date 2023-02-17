@@ -59,8 +59,6 @@ public class RobotContainer {
   private final OI flightStick = new OI(OIConstants.kDriverStickPort);
   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
-  public CANSparkMax steerMotor;
-  public SparkMaxPIDController turningPidController;
 
   public RobotContainer() {
 
@@ -102,17 +100,17 @@ public class RobotContainer {
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-    opController.povLeft().whileTrue(_pulley.liftIntakeCommand());
-    opController.povLeft().whileFalse(_pulley.StopCommand());
-    opController.povRight().whileTrue(_pulley.dropIntakeCommand());
-    opController.povRight().whileFalse(_pulley.StopCommand());
+    opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    opController.povUp().whileFalse(_pulley.StopCommand());
+    opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+    opController.povDown().whileFalse(_pulley.StopCommand());
 
-    opController.button(7).whileTrue(_pneumatics.flipperExtendCommand());
-    opController.button(7).whileFalse(_pneumatics.flipperCloseCommand());
+    opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
+    opController.button(8).whileFalse(_pneumatics.flipperCloseCommand());
 
     
         //full close reset
-        //opController.button(8).onTrue(_pneumatics.extensionRetractCommand().alongWith(_pneumatics.flipperCloseCommand()).andThen(_pulley.homeCommand()));
+        //opController.button(7).onTrue(_pneumatics.extensionRetractCommand().andThen(_pneumatics.flipperCloseCommand()).andThen(_pulley.homeCommand()));
                
     /* 
           
@@ -122,8 +120,8 @@ public class RobotContainer {
                 andThen(_pulley.midShelfCommand().
                 andThen(_pneumatics.intakeOpenCommand().
                // andThen(pulleySubsystem.homeCommand().)
-                alongWith(_pneumatics.extensionRetractCommand().
-                alongWith(_pneumatics.intakeCloseCommand()))))));
+                andThen(_pneumatics.extensionRetractCommand().
+                andThen(_pneumatics.intakeCloseCommand()))))));
     
            //mid pole command
            opController.b().toggleOnTrue((
@@ -131,82 +129,29 @@ public class RobotContainer {
                 andThen(_pulley.midPoleCommand().
                 andThen(_pneumatics.intakeOpenCommand().
                // andThen(_pulley.homeCommand().)
-                alongWith(_pneumatics.extensionRetractCommand().
-                alongWith(_pneumatics.intakeCloseCommand()))))));
+                andThen(_pneumatics.extensionRetractCommand().
+                andThen(_pneumatics.intakeCloseCommand()))))));
     
             opController.x().toggleOnTrue((
                 _pneumatics.extensionOutCommand().
                 andThen(_pulley.topShelfCommand().
                 andThen(_pneumatics.intakeOpenCommand().
                // andThen(_pulley.homeCommand().)
-                alongWith(_pneumatics.extensionRetractCommand().
-                alongWith(_pneumatics.intakeCloseCommand()))))));
+                andThen(_pneumatics.extensionRetractCommand().
+                andThen(_pneumatics.intakeCloseCommand()))))));
     
             opController.y().toggleOnTrue((
                 _pneumatics.extensionOutCommand().
                 andThen(_pulley.topPoleCommand().
                 andThen(_pneumatics.intakeOpenCommand().
                // andThen(_pulley.homeCommand().)
-                alongWith(_pneumatics.extensionRetractCommand().
-                alongWith(_pneumatics.intakeCloseCommand()))))));
+                andThen(_pneumatics.extensionRetractCommand().
+                andThen(_pneumatics.intakeCloseCommand()))))));
                 */
   }
 
-  /*  public Command getAutonCommand() {
-        
-    //return autonChooser.getSelected();
-    turningPidController = SwerveModule.steerMotor.getPIDController();
-    
-
-    TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-        Constants.AutoConstants.kMaxSpeedMetersPerSecond,
-        Constants.AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                .setKinematics(Constants.DriveConstants.kDriveKinematics);
-                
-
-        //TrajectoryConfig trajectoryConfig = new TrajectoryConfig(0, 0);
-
-//these line are where the robot will go. I need to figure out how to make multiple of these and to have the code implement
-//different one of my choosing each time as well as figuring out how to do commands like picking up stuff and such.
-
-        // 2. Generate trajectory
-        Trajectory trajectory = TrajectoryGenerator.generateTrajectory(
-                new Pose2d(0, 0, new Rotation2d(0)),
-                List.of(
-                        new Translation2d(1, 0),
-                        new Translation2d(1, -1)),
-                new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
-                trajectoryConfig);
-
-
-
-        // 3. Define PID controllers for tracking trajectory
-        PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
-        PIDController yController = new PIDController(Constants.AutoConstants.kPYController, 0, 0);
-        ProfiledPIDController thetaController = new ProfiledPIDController(
-          Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
-        thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-  // 4. Construct command to follow trajectory
-  SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        trajectory,
-        s_Swerve::getPose,
-        Constants.DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        s_Swerve::setModuleStates,
-        s_Swerve);
-
-
-        // 5. Add some init and wrap-up, and return everything
-        return new SequentialCommandGroup(
-                new InstantCommand(() -> s_Swerve.resetOdometry(trajectory.getInitialPose())),
-                swerveControllerCommand,
-                new InstantCommand(() -> s_Swerve.stopModules()));
-
-                }
-
+  //  public Command getAutonCommand() {
+ //} 
 }
 
 
@@ -224,5 +169,5 @@ public class RobotContainer {
  */
 
 
-}
+
 
