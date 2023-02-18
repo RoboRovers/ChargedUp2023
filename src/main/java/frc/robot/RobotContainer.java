@@ -144,10 +144,36 @@ public class RobotContainer {
   }
 
   public void configureAutoCommands() {
+    /*Auto Options Flow chart
+ * 
+ * START-
+ * 1. leave commmunity and hold piece                            KEEP
+ * 2. place cone or cube and stay
+ * 3. place and leave commmunity                                 KEEP
+ * 4. 3 + drive to second piece cone or cube                     KEEP
+ * 5. 1-2 + drive back to deposit ce                             KEEP
+ * 6. 1-3.5 + place game piece                                   KEEP
+ * 7. 1-4 + drive onto charge station but don't level
+ * 8. 1-4 + drive onto charge station but auto level             KEEP
+ */
 
   // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
-// for every path in the group
-List<PathPlannerTrajectory> GarageTestPaths = PathPlanner.loadPathGroup("Auto Test", new PathConstraints(2, 1));
+//RIGHT Side Grid RIGHT POLE paths
+List<PathPlannerTrajectory> RRConeFLPath = PathPlanner.loadPathGroup("RR Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RRConeMLPath = PathPlanner.loadPathGroup("RR Cone, mid left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RRConeMRPath = PathPlanner.loadPathGroup("RR Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RRConeFRPath = PathPlanner.loadPathGroup("RR Cone, far right", new PathConstraints(2, 1));
+//RIGHT Side Grid MID SHELF paths
+List<PathPlannerTrajectory> RCubeFLPath = PathPlanner.loadPathGroup("R Cube, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RCubeFRPath = PathPlanner.loadPathGroup("R Cube, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RCubeMLPath = PathPlanner.loadPathGroup("R Cube, mid left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RCubeMRPath = PathPlanner.loadPathGroup("R Cube, mid right", new PathConstraints(2, 1));
+//RIGHT Side Grid LEFT POLE
+List<PathPlannerTrajectory> RLConeFLPath = PathPlanner.loadPathGroup("RL Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RLConeFRPath = PathPlanner.loadPathGroup("RL Cone, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RLConeMLPath = PathPlanner.loadPathGroup("RL Cone, mid left", new PathConstraints(2, 1));
+
 
 // 3. Define PID controllers for tracking trajectory
 PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
@@ -172,11 +198,46 @@ SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(s_Swerve::getPose,
       eventMap,
        true,
         s_Swerve);
-SequentialCommandGroup GarageAutoTest = new SequentialCommandGroup(autoBuilder.followPathGroup(GarageTestPaths));
-//SequentialCommandGroup GarageAutoTest = new SequentialCommandGroup(
-   //  s_Swerve.followTrajectoryCommand(GarageTestPaths, true).andThen());
 
-autonChooser.setDefaultOption("Garage Test", GarageAutoTest);
+//sequential commands
+    //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
+SequentialCommandGroup RRConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RRConeFRPath));
+SequentialCommandGroup RRConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RRConeFLPath));
+SequentialCommandGroup RRConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RRConeMRPath));
+SequentialCommandGroup RRConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RRConeMLPath));
+    //RIght Grid Shelf Commands (JUST THE TRAJECTORIES)
+SequentialCommandGroup RCubeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RCubeFRPath));
+SequentialCommandGroup RCubeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RCubeFLPath));
+SequentialCommandGroup RCubeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RCubeMRPath));
+SequentialCommandGroup RCubeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RCubeMLPath));
+    //Right Grid Left Pole Commands (JUST THE TRAJECTORIES)
+SequentialCommandGroup RLConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeFRPath));
+SequentialCommandGroup RLConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeFLPath));
+SequentialCommandGroup RLConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMRPath));
+SequentialCommandGroup RLConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMLPath));
+
+
+
+
+
+//add command options
+    //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
+autonChooser.addOption("RRConeFRPath", RRConeFRCommand);
+autonChooser.addOption("RRConeFLPath", RRConeFLCommand);
+autonChooser.addOption("RRConeMRPath", RRConeMRCommand);
+autonChooser.addOption("RRConeMLPath", RRConeMLCommand);
+
+    //Right Grid Shelf Commands (JUST THE TRAJECTORIES)
+autonChooser.addOption("RCubeFRPath", RCubeFRCommand);
+autonChooser.addOption("RCubeFLPath", RCubeFLCommand);
+autonChooser.addOption("RCubeMRPath", RCubeMRCommand);
+autonChooser.addOption("RCubeMLPath", RCubeMLCommand);
+    //Right Grid Left Pole Commands (JUST THE TRAJECTORIES)
+autonChooser.addOption("RLConeFRPath", RLConeFRCommand);
+autonChooser.addOption("RLConeFLPath", RLConeFLCommand);
+autonChooser.addOption("RLConeMRPath", RLConeMRCommand);
+autonChooser.addOption("RLConeMLPath", RLConeMLCommand);
+
 
 }
  
@@ -188,18 +249,7 @@ autonChooser.setDefaultOption("Garage Test", GarageAutoTest);
 }
 
 
-/*Auto Options Flow chart
- * 
- * START-
- * 1. leave commmunity and hold piece                            KEEP
- * 2. place cone or cube and stay
- * 3. place and leave commmunity                                 KEEP
- * 4. 3 + drive to second piece cone or cube                     KEEP
- * 5. 1-2 + drive back to deposit ce                             KEEP
- * 6. 1-3.5 + place game piece                                   KEEP
- * 7. 1-4 + drive onto charge station but don't level
- * 8. 1-4 + drive onto charge station but auto level             KEEP
- */
+
 
 
 

@@ -19,7 +19,7 @@ public class DriveCommand extends CommandBase {
     private final OI driveController;
     private final OI flightStick;
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=false;
+    private boolean fieldOriented=true;
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
                 this.swerveSubsystem = swerveSubsystem;
