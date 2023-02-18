@@ -231,13 +231,12 @@ desiredAngle = state.angle.getDegrees();
 //I should have made a button that zeros them instead of turning the bot off and on multiple times, I need to make this automatic
 
 public void wheelFaceForward(double faceForwardOffset) {
-//steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
-turningPidController.setReference(90, ControlType.kPosition);
- if((steerMotorEncoder.getPosition() - faceForwardOffset) > 2 || (steerMotorEncoder.getPosition() - faceForwardOffset) < -2) {
-   //turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
- {
-   //steerMotorEncoder.setPosition(0);
- }
+steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
+try{
+  Thread.sleep(1000);
+  turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
+}catch (Exception e) {
+}
  }
 
 
@@ -262,7 +261,7 @@ turningPidController.setReference(90, ControlType.kPosition);
 turningPidController.setReference(theta, ControlType.kPosition);
 }  */
 
- }
+ 
 
   
 

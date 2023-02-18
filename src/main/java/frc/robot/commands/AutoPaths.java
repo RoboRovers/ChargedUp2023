@@ -1,29 +1,39 @@
 package frc.robot.commands;
-/* 
-import java.util.List;
 
+import java.util.List;
+//controller imports
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
-
 import edu.wpi.first.math.controller.PIDController;
+//position tracker imports
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+//trajectory imports
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+//file imports
 import frc.robot.Constants;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
+//path planner imports
+import com.pathplanner.lib.PathPlanner;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPoint;
+import com.pathplanner.lib.PathConstraints;
+
 public class AutoPaths {
     
     public SparkMaxPIDController turningPidController;
     public CANSparkMax steerMotor;
     public SwerveSubsystem s_Swerve = new SwerveSubsystem();
 
-    void AutoCommands() {
+
+    public SequentialCommandGroup leftShelfClosePiece() {
 
     //return autonChooser.getSelected();
     turningPidController = SwerveModule.steerMotor.getPIDController();
@@ -48,6 +58,7 @@ public class AutoPaths {
                         new Translation2d(1, -1)),
                 new Pose2d(2, -1, Rotation2d.fromDegrees(180)),
                 trajectoryConfig);
+        
 
 
 
@@ -59,8 +70,11 @@ public class AutoPaths {
          // Constants.AutoConstants.kPThetaController, 0, 0, Constants.AutoConstants.kThetaControllerConstraints);
         thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
+        PathPlanner.loadPath("left shelf, close", 4, 3);
+
+
   // 4. Construct command to follow trajectory
-  SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
+  /*SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
         trajectory,
         s_Swerve::getPose,
         Constants.DriveConstants.kDriveKinematics,
@@ -68,7 +82,11 @@ public class AutoPaths {
         yController,
         thetaController,
         s_Swerve::setModuleStates,
-        s_Swerve);
+        s_Swerve);*/
+
+        SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(PathPlanner.loadPath("left shelf, close", 4, 3), null, null, null, null, null);
+
+
 
 
         // 5. Add some init and wrap-up, and return everything
@@ -82,5 +100,6 @@ public class AutoPaths {
 
                 //PATH PLANNER (USE)
                 //PATH WEEVER (WPI)
-}
-*/
+        }
+
+
