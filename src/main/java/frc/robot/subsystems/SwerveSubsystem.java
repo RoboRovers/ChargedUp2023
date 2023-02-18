@@ -1,17 +1,24 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.Constants;
 
@@ -34,12 +41,10 @@ public class SwerveSubsystem extends SubsystemBase{
    
     //reset all method. Used after face foward to then reference all RE values as 0 being the front.
 public void ResetAllEncoders() {
-    frontLeftModule.resetEncoders();
-    frontRightModule.resetEncoders();
-    backLeftModule.resetEncoders();
-    backRightModule.resetEncoders();
-
-
+    frontLeftModule.resetDrive();
+    frontRightModule.resetDrive();
+    backLeftModule.resetDrive();
+    backRightModule.resetDrive();
 }
 
 
@@ -95,6 +100,12 @@ backRightModule.getPosition()
 
     @Override
     public void periodic() {
+      
+        frontLeftModule.turningPidController.setP(0.025);
+        frontRightModule.turningPidController.setP(0.025);
+        backLeftModule.turningPidController.setP(0.025);
+        backRightModule.turningPidController.setP(0.025);
+      
 
         odometer.update(geRotation2d(),  new SwerveModulePosition[] {
             frontLeftModule.getPosition(),
@@ -121,8 +132,16 @@ backRightModule.getPosition()
         SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
         SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
         SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
-    }
 
+       SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
+       SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());
+       SmartDashboard.putNumber("Back Left Drive Position", backLeftModule.getDrivePosition());
+       SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
+
+    //    SmartDashboard.putNumber("kP Value" + SwerveModule.steerMotor.getDeviceId(), SwerveModule.getPIDController().getP());
+
+
+    }
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {
         frontLeftModule.stop();
@@ -143,12 +162,47 @@ backRightModule.getPosition()
         backRightModule.setDesiredState(desiStates[1]);
 
     }
+
+
    //face forward method. Called once the bot is enabled
 public void faceAllFoward() {
-    frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
-    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
-    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     backRightModule.wheelFaceForward(Constants.DriveConstants.kBRDegrees);
+    frontLeftModule.wheelFaceForward(Constants.DriveConstants.kFLDegrees);
+    frontRightModule.wheelFaceForward(Constants.DriveConstants.kFRDegrees);
+   backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     System.out.println("exacuted faceAll");
 }
+
+ /* 
+static PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
+static PIDController yController = new PIDController(Constants.AutoConstants.kPYController, 0, 0);
+static PIDController thetaController = new PIDController(
+  Constants.AutoConstants.kPThetaController, 0, 0);
+
+public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    return new SequentialCommandGroup(
+         new InstantCommand(() -> {
+           // Reset odometry for the first path you run during auto
+           if(isFirstPath){
+               this.resetOdometry(traj.getInitialHolonomicPose());
+           }
+         }),
+    
+         new PPSwerveControllerCommand(
+             traj, 
+             this::getPose, // Pose supplier
+             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
+             xController, // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+             yController, // Y controller (usually the same values as X controller)
+             thetaController, // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
+             this::setModuleStates, // Module states consumer
+             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
+             this // Requires this drive subsystem
+         )
+     );
+
+ }*/
+ 
+
 }

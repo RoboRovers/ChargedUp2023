@@ -6,6 +6,9 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
+import org.opencv.core.Mat;
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
 import com.revrobotics.*;
@@ -54,6 +57,7 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.setPositionPIDWrappingEnabled(true);
     turningPidController.setPositionPIDWrappingMaxInput(1080); 
     turningPidController.setPositionPIDWrappingMinInput(720);
+    
 
 
 
@@ -65,7 +69,7 @@ public class SwerveModule extends SubsystemBase {
  
     //Drive motor encoder
     driveMotorEncoder = driveMotor.getEncoder();
-    driveMotorEncoder.setPositionConversionFactor(Constants.ModuleConstants.kDriveEncoderRot2Meter);
+    driveMotorEncoder.setPositionConversionFactor( 1/23.58);
     driveMotorEncoder.setVelocityConversionFactor(Constants.ModuleConstants.kDriveEncoderRPM2MeterPerSec);
 
     //Steer motor encoder 
@@ -84,11 +88,7 @@ public static SparkMaxPIDController getPIDController() {
 }
 
 //Reset encoder method. Called after init
-public void resetEncoders()  {
-  steerMotorEncoder.setPosition(0);
-  //this might need to be on getAbsoluteEncoderDeg() not sure
-  //set it to 0 to see if my keybind works
-  }
+  
   public void resetDrive() {
    driveMotorEncoder.setPosition(0);
    steerMotorEncoder.setPosition(0);
@@ -127,7 +127,7 @@ public void stop() {
   }
 
   public double getPositionMeters() {
-    return driveMotorEncoder.getPosition() * 4;
+    return driveMotorEncoder.getPosition(); //* 4;
   }
   
  
@@ -147,7 +147,6 @@ public SwerveModuleState gState() {
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
   }
-
   //it seems that all encoders values are +- 5 degrees off. this variable tries to correct that.
 public double encoderCorrection;
 
@@ -160,21 +159,6 @@ public void setDesiredState(SwerveModuleState state) {
         return;
   }
  
-  
-
-  //this is what encoderCorrection is. it adds 5 if the encoder is positive and subtracts 5 if the value is negitive
-  double encoderCorrection; {
-    encoderCorrection = 0;
-    if ((state.angle.getDegrees() < 5) || (state.angle.getDegrees() > -5)) {
-      encoderCorrection = 0;
-    }
-    if (state.angle.getDegrees() > (0)) {
-        encoderCorrection = 5;
-      }
-    if (state.angle.getDegrees() < (0)){
-        encoderCorrection = -5;
-       }
-    }
 
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
@@ -184,12 +168,14 @@ turningPidController.setReference(state.angle.getDegrees(), ControlType.kPositio
   SmartDashboard.putNumber("Speed", getDriveVelocity());
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
+ */
   SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees());
-  */
+
+
 
 
 //see if we need this and how it actually works
-/*double desiredAngle;
+double desiredAngle;
 boolean desiredAngleSign;
 double currentAngle = steerMotorEncoder.getPosition();
 boolean currentAngleSign;
@@ -208,17 +194,17 @@ desiredAngle = state.angle.getDegrees();
 
 
 
-  if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt > 0){
+  if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 90 && currentAngleInt > 0){
   turningPidController.setReference(state.angle.getDegrees()-360, ControlType.kPosition);
 
-  } else if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 900 && currentAngleInt < 0){
+  } else if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 90 && currentAngleInt < 0){
     turningPidController.setReference(state.angle.getDegrees()+360, ControlType.kPosition);
 
 
   }
 
   SmartDashboard.putNumber("Difference", desiredAngle-currentAngle);
-*/
+
  
 }
   
@@ -232,36 +218,19 @@ desiredAngle = state.angle.getDegrees();
 
 public void wheelFaceForward(double faceForwardOffset) {
 steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
+
 try{
-  Thread.sleep(1000);
+  Thread.sleep(10);
   turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
 }catch (Exception e) {
+  
 }
+
  }
 
 
 }
 
-   /*while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 4) {
-    turningPidController.setReference(steerMotorEncoder.getPosition()+200, ControlType.kPosition);
-    }
-    steerMotorEncoder.setPosition(0);
-    turningPidController.setReference(0, ControlType.kPosition);
-    while(Math.abs(getAbsoluteEncoderDeg()-faceForwardOffset) > 0.5) {
-  turningPidController.setReference(steerMotorEncoder.getPosition()+10, ControlType.kPosition);
-}
-  steerMotorEncoder.setPosition(0);
-  turningPidController.setReference(0, ControlType.kPosition);
-  }*/
-
-
-  /*  public void wheelFaceForward(double faceForwardOffset) {
-    double currangle = getAbsoluteEncoderDeg();
- double theta = (360 - (currangle - faceForwardOffset)) % 360;
-turningPidController.setReference(theta, ControlType.kPosition);
-}  */
-
- 
 
   
 

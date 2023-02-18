@@ -5,6 +5,10 @@
 package frc.robot;
 
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj2.command.Command;
+
+import java.util.HashMap;
+
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
@@ -101,13 +105,13 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kWheelDiameterMeters = Units.inchesToMeters(4);
     public static final double kDriveMotorGearRatio = 7 / 1;
     public static final double kTurningMotorGearRatio = 12.8 / 1;
-    public static final double kDriveEncoderRot2Meter = kDriveMotorGearRatio * Math.PI * kWheelDiameterMeters;
+    public static final double kDriveEncoderRot2Meter = 1/23.58;
     
     //get this a little closer. maybe 28.23
     public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
-    public static final double kPTurning = 0.025; //test a higher value
+    public static final double kPTurning = 0.025; //test a higher value 0.025 is to high
     public static final double kITurning = 0.00001;
     public static final double kDTurning = 0.001;
 }
@@ -123,23 +127,25 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
       public static final int kDriverRotAxis = 4;
       public static final int kDriverFieldOrientedButtonIdx = 1;
 
-      public static final double kDeadband = 0.06;
+      public static final double kDeadband = 0.1;
   }
   public static final class AutoConstants {
-    public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 4;
-    public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 10;
+    public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 1.75;
+    public static final double kMaxAngularSpeedRadiansPerSecond =  DriveConstants.kPhysicalMaxAngularSpeedRadiansPerSecond / 1.89;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
-    public static final double kMaxAngularAccelerationRadiansPerSecondSquared = Math.PI / 4;
-    public static final double kPXController = 0.0035;
-    public static final double kPYController = 0.0035;
-    public static final double kPThetaController = 0.0035;
+    public static final double kMaxAngularAccelerationUnitsPerSecond = 3;
+    public static final double kPXController = 0.025;
+    public static final double kPYController = 0.025;
+    public static final double kPThetaController = 0.025;
+
+    public static final HashMap<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 
     //public static final Trajector
 
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = 
             new TrapezoidProfile.Constraints(
                     kMaxAngularSpeedRadiansPerSecond,
-                    kMaxAngularAccelerationRadiansPerSecondSquared);
+                    kMaxAngularAccelerationUnitsPerSecond);
   }
 
 
@@ -147,12 +153,12 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
   //Pneumatics Constants
   public static final class PneumaticsConstants {
     //Intake numbers 5+1
-     public static final int L_INTAKE_IN = 5;
-     public static final int L_INTAKE_OUT = 1; //correct //1
+     public static final int L_INTAKE_IN = 7;
+     public static final int L_INTAKE_OUT = 2; //correct //1
   
     //Extension number 7+2
- public static final int EXTENSION_IN = 2;
- public static final int EXTENSION_OUT = 7;
+ public static final int EXTENSION_IN = 1;
+ public static final int EXTENSION_OUT = 5;
  
  public static final int FLIPPER_IN = 0;
  public static final int FLIPPER_OUT = 6;

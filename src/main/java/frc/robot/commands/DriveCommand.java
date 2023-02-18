@@ -35,6 +35,16 @@ public class DriveCommand extends CommandBase {
     public void initialize() {
      swerveSubsystem.faceAllFoward();
 
+     try{
+        Thread.sleep(100);
+        SwerveSubsystem.frontLeftModule.steerMotorEncoder.setPosition(0);
+        SwerveSubsystem.frontRightModule.steerMotorEncoder.setPosition(0);
+        SwerveSubsystem.backLeftModule.steerMotorEncoder.setPosition(0);
+        SwerveSubsystem.backRightModule.steerMotorEncoder.setPosition(0);
+     }catch (Exception i) {
+
+     }
+
     //get auto set working then reset all encoders. This might screw up the auto set as the code might be running both commands at
     //the same time messing with the auto set
     // swerveSubsystem.ResetAllEncoders();
@@ -44,14 +54,17 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
+    
+
 //Xbox joystick init and debugging code. Main drive method
         double xSpeed = driveController.controller.getLeftX()*-1;
         double ySpeed = driveController.controller.getLeftY()*-1;
-        double turningSpeed = driveController.controller.getRightX()*0.5;
+        double turningSpeed = driveController.controller.getRightX();
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
         SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX()*0.5);
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
+       
        
 //flight stick init and debugging code. Alt drive method
        // double xSpeed = flightStick.flightStick.getX()*-1;
@@ -83,16 +96,16 @@ public class DriveCommand extends CommandBase {
         } 
 
 
-       if(driveController.startButton.getAsBoolean())
-       {
-            swerveSubsystem.ResetAllEncoders();
+        if(driveController.povWest.getAsBoolean())
+        {
+         // swerveSubsystem.ResetAllEncoders();
         }
 
 
         // 2. Apply deadband
-        // xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-        // ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-        // turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
+         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 3. Make the driving smoother
  // TO DO: could be causing a problem. Check if this is a problem and ways to fix or implement this differently
@@ -102,10 +115,10 @@ public class DriveCommand extends CommandBase {
         turningSpeed = turningLimiter.calculate(turningSpeed) * Constants.DriveConstants.kTeleDriveMaxAngularSpeedRadiansPerSecond;
 
 
-        // 2. Apply deadband
-        xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
-        ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
-        turningSpeed = Math.abs(turningSpeed) > 0.08 ? turningSpeed : 0.0;
+        // // 2. Apply deadband
+         xSpeed = Math.abs(xSpeed) > OIConstants.kDeadband ? xSpeed : 0.0;
+         ySpeed = Math.abs(ySpeed) > OIConstants.kDeadband ? ySpeed : 0.0;
+         turningSpeed = Math.abs(turningSpeed) > OIConstants.kDeadband ? turningSpeed : 0.0;
 
         // 4. Construct desired chassis speeds
         ChassisSpeeds chassisSpeeds;
