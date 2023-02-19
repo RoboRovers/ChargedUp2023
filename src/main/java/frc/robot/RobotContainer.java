@@ -173,14 +173,39 @@ List<PathPlannerTrajectory> RLConeFLPath = PathPlanner.loadPathGroup("RL Cone, f
 List<PathPlannerTrajectory> RLConeFRPath = PathPlanner.loadPathGroup("RL Cone, far right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RLConeMLPath = PathPlanner.loadPathGroup("RL Cone, mid left", new PathConstraints(2, 1));
+//MID Grid RIGHT POLE paths
+List<PathPlannerTrajectory> MRConeFRPath = PathPlanner.loadPathGroup("MR Cone, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MRConeMRPath = PathPlanner.loadPathGroup("MR Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MRConeFLPath = PathPlanner.loadPathGroup("MR Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MRConeMLPath = PathPlanner.loadPathGroup("MR Cone, mid left", new PathConstraints(2, 1));
+//MID Grid MID SHELF paths
+List<PathPlannerTrajectory> MCubeFRPath = PathPlanner.loadPathGroup("M Cube, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MCubeMRPath = PathPlanner.loadPathGroup("M Cube, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MCubeFLPath = PathPlanner.loadPathGroup("M Cube, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MCubeMLPath = PathPlanner.loadPathGroup("M Cube, mid left", new PathConstraints(2, 1));
+//Mid Grid LEFT POLE paths
+List<PathPlannerTrajectory> MLConeFRPath = PathPlanner.loadPathGroup("ML Cone, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MLConeMRPath = PathPlanner.loadPathGroup("ML Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MLConeFLPath = PathPlanner.loadPathGroup("ML Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> MLConeMLPath = PathPlanner.loadPathGroup("ML Cone, mid left", new PathConstraints(2, 1));
+//LEFT Grid RIGHT POLE paths
+List<PathPlannerTrajectory> LRConeFRPath = PathPlanner.loadPathGroup("LR Cone, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LRConeMRPath = PathPlanner.loadPathGroup("LR Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LRConeFLPath = PathPlanner.loadPathGroup("LR Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LRConeMLPath = PathPlanner.loadPathGroup("LR Cone, mid left", new PathConstraints(2, 1));
+//LEFT Grid MID SHELF paths
+List<PathPlannerTrajectory> LCubeFRPath = PathPlanner.loadPathGroup("L Cube, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LCubeMRPath = PathPlanner.loadPathGroup("L Cube, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LCubeFLPath = PathPlanner.loadPathGroup("L Cube, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LCubeMLPath = PathPlanner.loadPathGroup("L Cube, mid left", new PathConstraints(2, 1));
+//LEFT Grid LEFT POLE paths
+List<PathPlannerTrajectory> LLConeFRPath = PathPlanner.loadPathGroup("LL Cone, far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LLConeMRPath = PathPlanner.loadPathGroup("LL Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LLConeMLPath = PathPlanner.loadPathGroup("LL Cone, mid left", new PathConstraints(2, 1));
 
 
-// 3. Define PID controllers for tracking trajectory
-PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
-PIDController yController = new PIDController(Constants.AutoConstants.kPYController, 0, 0);
-PIDController thetaController = new PIDController(
-  Constants.AutoConstants.kPThetaController, 0, 0);
-thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
 
 // This is just an example event map. It would be better to have a constant, global event map
 // in your code that will be used by all path following commands.
@@ -215,29 +240,84 @@ SequentialCommandGroup RLConeFRCommand = new SequentialCommandGroup(autoBuilder.
 SequentialCommandGroup RLConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeFLPath));
 SequentialCommandGroup RLConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMRPath));
 SequentialCommandGroup RLConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMLPath));
-
-
-
+    //Mid Grid Right Cone Commands (JUST THE TRAJECTORIES)
+SequentialCommandGroup MRConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MRConeFRPath));
+SequentialCommandGroup MRConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MRConeFLPath));
+SequentialCommandGroup MRConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MRConeMRPath));
+SequentialCommandGroup MRConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MRConeMLPath));
+    //Mid Grid Shelf Commands  (JUST THE TRAJECTORIES)
+SequentialCommandGroup MCubeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MCubeFRPath));
+SequentialCommandGroup MCubeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MCubeFLPath));
+SequentialCommandGroup MCubeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MCubeMRPath));
+SequentialCommandGroup MCubeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MCubeMLPath));
+    //Mid Grid Left Cone Commands  (JUST THE TRAJECTORIES)
+SequentialCommandGroup MLConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MLConeFRPath));
+SequentialCommandGroup MLConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MLConeFLPath));
+SequentialCommandGroup MLConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MLConeMRPath));
+SequentialCommandGroup MLConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(MLConeMLPath));
+    //Left Grid Right Cone Commands   (JUST THE TRAJECTORIES)
+SequentialCommandGroup LRConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LRConeFRPath));
+SequentialCommandGroup LRConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LRConeFLPath));
+SequentialCommandGroup LRConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LRConeMRPath));
+SequentialCommandGroup LRConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LRConeMLPath));
+    //Left Grid Shelf Commands   (JUST THE TRAJECTORIES)
+SequentialCommandGroup LCubeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LCubeFRPath));
+SequentialCommandGroup LCubeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LCubeFLPath));
+SequentialCommandGroup LCubeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LCubeMRPath));
+SequentialCommandGroup LCubeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LCubeMLPath));
+    //Left Grid Left Cone Commands   (JUST THE TRAJECTORIES)
+SequentialCommandGroup LLConeFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeFRPath));
+SequentialCommandGroup LLConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeFLPath));
+SequentialCommandGroup LLConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeMRPath));
+SequentialCommandGroup LLConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeMLPath));
 
 
 //add command options
-    //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
+      //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
 autonChooser.addOption("RRConeFRPath", RRConeFRCommand);
 autonChooser.addOption("RRConeFLPath", RRConeFLCommand);
 autonChooser.addOption("RRConeMRPath", RRConeMRCommand);
 autonChooser.addOption("RRConeMLPath", RRConeMLCommand);
-
-    //Right Grid Shelf Commands (JUST THE TRAJECTORIES)
+      //Right Grid Shelf Commands (JUST THE TRAJECTORIES)
 autonChooser.addOption("RCubeFRPath", RCubeFRCommand);
 autonChooser.addOption("RCubeFLPath", RCubeFLCommand);
 autonChooser.addOption("RCubeMRPath", RCubeMRCommand);
 autonChooser.addOption("RCubeMLPath", RCubeMLCommand);
-    //Right Grid Left Pole Commands (JUST THE TRAJECTORIES)
+      //Right Grid Left Pole Commands (JUST THE TRAJECTORIES)
 autonChooser.addOption("RLConeFRPath", RLConeFRCommand);
 autonChooser.addOption("RLConeFLPath", RLConeFLCommand);
 autonChooser.addOption("RLConeMRPath", RLConeMRCommand);
 autonChooser.addOption("RLConeMLPath", RLConeMLCommand);
-
+      //Mid Grid Right Cone Commands (JUST THE TRAJECTORIES)
+autonChooser.addOption("MRConeFRPath", MRConeFRCommand);
+autonChooser.addOption("MRConeFLPath", MRConeFLCommand);
+autonChooser.addOption("MRConeMRPath", MRConeMRCommand);
+autonChooser.addOption("MRConeMLPath", MRConeMLCommand);
+      //Mid Grid Shelf Commands  (JUST THE TRAJECTORIES)
+autonChooser.addOption("MCubeFRPath", MCubeFRCommand);
+autonChooser.addOption("MCubeFLPath", MCubeFLCommand);
+autonChooser.addOption("MCubeMRPath", MCubeMRCommand);
+autonChooser.addOption("MCubeMLPath", MCubeMLCommand);
+      //Mid Grid Left Cone Commands  (JUST THE TRAJECTORIES)
+//autonChooser.addOption("MLConeFRPath", MLConeFRCommand);
+autonChooser.addOption("MLConeFLPath", MLConeFLCommand);
+//autonChooser.addOption("MLConeMRPath", MLConeMRCommand);
+autonChooser.addOption("MLConeMLPath", MLConeMLCommand);
+      //Left Grid Right Cone Commands   (JUST THE TRAJECTORIES)
+autonChooser.addOption("LRConeFRPath", LRConeFRCommand);
+autonChooser.addOption("LRConeFLPath", LRConeFLCommand);
+autonChooser.addOption("LRConeMRPath", LRConeMRCommand);
+autonChooser.addOption("LRConeMLPath", LRConeMLCommand);
+      //Left Grid Shelf Commands   (JUST THE TRAJECTORIES)
+autonChooser.addOption("LCubeFRPath", LCubeFRCommand);
+autonChooser.addOption("LCubeFLPath", LCubeFLCommand);
+autonChooser.addOption("LCubeMRPath", LCubeMRCommand);
+autonChooser.addOption("LCubeMLPath", LCubeMLCommand);
+      //Left Grid Left Cone Commands   (JUST THE TRAJECTORIES)
+//autonChooser.addOption("LLConeFRPath", LLConeFRCommand);
+autonChooser.addOption("LLConeFLPath", LLConeFLCommand);
+//autonChooser.addOption("LLConeMRPath", LLConeMRCommand);
+autonChooser.addOption("LLConeMLPath", LLConeMLCommand);
 
 }
  
