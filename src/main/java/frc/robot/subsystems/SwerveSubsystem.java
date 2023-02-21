@@ -1,24 +1,18 @@
 package frc.robot.subsystems;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
 import com.kauailabs.navx.frc.AHRS;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 
 import frc.robot.Constants;
 
@@ -36,8 +30,7 @@ public class SwerveSubsystem extends SubsystemBase{
 
     public static SwerveModule backRightModule = new SwerveModule(Constants.DriveConstants.kBackRightTurningMotorPort, Constants.DriveConstants.kBackRightDriveMotorPort, Constants.DriveConstants.kBackRightDriveEncoderReversed, Constants.DriveConstants.kBackRightTurningEncoderReversed, Constants.DriveConstants.kBackRightDriveAbsoluteEncoderPort, Constants.DriveConstants.kFRDegrees, Constants.DriveConstants.kBackRightTurningEncoderReversed);
 
-    //frontleft, frontRight, backLeft, backRight
-    //backleft, backright, frontleft, frontRight
+
    
     //reset all method. Used after face foward to then reference all RE values as 0 being the front.
 public void ResetAllEncoders() {
@@ -50,9 +43,11 @@ public void ResetAllEncoders() {
 
 
 //gyro int and heading code
+
+// TODO see if changing to geRotation2d from gyro.getRotation2d worked
     private AHRS gyro = new AHRS(SPI.Port.kMXP);
     public final SwerveDriveOdometry odometer = new SwerveDriveOdometry(Constants.DriveConstants.kDriveKinematics,
-    gyro.getRotation2d(), new SwerveModulePosition[] {
+    geRotation2d(), new SwerveModulePosition[] {
  frontLeftModule.getPosition(),
  frontRightModule.getPosition(),
  backLeftModule.getPosition(),
@@ -78,8 +73,9 @@ backRightModule.getPosition()
 
     //used for debugging and field centric
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 360);
+        return Math.IEEEremainder(-gyro.getAngle(), 180);
     }
+    
     public Pose2d getPose() {
         return odometer.getPoseMeters();
     }
@@ -88,6 +84,8 @@ backRightModule.getPosition()
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
     }
+
+
      public void resetOdometry(Pose2d pose) {
         odometer.resetPosition(geRotation2d(), new SwerveModulePosition[] {
             frontLeftModule.getPosition(),
@@ -101,10 +99,10 @@ backRightModule.getPosition()
     @Override
     public void periodic() {
       
-        frontLeftModule.turningPidController.setP(0.025);
-        frontRightModule.turningPidController.setP(0.025);
-        backLeftModule.turningPidController.setP(0.025);
-        backRightModule.turningPidController.setP(0.025);
+        frontLeftModule.turningPidController.setP(0.01);
+        frontRightModule.turningPidController.setP(0.01);
+        backLeftModule.turningPidController.setP(0.01);
+        backRightModule.turningPidController.setP(0.01);
       
 
         odometer.update(geRotation2d(),  new SwerveModulePosition[] {
@@ -122,6 +120,7 @@ backRightModule.getPosition()
         //Odometer and other gyro values
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
         SmartDashboard.putNumber("Robot Heading", getHeading());
+        SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
         //AE Degrees Reading
         SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
         SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());

@@ -120,7 +120,7 @@ public void stop() {
   }
     //Get the Steer values. Value is in degrees.
   public double getSteerPosition() {
-     return steerMotorEncoder.getPosition();
+     return steerMotorEncoder.getPosition() % 360;
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
@@ -147,8 +147,6 @@ public SwerveModuleState gState() {
   public SwerveModulePosition getPosition() {
     return new SwerveModulePosition(driveMotorEncoder.getPosition(), Rotation2d.fromDegrees(steerMotorEncoder.getPosition()));
   }
-  //it seems that all encoders values are +- 5 degrees off. this variable tries to correct that.
-public double encoderCorrection;
 
 //This is our setDesiredState alg. Takes the current state and the desired state shown by the controller and points the wheels to that 
 //location
@@ -172,41 +170,41 @@ turningPidController.setReference(state.angle.getDegrees(), ControlType.kPositio
   SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees());
 
 
+}
+
+// see if we need this and how it actually works
+// double desiredAngle;
+// boolean desiredAngleSign;
+// double currentAngle = steerMotorEncoder.getPosition() % 360;
+// boolean currentAngleSign;
+// int currentAngleInt;
+// desiredAngle = state.angle.getDegrees();
+
+//    if(desiredAngle>0){desiredAngleSign = true;}
+
+//   else {desiredAngleSign = false;}
+
+//   if(currentAngle>0){ currentAngleSign = true;}
+
+//   else {currentAngleSign = false;}
+
+//   currentAngleInt = (int) currentAngle;
 
 
-//see if we need this and how it actually works
-double desiredAngle;
-boolean desiredAngleSign;
-double currentAngle = steerMotorEncoder.getPosition();
-boolean currentAngleSign;
-int currentAngleInt;
-desiredAngle = state.angle.getDegrees();
 
-   if(desiredAngle>0){desiredAngleSign = true;}
+//   if(Math.abs(desiredAngle-currentAngle) > 180 && currentAngleInt > 0){
+//   turningPidController.setReference(state.angle.getDegrees()-360, ControlType.kPosition);
 
-  else {desiredAngleSign = false;}
-
-  if(currentAngle>0){ currentAngleSign = true;}
-
-  else {currentAngleSign = false;}
-
-  currentAngleInt = (int) currentAngle;
+//   } else if(Math.abs(desiredAngle-currentAngle) > 180 && currentAngleInt < 0){
+//     turningPidController.setReference(state.angle.getDegrees()+360, ControlType.kPosition);
 
 
+//   }
 
-  if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 90 && currentAngleInt > 0){
-  turningPidController.setReference(state.angle.getDegrees()-360, ControlType.kPosition);
-
-  } else if(desiredAngleSign != currentAngleSign && Math.abs(desiredAngle-currentAngle) > 90 && currentAngleInt < 0){
-    turningPidController.setReference(state.angle.getDegrees()+360, ControlType.kPosition);
-
-
-  }
-
-  SmartDashboard.putNumber("Difference", desiredAngle-currentAngle);
+//   SmartDashboard.putNumber("Difference", desiredAngle-currentAngle);
 
  
-}
+// }
   
 
 
@@ -222,6 +220,13 @@ steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
 try{
   Thread.sleep(10);
   turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
+  // try{
+  //   Thread.sleep(10);
+  //   steerMotorEncoder.setPosition(0);
+  //       turningPidController.setReference(0, ControlType.kPosition);
+  // }catch (Exception P) {
+
+  // }
 }catch (Exception e) {
   
 }

@@ -26,6 +26,7 @@ import frc.robot.Constants.OIConstants;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -49,7 +50,10 @@ public class RobotContainer {
   private final OI driveController = new OI(OIConstants.kDriverControllerPort);
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
-  private final OI flightStick = new OI(OIConstants.kDriverStickPort);
+  private final OI driveStick = new OI(OIConstants.kDriverStickPort);
+  private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
+  
+
 //   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
 
@@ -65,7 +69,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveController, flightStick));
+            driveController, driveStick, thetaStick));
 
 
             // _pulley.setDefaultCommand(
@@ -203,14 +207,22 @@ List<PathPlannerTrajectory> LLConeFRPath = PathPlanner.loadPathGroup("LL Cone, f
 List<PathPlannerTrajectory> LLConeMRPath = PathPlanner.loadPathGroup("LL Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, far left", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LLConeMLPath = PathPlanner.loadPathGroup("LL Cone, mid left", new PathConstraints(2, 1));
+//Just a few paths back tests
+List<PathPlannerTrajectory> ReturnFL = PathPlanner.loadPathGroup("back from far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> ReturnFR = PathPlanner.loadPathGroup("back from far right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> ReturnMR = PathPlanner.loadPathGroup("back from mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> ReturnML = PathPlanner.loadPathGroup("back from mid left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> Spin = PathPlanner.loadPathGroup("Spin", new PathConstraints(2, 1));
 
+List<PathPlannerTrajectory> RCubeFR2RCube = PathPlanner.loadPathGroup("Complicated test 1", 2, 1);
 
 
 
 // This is just an example event map. It would be better to have a constant, global event map
 // in your code that will be used by all path following commands.
 HashMap<String, Command> eventMap = new HashMap<>();
-eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+//eventMap.put("marker1", new PrintCommand("Passed marker 1"));
+eventMap.put("Arrived at piece", _pneumatics.extensionOutCommand().andThen(_pneumatics.intakeOpenCommand()));
 //eventMap.put("intakeDown", new IntakeDown());
 
 // Create the AutoBuilder. This only needs to be created once when robot code starts, not every time you want to create an auto command. A good place to put this is in RobotContainer along with your subsystems.
@@ -223,6 +235,8 @@ SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(s_Swerve::getPose,
       eventMap,
        true,
         s_Swerve);
+
+        
 
 //sequential commands
     //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
@@ -270,6 +284,19 @@ SequentialCommandGroup LLConeFRCommand = new SequentialCommandGroup(autoBuilder.
 SequentialCommandGroup LLConeFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeFLPath));
 SequentialCommandGroup LLConeMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeMRPath));
 SequentialCommandGroup LLConeMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(LLConeMLPath));
+    //return commands
+SequentialCommandGroup returnFRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnFR));
+SequentialCommandGroup returnFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnFL));
+SequentialCommandGroup returnMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnMR));
+SequentialCommandGroup returnMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnML));
+SequentialCommandGroup SpinCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(Spin));
+
+
+
+SequentialCommandGroup Test = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMRPath).andThen(autoBuilder.followPathGroup(Spin).andThen(autoBuilder.followPathGroup(ReturnMR))));
+
+SequentialCommandGroup RCubeFR2RCubeCommand = new SequentialCommandGroup(autoBuilder.fullAuto(RCubeFR2RCube));
+
 
 
 //add command options
@@ -299,9 +326,9 @@ autonChooser.addOption("MCubeFLPath", MCubeFLCommand);
 autonChooser.addOption("MCubeMRPath", MCubeMRCommand);
 autonChooser.addOption("MCubeMLPath", MCubeMLCommand);
       //Mid Grid Left Cone Commands  (JUST THE TRAJECTORIES)
-//autonChooser.addOption("MLConeFRPath", MLConeFRCommand);
+autonChooser.addOption("MLConeFRPath", MLConeFRCommand);
 autonChooser.addOption("MLConeFLPath", MLConeFLCommand);
-//autonChooser.addOption("MLConeMRPath", MLConeMRCommand);
+autonChooser.addOption("MLConeMRPath", MLConeMRCommand);
 autonChooser.addOption("MLConeMLPath", MLConeMLCommand);
       //Left Grid Right Cone Commands   (JUST THE TRAJECTORIES)
 autonChooser.addOption("LRConeFRPath", LRConeFRCommand);
@@ -314,11 +341,22 @@ autonChooser.addOption("LCubeFLPath", LCubeFLCommand);
 autonChooser.addOption("LCubeMRPath", LCubeMRCommand);
 autonChooser.addOption("LCubeMLPath", LCubeMLCommand);
       //Left Grid Left Cone Commands   (JUST THE TRAJECTORIES)
-//autonChooser.addOption("LLConeFRPath", LLConeFRCommand);
+autonChooser.addOption("LLConeFRPath", LLConeFRCommand);
 autonChooser.addOption("LLConeFLPath", LLConeFLCommand);
-//autonChooser.addOption("LLConeMRPath", LLConeMRCommand);
+autonChooser.addOption("LLConeMRPath", LLConeMRCommand);
 autonChooser.addOption("LLConeMLPath", LLConeMLCommand);
+      //return commands
+autonChooser.addOption("Return from mid right", returnMRCommand);
+autonChooser.addOption("Return from far right", returnFRCommand);
+autonChooser.addOption("Return from mid left", returnMLCommand);
+autonChooser.addOption("Return from far left", returnFLCommand);
+autonChooser.addOption("Spin", SpinCommand);
 
+
+
+autonChooser.addOption("Auto Test", Test);
+
+autonChooser.addOption("Complex test", RCubeFR2RCubeCommand);
 }
  
 

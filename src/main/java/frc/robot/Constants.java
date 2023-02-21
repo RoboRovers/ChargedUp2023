@@ -111,7 +111,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
-    public static final double kPTurning = 0.025; //test a higher value 0.025 is to high
+    public static final double kPTurning = 0.01; //test a higher value 0.025 is to high
     public static final double kITurning = 0.00001;
     public static final double kDTurning = 0.001;
 }
@@ -119,15 +119,16 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 //Max speed
     public static final class OIConstants {
       public static final int kDriverControllerPort = 1;
-      public static final int kOPControllerPort = 1;
+      public static final int kOPControllerPort = 2;
       public static final int kDriverStickPort = 0;
+      public static final int kThetaStickPort = 3;
 
       public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;
       public static final int kDriverRotAxis = 4;
       public static final int kDriverFieldOrientedButtonIdx = 1;
 
-      public static final double kDeadband = 0.1;
+      public static final double kDeadband = 0.07;
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 1.75;

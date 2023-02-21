@@ -17,18 +17,22 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
-    private final OI flightStick;
+    private final OI driveStick;
+    private final OI thetaStick;
+
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI flightStick) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI driveStick, OI thetaStick) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.driveController = driveController;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
-                this.flightStick = flightStick;
+                this.driveStick = driveStick;
+                this.thetaStick = thetaStick;
+
     }
 
     @Override
@@ -96,9 +100,18 @@ public class DriveCommand extends CommandBase {
         } 
 
 
-        if(driveController.povWest.getAsBoolean())
+        if(driveController.backButton.getAsBoolean())
         {
-         // swerveSubsystem.ResetAllEncoders();
+            swerveSubsystem.faceAllFoward();
+            try{
+               Thread.sleep(50);
+               SwerveSubsystem.frontLeftModule.steerMotorEncoder.setPosition(0);
+               SwerveSubsystem.frontRightModule.steerMotorEncoder.setPosition(0);
+               SwerveSubsystem.backLeftModule.steerMotorEncoder.setPosition(0);
+               SwerveSubsystem.backRightModule.steerMotorEncoder.setPosition(0);
+            }catch (Exception i) {
+       
+            }
         }
 
 
@@ -124,7 +137,6 @@ public class DriveCommand extends CommandBase {
         ChassisSpeeds chassisSpeeds;
         if (fieldOriented) {
             // Relative to field
-            SmartDashboard.putNumber("turningSpeed", turningSpeed);
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
                     
@@ -134,7 +146,6 @@ public class DriveCommand extends CommandBase {
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
-            SmartDashboard.putNumber("turningSpeed", turningSpeed);
         }
 
 
