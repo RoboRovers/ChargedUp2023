@@ -6,18 +6,16 @@ package frc.robot;
 
 import frc.robot.commands.DriveCommand;
 import frc.robot.subsystems.PneumaticsSubsystem;
-// import frc.robot.subsystems.PulleySubsystem;
-//import frc.robot.commands.ZeroGyro;
+import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
 import java.util.HashMap;
 import java.util.List;
 
-import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
@@ -26,7 +24,6 @@ import frc.robot.Constants.OIConstants;
 import com.pathplanner.lib.PathConstraints;
 import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.PathPlannerTrajectory.EventMarker;
 import com.pathplanner.lib.auto.PIDConstants;
 import com.pathplanner.lib.auto.SwerveAutoBuilder;
 
@@ -51,13 +48,16 @@ public class RobotContainer {
   public SwerveSubsystem s_Swerve = new SwerveSubsystem();
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
   private final OI driveStick = new OI(OIConstants.kDriverStickPort);
-  private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
-  
+//   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
+DigitalInput retractLimitSwitch;
 
-//   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
+
+
+  public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
 
   public RobotContainer() {
+    retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
 
     autonChooser = new SendableChooser<>();
@@ -69,7 +69,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveController, driveStick, thetaStick));
+            driveController));
 
 
             // _pulley.setDefaultCommand(
@@ -89,18 +89,41 @@ public class RobotContainer {
 
   }
 
+public void periodic() {
+    boolean retractSwitchState = retractLimitSwitch.get();
+    SmartDashboard.putBoolean("Retract State", retractSwitchState);
+    return;
+
+}
+
   //dont think this is really necessary because we are defining them in the file OI.java
   private void configureButtonBindings() {
+    boolean getRetractState;
+   getRetractState = retractLimitSwitch.get();
+
     /* Driver Buttons */
     opController.leftTrigger().toggleOnTrue(_pneumatics.extensionOutCommand());
     opController.leftBumper().toggleOnTrue(_pneumatics.extensionRetractCommand());
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-    // opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    // opController.povUp().whileFalse(_pulley.StopCommand());
-    // opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-    // opController.povDown().whileFalse(_pulley.StopCommand());
+    opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    opController.povUp().whileFalse(_pulley.StopCommand());
+    opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+    opController.povDown().whileFalse(_pulley.StopCommand());
+
+
+    while(getRetractState= true) {
+        opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+        opController.povUp().whileFalse(_pulley.StopCommand());
+    }
+    while(getRetractState = false) {
+        opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+        opController.povDown().whileFalse(_pulley.StopCommand());
+        opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+        opController.povUp().whileFalse(_pulley.StopCommand());
+    }
+
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
     opController.button(8).whileFalse(_pneumatics.flipperCloseCommand());

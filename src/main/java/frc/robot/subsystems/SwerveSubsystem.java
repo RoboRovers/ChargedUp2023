@@ -6,6 +6,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -21,6 +23,7 @@ import frc.robot.Constants;
 public class SwerveSubsystem extends SubsystemBase{
    // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
+
 
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
@@ -63,6 +66,8 @@ backRightModule.getPosition()
             } catch (Exception e) {
             }
         }).start();
+
+
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
@@ -73,7 +78,7 @@ backRightModule.getPosition()
 
     //used for debugging and field centric
     public double getHeading() {
-        return Math.IEEEremainder(-gyro.getAngle(), 180);
+        return Math.IEEEremainder(-gyro.getAngle(), 360);
     }
     
     public Pose2d getPose() {
@@ -95,10 +100,14 @@ backRightModule.getPosition()
             pose);
     }
 
-
+   
+ 
     @Override
     public void periodic() {
-      
+       
+
+
+
         frontLeftModule.turningPidController.setP(0.01);
         frontRightModule.turningPidController.setP(0.01);
         backLeftModule.turningPidController.setP(0.01);
@@ -141,6 +150,12 @@ backRightModule.getPosition()
 
 
     }
+    // public Boolean getRetractState() {
+    //     return retractSwitchState;
+    // }
+
+
+
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {
         frontLeftModule.stop();
@@ -149,7 +164,6 @@ backRightModule.getPosition()
         backRightModule.stop();
     }
      
-
 
 
     //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class

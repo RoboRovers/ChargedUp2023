@@ -17,21 +17,21 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
-    private final OI driveStick;
-    private final OI thetaStick;
+    // private final OI driveStick;
+    // private final OI thetaStick;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, OI driveStick, OI thetaStick) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.driveController = driveController;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
-                this.driveStick = driveStick;
-                this.thetaStick = thetaStick;
+                // this.driveStick = driveStick;
+                // this.thetaStick = thetaStick;
 
     }
 

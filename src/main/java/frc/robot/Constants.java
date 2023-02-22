@@ -119,7 +119,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 //Max speed
     public static final class OIConstants {
       public static final int kDriverControllerPort = 1;
-      public static final int kOPControllerPort = 2;
+      public static final int kOPControllerPort = 1;
       public static final int kDriverStickPort = 0;
       public static final int kThetaStickPort = 3;
 
@@ -168,8 +168,8 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
    public static final class PullyConstants {
  
      public static final int pulleyMotorNum = 14;
-     public static final int extendSwitchstatePort = 1;
-     public static final int retractSwitchstatePort = 2;
+     //public static final int extendSwitchstatePort = 1;
+     public static final int retractSwitchstatePort = 9;
      public static final double pulleyPIDControllerPVal = 0.005;
      public static final double pulleyEncoder2deg = 28.25;
      }
