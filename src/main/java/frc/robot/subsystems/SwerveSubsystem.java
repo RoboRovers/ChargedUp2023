@@ -105,7 +105,7 @@ backRightModule.getPosition()
     @Override
     public void periodic() {
        
-
+     
 
 
         frontLeftModule.turningPidController.setP(0.01);
@@ -150,9 +150,7 @@ backRightModule.getPosition()
 
 
     }
-    // public Boolean getRetractState() {
-    //     return retractSwitchState;
-    // }
+    
 
 
 
@@ -169,10 +167,10 @@ backRightModule.getPosition()
     //desired states calls. Takes multiple modules and gets/sets their modules individually apart of the SwerveDriveKinematics class
     public void setModuleStates(SwerveModuleState[] desiStates) {
         SwerveDriveKinematics.desaturateWheelSpeeds(desiStates, Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
-         frontLeftModule.setDesiredState(desiStates[2]);
-        frontRightModule.setDesiredState(desiStates[3]);
-        backLeftModule.setDesiredState(desiStates[0]);
-        backRightModule.setDesiredState(desiStates[1]);
+         frontLeftModule.setDesiredState(desiStates[1]);
+        frontRightModule.setDesiredState(desiStates[0]);
+        backLeftModule.setDesiredState(desiStates[3]);
+        backRightModule.setDesiredState(desiStates[2]);
 
     }
 

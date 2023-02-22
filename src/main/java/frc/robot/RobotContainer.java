@@ -49,7 +49,6 @@ public class RobotContainer {
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
   private final OI driveStick = new OI(OIConstants.kDriverStickPort);
 //   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
-DigitalInput retractLimitSwitch;
 
 
 
@@ -57,7 +56,6 @@ DigitalInput retractLimitSwitch;
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
 
   public RobotContainer() {
-    retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
 
     autonChooser = new SendableChooser<>();
@@ -69,7 +67,7 @@ DigitalInput retractLimitSwitch;
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveController));
+            driveController, opController, _pulley));
 
 
             // _pulley.setDefaultCommand(
@@ -89,17 +87,11 @@ DigitalInput retractLimitSwitch;
 
   }
 
-public void periodic() {
-    boolean retractSwitchState = retractLimitSwitch.get();
-    SmartDashboard.putBoolean("Retract State", retractSwitchState);
-    return;
 
-}
 
   //dont think this is really necessary because we are defining them in the file OI.java
   private void configureButtonBindings() {
-    boolean getRetractState;
-   getRetractState = retractLimitSwitch.get();
+   
 
     /* Driver Buttons */
     opController.leftTrigger().toggleOnTrue(_pneumatics.extensionOutCommand());
@@ -113,16 +105,16 @@ public void periodic() {
     opController.povDown().whileFalse(_pulley.StopCommand());
 
 
-    while(getRetractState= true) {
-        opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-        opController.povUp().whileFalse(_pulley.StopCommand());
-    }
-    while(getRetractState = false) {
-        opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-        opController.povDown().whileFalse(_pulley.StopCommand());
-        opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-        opController.povUp().whileFalse(_pulley.StopCommand());
-    }
+    // while(getRetractState= true) {
+    //     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    //     opController.povUp().whileFalse(_pulley.StopCommand());
+    // }
+    // while(getRetractState = false) {
+    //     opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+    //     opController.povDown().whileFalse(_pulley.StopCommand());
+    //     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    //     opController.povUp().whileFalse(_pulley.StopCommand());
+    // }
 
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
@@ -235,7 +227,7 @@ List<PathPlannerTrajectory> ReturnFL = PathPlanner.loadPathGroup("back from far 
 List<PathPlannerTrajectory> ReturnFR = PathPlanner.loadPathGroup("back from far right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> ReturnMR = PathPlanner.loadPathGroup("back from mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> ReturnML = PathPlanner.loadPathGroup("back from mid left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> Spin = PathPlanner.loadPathGroup("Spin", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> Spin = PathPlanner.loadPathGroup("Spin", new PathConstraints(6, 4));
 
 List<PathPlannerTrajectory> RCubeFR2RCube = PathPlanner.loadPathGroup("Complicated test 1", 2, 1);
 

@@ -6,30 +6,38 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 // could need this import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
 public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
+    private final PulleySubsystem pulleySubsystem;
     private final OI driveController;
+    private final CommandXboxController opController;
     // private final OI driveStick;
     // private final OI thetaStick;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
+    DigitalInput retractLimitSwitch;
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController) {
+
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.driveController = driveController;
+                this.pulleySubsystem = pulleySubsystem;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
+                this.opController = opController;
                 // this.driveStick = driveStick;
                 // this.thetaStick = thetaStick;
 
@@ -48,6 +56,7 @@ public class DriveCommand extends CommandBase {
      }catch (Exception i) {
 
      }
+    //  retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
     //get auto set working then reset all encoders. This might screw up the auto set as the code might be running both commands at
     //the same time messing with the auto set
@@ -58,15 +67,32 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-    
+        // boolean retractSwitchState = retractLimitSwitch.get();
+
+        // SmartDashboard.putBoolean("Retract State", retractSwitchState);
+
+        // while(retractSwitchState = false) {
+        //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
+        //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
+
+        // }
+       
+        //  while(retractSwitchState = true) {
+        //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
+        //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
+        //     opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
+        //     opController.povDown().whileFalse(pulleySubsystem.StopCommand());
+        // }
+
+
 
 //Xbox joystick init and debugging code. Main drive method
         double xSpeed = driveController.controller.getLeftX()*-1;
         double ySpeed = driveController.controller.getLeftY()*-1;
-        double turningSpeed = driveController.controller.getRightX();
+        double turningSpeed = driveController.controller.getRightX()*-1;
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
-        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX()*0.5);
+        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
        
