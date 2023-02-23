@@ -40,6 +40,8 @@ public class SwerveModule extends SubsystemBase {
       driveMotor.setOpenLoopRampRate(RAMP_RATE);
       driveMotor.setIdleMode(IdleMode.kBrake);
       
+
+      
   
 
 

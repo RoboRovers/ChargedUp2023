@@ -9,8 +9,9 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-
+import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -23,7 +24,8 @@ import frc.robot.Constants;
 public class SwerveSubsystem extends SubsystemBase{
    // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
-
+public Spark lights;
+public boolean fieldOriented;
 
     public static SwerveModule frontLeftModule = new SwerveModule(Constants.DriveConstants.kFrontLeftTurningMotorPort, Constants.DriveConstants.kFrontLeftDriveMotorPort, Constants.DriveConstants.kFrontLeftDriveEncoderReversed, Constants.DriveConstants.kFrontLeftTurningEncoderReversed, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderPort, Constants.DriveConstants.kBLDegrees, Constants.DriveConstants.kFrontLeftDriveAbsoluteEncoderReversed);
 
@@ -67,7 +69,7 @@ backRightModule.getPosition()
             }
         }).start();
 
-
+        lights = new Spark(9);
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
@@ -88,6 +90,18 @@ backRightModule.getPosition()
     //used for Field Centric
     public Rotation2d geRotation2d() {
         return Rotation2d.fromDegrees(getHeading());
+    }
+
+    public boolean fieldToggle() {
+        return fieldOriented = !fieldOriented;
+    }
+
+    public CommandBase fieldToggleCommand() {
+        return runOnce(
+            () -> {
+                fieldToggle();
+            }
+        );
     }
 
 
@@ -127,24 +141,24 @@ backRightModule.getPosition()
 //multiple debugging values are listed here. Names are self explanitory
 
         //Odometer and other gyro values
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-        SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
-        //AE Degrees Reading
-        SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
-       //RE Degrees Reading
-        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+    //     SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    //     SmartDashboard.putNumber("Robot Heading", getHeading());
+    //     SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
+    //     //AE Degrees Reading
+    //     SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
+    //    //RE Degrees Reading
+    //     SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
 
-       SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
-       SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());
-       SmartDashboard.putNumber("Back Left Drive Position", backLeftModule.getDrivePosition());
-       SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
+    //    SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
+    //    SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());
+    //    SmartDashboard.putNumber("Back Left Drive Position", backLeftModule.getDrivePosition());
+    //    SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
 
     //    SmartDashboard.putNumber("kP Value" + SwerveModule.steerMotor.getDeviceId(), SwerveModule.getPIDController().getP());
 

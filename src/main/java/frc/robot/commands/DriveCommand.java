@@ -2,11 +2,16 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+
+import com.revrobotics.CANSparkMax;
+
 import edu.wpi.first.math.filter.SlewRateLimiter;
 // could need this import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
@@ -14,6 +19,7 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
+
 
 public class DriveCommand extends CommandBase {
 
@@ -40,7 +46,7 @@ public class DriveCommand extends CommandBase {
                 this.opController = opController;
                 // this.driveStick = driveStick;
                 // this.thetaStick = thetaStick;
-
+               
     }
 
     @Override
@@ -56,28 +62,25 @@ public class DriveCommand extends CommandBase {
      }catch (Exception i) {
 
      }
-    //  retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
-
-    //get auto set working then reset all encoders. This might screw up the auto set as the code might be running both commands at
-    //the same time messing with the auto set
-    // swerveSubsystem.ResetAllEncoders();
-    }
-
+      retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
   
+   
+    }
+   
+
 
     @Override
     public void execute() {
-        // boolean retractSwitchState = retractLimitSwitch.get();
+       boolean retractSwitchState = retractLimitSwitch.get();
 
-        // SmartDashboard.putBoolean("Retract State", retractSwitchState);
+        SmartDashboard.putBoolean("Retract State", retractSwitchState);
 
-        // while(retractSwitchState = false) {
+        // while(retractSwitchState = true) {
         //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
         //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
-
         // }
        
-        //  while(retractSwitchState = true) {
+        //  if(retractSwitchState = false) {
         //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
         //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
         //     opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
@@ -90,10 +93,10 @@ public class DriveCommand extends CommandBase {
         double xSpeed = driveController.controller.getLeftX()*-1;
         double ySpeed = driveController.controller.getLeftY()*-1;
         double turningSpeed = driveController.controller.getRightX()*-1;
-        SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
-        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
-        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
-        SmartDashboard.putBoolean("fieldOriented", fieldOriented);
+        // SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
+        // SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+        // SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
+        // SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
        
 //flight stick init and debugging code. Alt drive method
@@ -120,11 +123,17 @@ public class DriveCommand extends CommandBase {
         //use "toggle on true" or smg and change to a command not a boolean. Look into that
 
 //start button = if field orriented is on or not. Middle right small button
-        if(driveController.povWest.getAsBoolean())
-        {
-            fieldOriented = !fieldOriented;
-        } 
 
+if(driveController.povWest.getAsBoolean()){
+    fieldOriented = !fieldOriented;
+}
+
+
+//if(opController.povLeft().onTrue(swerveSubsystem.fieldToggleCommand()) != null)
+
+        
+        
+        SmartDashboard.putNumber("lights number", swerveSubsystem.lights.get());
 
         if(driveController.backButton.getAsBoolean())
         {
@@ -165,6 +174,8 @@ public class DriveCommand extends CommandBase {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
+                    swerveSubsystem.lights.set(0.57);
+
                     
         } else {
             // Relative to robot. 
@@ -172,6 +183,8 @@ public class DriveCommand extends CommandBase {
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
+            swerveSubsystem.lights.set(0.59);
+
         }
 
 

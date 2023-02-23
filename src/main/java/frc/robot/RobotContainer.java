@@ -13,6 +13,8 @@ import java.util.HashMap;
 import java.util.List;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Servo;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -105,7 +107,7 @@ public class RobotContainer {
     opController.povDown().whileFalse(_pulley.StopCommand());
 
 
-    // while(getRetractState= true) {
+    // while(= true) {
     //     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
     //     opController.povUp().whileFalse(_pulley.StopCommand());
     // }
@@ -374,6 +376,7 @@ autonChooser.addOption("Auto Test", Test);
 autonChooser.addOption("Complex test", RCubeFR2RCubeCommand);
 }
  
+
 
 
   public Command getAutonomousCommand() {
