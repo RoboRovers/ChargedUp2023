@@ -32,7 +32,7 @@ public class DriveCommand extends CommandBase {
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
-    DigitalInput retractLimitSwitch;
+     DigitalInput retractSwitch;
 
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
@@ -46,7 +46,8 @@ public class DriveCommand extends CommandBase {
                 this.opController = opController;
                 // this.driveStick = driveStick;
                 // this.thetaStick = thetaStick;
-               
+                //   retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
+
     }
 
     @Override
@@ -62,7 +63,6 @@ public class DriveCommand extends CommandBase {
      }catch (Exception i) {
 
      }
-      retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
   
    
     }
@@ -71,9 +71,8 @@ public class DriveCommand extends CommandBase {
 
     @Override
     public void execute() {
-       boolean retractSwitchState = retractLimitSwitch.get();
 
-        SmartDashboard.putBoolean("Retract State", retractSwitchState);
+        // SmartDashboard.putBoolean("Retract State", retractSwitchState);
 
         // while(retractSwitchState = true) {
         //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
@@ -87,16 +86,17 @@ public class DriveCommand extends CommandBase {
         //     opController.povDown().whileFalse(pulleySubsystem.StopCommand());
         // }
 
+        // boolean retractSwitchState = retractSwitch.get();
 
 
 //Xbox joystick init and debugging code. Main drive method
         double xSpeed = driveController.controller.getLeftX()*-1;
         double ySpeed = driveController.controller.getLeftY()*-1;
         double turningSpeed = driveController.controller.getRightX()*-1;
-        // SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
-        // SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
-        // SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
-        // SmartDashboard.putBoolean("fieldOriented", fieldOriented);
+        SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
+        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
+        SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
        
 //flight stick init and debugging code. Alt drive method
@@ -117,6 +117,7 @@ public class DriveCommand extends CommandBase {
         {
             swerveSubsystem.zeroHeading();
         }
+     
 
         // TO DO: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
         //So its not very reliable

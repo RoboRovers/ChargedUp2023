@@ -1,12 +1,8 @@
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
+
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
-import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 
 public class PulleyCommand extends CommandBase {
@@ -25,14 +21,14 @@ public PulleyCommand(PulleySubsystem pulleySubsystem, CommandXboxController opCo
 
 @Override
 public void initialize() {
-    //pulleySubsystem.autoHome();
+    pulleySubsystem.autoHome();
+    System.out.print("Auto Home Complete");
 }
 
 
 
     @Override
     public void execute() {
-        SmartDashboard.putNumber("Pulley Encoder Value", pulleySubsystem.pulleyEncoderValue());
     }
 
 }

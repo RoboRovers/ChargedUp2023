@@ -22,6 +22,8 @@ private SparkMaxPIDController pulleyPidController;
 DigitalInput extendLimitSwitch;
 DigitalInput retractLimitSwitch;
 
+public boolean retractSwitchState;
+
 
 public PulleySubsystem(int pulleyMotorNum) {
 
@@ -31,6 +33,9 @@ pulleyMotor.restoreFactoryDefaults();
 pulleyMotor.setIdleMode(IdleMode.kBrake);
 pulleyMotor.setSmartCurrentLimit(40);
 pulleyMotor.setOpenLoopRampRate(0.5);
+retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
+
+
 
 
 //int encoder
@@ -51,17 +56,15 @@ public void idleBrake() {
     pulleyMotor.set(0);
 }
 
-// public void autoHome() {
-//     retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
-//     boolean retractSwitchstate = retractLimitSwitch.get();
 
-//     while(retractSwitchstate != true) {
-//     pulleyMotor.set(-2);
-//     }
-//     pulleyMotor.set(0);
-//     pulleyEncoder.setPosition(0);
+public void autoHome() {
 
-// }
+    while(retractSwitchState != true) {
+    pulleyMotor.set(-2);
+    }
+    pulleyMotor.set(0);
+    pulleyEncoder.setPosition(0);
+}
 
 
 public double pulleyEncoderValue() {
@@ -102,14 +105,14 @@ public CommandBase StopCommand() {
     );
 }
 
-// public CommandBase homeCommand() {
-//     return runOnce(
-//         () -> {
-//             autoHome();
-//             System.out.print("Auto Home Command Ran");
-//         }
-//     );
-// }
+public CommandBase homeCommand() {
+    return runOnce(
+        () -> {
+            autoHome();
+            System.out.print("Auto Home Command Ran");
+        }
+    );
+}
 
 public CommandBase liftIntakeCommand() {
     return run(
@@ -164,6 +167,12 @@ public CommandBase midShelfCommand() {
 }
 
 
+@Override
+public void periodic() {
+    retractSwitchState = retractLimitSwitch.get();
+    SmartDashboard.putNumber("Pulley Encoder Value", pulleyEncoderValue());
+
+}
 
 
 

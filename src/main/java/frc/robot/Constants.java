@@ -53,7 +53,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
     public static final boolean kFrontLeftTurningEncoderReversed = false;
     public static final boolean kBackLeftTurningEncoderReversed = false;
-    public static final boolean kFrontRightTurningEncoderReversed = false;//broke auto
+    public static final boolean kFrontRightTurningEncoderReversed = false;
     public static final boolean kBackRightTurningEncoderReversed = false;
 
     public static final boolean kFrontLeftDriveEncoderReversed = true;

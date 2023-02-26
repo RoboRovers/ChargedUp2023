@@ -47,7 +47,7 @@ public class RobotContainer {
 
   // init all our controllers and motors
   private final OI driveController = new OI(OIConstants.kDriverControllerPort);
-  public SwerveSubsystem s_Swerve = new SwerveSubsystem();
+  public SwerveSubsystem s_Swerve = new SwerveSubsystem(_pulley);
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
   private final OI driveStick = new OI(OIConstants.kDriverStickPort);
 //   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
@@ -101,22 +101,10 @@ public class RobotContainer {
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-    opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    opController.povUp().whileFalse(_pulley.StopCommand());
-    opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-    opController.povDown().whileFalse(_pulley.StopCommand());
-
-
-    // while(= true) {
-    //     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    //     opController.povUp().whileFalse(_pulley.StopCommand());
-    // }
-    // while(getRetractState = false) {
-    //     opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-    //     opController.povDown().whileFalse(_pulley.StopCommand());
-    //     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    //     opController.povUp().whileFalse(_pulley.StopCommand());
-    // }
+    // opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    // opController.povUp().whileFalse(_pulley.StopCommand());
+    // opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+    // opController.povDown().whileFalse(_pulley.StopCommand());
 
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
@@ -124,7 +112,7 @@ public class RobotContainer {
 
     
         //full close reset
-        //opController.button(7).onTrue(_pneumatics.extensionRetractCommand().andThen(_pneumatics.flipperCloseCommand()).andThen(_pulley.homeCommand()));
+        //opController.button(7).onTrue(_pneumatics.extensionRetractCommand().andThen(_pneumatics.flipperCloseCommand()).withTimeout(2).andThen(_pulley.homeCommand()));
                
     /* 
           
@@ -306,7 +294,8 @@ SequentialCommandGroup returnFRCommand = new SequentialCommandGroup(autoBuilder.
 SequentialCommandGroup returnFLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnFL));
 SequentialCommandGroup returnMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnMR));
 SequentialCommandGroup returnMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnML));
-SequentialCommandGroup SpinCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(Spin));
+
+SequentialCommandGroup SpinCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(Spin).andThen(_pneumatics.extensionOutCommand().withTimeout(3).andThen(_pneumatics.intakeOpenCommand().withTimeout(2).andThen(_pneumatics.intakeCloseCommand()))));
 
 
 
@@ -382,6 +371,8 @@ autonChooser.addOption("Complex test", RCubeFR2RCubeCommand);
   public Command getAutonomousCommand() {
     return autonChooser.getSelected();
   }
+
+
 }
 
 
