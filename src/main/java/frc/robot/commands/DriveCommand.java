@@ -33,6 +33,9 @@ public class DriveCommand extends CommandBase {
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
      DigitalInput retractSwitch;
+     public double ySpeed;
+     public double xSpeed;
+     public double turningSpeed;
 
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
@@ -66,6 +69,65 @@ public class DriveCommand extends CommandBase {
   
    
     }
+    //Auto Balance Stuff
+
+public void autoBalance(double gyroPitch) {
+    double referencePitch = gyroPitch;
+    fieldOriented = true;
+ 
+ 
+    while(gyroPitch > 5) {
+         while(gyroPitch > 10 || gyroPitch < -10) {      
+             try{Thread.sleep(20);}catch (Exception i) {}
+             if(referencePitch - gyroPitch < 0) {
+                 ySpeed = -0.2;
+             } else {
+                 ySpeed = 0.2;
+             }
+ 
+             if(gyroPitch > 20 || gyroPitch < -20) {
+                 if(ySpeed < 0){
+                     ySpeed = -0.4;
+                 } else {
+                     ySpeed = 0.4;
+                 }
+             }
+             
+             if(gyroPitch > 30 || gyroPitch < -30) {
+                 if(ySpeed < 0){
+                     ySpeed = -0.6;
+                 } else {
+                     ySpeed = 0.6;
+                 }
+ 
+                 referencePitch = gyroPitch;
+                 try{Thread.sleep(20);}catch (Exception i) {}
+             }
+            }
+            swerveSubsystem.stopModules();
+            System.out.print("Stuck here?");
+     }
+     swerveSubsystem.stopModules();
+     System.out.print("Finished Auto Balance");
+
+     //the below code might be needed
+ 
+     // while(gyroPitch > 6 || gyroPitch < -6) {
+     //     turningSpeed = 0; 
+     //     xSpeed = 0;
+     //     ySpeed = 0.2;       
+     //     try{
+     //         Thread.sleep(20);
+     //      }catch (Exception i) {}
+     //     if(gyroPitch > 6 || gyroPitch < -6) {
+     //         ySpeed = -0.2;       
+     //     } else {
+     //         ySpeed = 0.2;       
+     //     }
+     //   }
+ 
+ 
+ }
    
 
 
@@ -90,9 +152,9 @@ public class DriveCommand extends CommandBase {
 
 
 //Xbox joystick init and debugging code. Main drive method
-        double xSpeed = driveController.controller.getLeftX()*-1;
-        double ySpeed = driveController.controller.getLeftY()*-1;
-        double turningSpeed = driveController.controller.getRightX()*-1;
+         xSpeed = driveController.controller.getLeftX()*-1;
+         ySpeed = driveController.controller.getLeftY()*-1;
+         turningSpeed = driveController.controller.getRightX()*-1;
         SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
         SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
@@ -100,9 +162,9 @@ public class DriveCommand extends CommandBase {
        
        
 //flight stick init and debugging code. Alt drive method
-       // double xSpeed = flightStick.flightStick.getX()*-1;
-       // double ySpeed = flightStick.flightStick.getY()*-1;
-       // double turningSpeed = flightStick.flightStick.getZ();
+       //  xSpeed = flightStick.flightStick.getX()*-1;
+       //  ySpeed = flightStick.flightStick.getY()*-1;
+       //  turningSpeed = flightStick.flightStick.getZ();
        // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
         //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
         // SmartDashboard.putNumber("turningSpeed", turningSpeed);
@@ -119,14 +181,13 @@ public class DriveCommand extends CommandBase {
         }
      
 
-        // TO DO: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
-        //So its not very reliable
-        //use "toggle on true" or smg and change to a command not a boolean. Look into that
-
-//start button = if field orriented is on or not. Middle right small button
-
+// TODO: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
 if(driveController.povWest.getAsBoolean()){
     fieldOriented = !fieldOriented;
+}
+
+if(driveController.startButton.getAsBoolean()) {
+    autoBalance(swerveSubsystem.getPitch());
 }
 
 
@@ -205,4 +266,8 @@ if(driveController.povWest.getAsBoolean()){
     public boolean isFinished() {
         return false;
     }
+
+
+
+
 }

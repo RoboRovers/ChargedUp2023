@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
 public class SwerveSubsystem extends SubsystemBase{
-   // private final SwerveModulePosition frontLeftPosition = frontLeftModulePosition();
     //init all swerve modules 
 public Spark lights;
 public DigitalInput retractSwitch;

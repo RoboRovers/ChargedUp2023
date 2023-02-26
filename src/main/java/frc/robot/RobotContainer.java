@@ -5,6 +5,7 @@
 package frc.robot;
 
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.PulleyCommand;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -47,15 +48,18 @@ public class RobotContainer {
 
   // init all our controllers and motors
   private final OI driveController = new OI(OIConstants.kDriverControllerPort);
+  private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+
+
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(_pulley);
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
-  private final OI driveStick = new OI(OIConstants.kDriverStickPort);
-//   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
-
-
-
   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
-  private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+
+  private final OI driveStick = new OI(OIConstants.kDriverStickPort);
+   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
+
+
+
 
   public RobotContainer() {
 
@@ -72,15 +76,13 @@ public class RobotContainer {
             driveController, opController, _pulley));
 
 
-            // _pulley.setDefaultCommand(
-            //     new PulleyCommand(
-            //       _pulley,
-            //        opController));
+    _pulley.setDefaultCommand(
+        new PulleyCommand(
+            _pulley));
+
+    
+    
           
-              // _pneumatics.setDefaultCommand(
-              //   new PneumaticsCommand(
-                  // _pneumatics, 
-              //      opController));
 
 
     // Configure the button bindings
