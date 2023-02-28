@@ -33,7 +33,7 @@ pulleyMotor.restoreFactoryDefaults();
 pulleyMotor.setIdleMode(IdleMode.kBrake);
 pulleyMotor.setSmartCurrentLimit(40);
 pulleyMotor.setOpenLoopRampRate(0.5);
-retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
+// retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
 
 
@@ -59,11 +59,11 @@ public void idleBrake() {
 
 public void autoHome() {
 
-    while(retractSwitchState != true) {
-    pulleyMotor.set(-2);
-    }
-    pulleyMotor.set(0);
-    pulleyEncoder.setPosition(0);
+    // while(retractSwitchState != true) {
+    // pulleyMotor.set(2);
+    // }
+    // pulleyMotor.set(0);
+    // pulleyEncoder.setPosition(0);
 }
 
 
@@ -169,8 +169,8 @@ public CommandBase midShelfCommand() {
 
 @Override
 public void periodic() {
-    retractSwitchState = retractLimitSwitch.get();
-    SmartDashboard.putNumber("Pulley Encoder Value", pulleyEncoderValue());
+    // retractSwitchState = retractLimitSwitch.get();
+    // SmartDashboard.putNumber("Pulley Encoder Value", pulleyEncoderValue());
 
 }
 

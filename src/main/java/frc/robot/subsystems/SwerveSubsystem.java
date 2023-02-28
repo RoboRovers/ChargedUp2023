@@ -7,12 +7,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DigitalOutput;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
+
+import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 
@@ -67,6 +68,10 @@ backRightModule.getPosition()
     
     
     public SwerveSubsystem(PulleySubsystem pulleySubsystem) {
+        lights = new Spark(9);
+        retractSwitch = new DigitalInput(9);
+        this.pulleySubsystem = pulleySubsystem;
+
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -75,9 +80,7 @@ backRightModule.getPosition()
             }
         }).start();
 
-        lights = new Spark(9);
-        retractSwitch = new DigitalInput(9);
-        this.pulleySubsystem = pulleySubsystem;
+       
     }
 
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
@@ -101,7 +104,7 @@ backRightModule.getPosition()
     }
 
     public double getPitch() {
-        return gyro.getPitch();
+        return gyro.getRoll();
     }
 
 
@@ -116,23 +119,20 @@ backRightModule.getPosition()
             pose);
     }
 
-   
+
  
     @Override
     public void periodic() {
-    retractSwitchState = retractSwitch.get();
+    //retractSwitchState = retractSwitch.get();
      
-       retractSwitchCheck(retractSwitchState);
+      // retractSwitchCheck(retractSwitchState);
 
-SmartDashboard.putBoolean("Retract Switch State", retractSwitchState);
-SmartDashboard.putBoolean("Is the check running", isItWorking);
+//SmartDashboard.putBoolean("Retract Switch State", retractSwitchState);
+//SmartDashboard.putBoolean("Is the check running", isItWorking);
 
-SmartDashboard.putNumber("Pitch value", getPitch());
+//SmartDashboard.putNumber("Pitch value", getPitch());
 
-        frontLeftModule.turningPidController.setP(0.01);
-        frontRightModule.turningPidController.setP(0.01);
-        backLeftModule.turningPidController.setP(0.01);
-        backRightModule.turningPidController.setP(0.01);
+        
       
 
         odometer.update(geRotation2d(),  new SwerveModulePosition[] {
@@ -148,47 +148,58 @@ SmartDashboard.putNumber("Pitch value", getPitch());
 //multiple debugging values are listed here. Names are self explanitory
 
         //Odometer and other gyro values
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+       // SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
         SmartDashboard.putNumber("Robot Heading", getHeading());
-        SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
+        //SmartDashboard.putNumber("R2d", geRotation2d().getDegrees());
         //AE Degrees Reading
-        SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
-        SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
-       //RE Degrees Reading
-        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Back Left AE Value", backLeftModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Back Right AE Value", backRightModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg());
+    //     SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg());
+    //    //RE Degrees Reading
+    //     SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+    //     SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
 
        SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
        SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());
        SmartDashboard.putNumber("Back Left Drive Position", backLeftModule.getDrivePosition());
        SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
 
-       SmartDashboard.putNumber("kP Value" + SwerveModule.steerMotor.getDeviceId(), SwerveModule.getPIDController().getP());
+       //SmartDashboard.putNumber("kP Value" + SwerveModule.steerMotor.getDeviceId(), SwerveModule.getPIDController().getP());
 
 
     }
     
 
 public void retractSwitchCheck(boolean switchState) {
-
-
-    if(switchState  = false) {
-        opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
-        opController.povUp().whileFalse(pulleySubsystem.StopCommand());
-        opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
-        opController.povDown().whileFalse(pulleySubsystem.StopCommand());
-        isItWorking = false;
-    }
-    if(switchState  = true) {
-        opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
-        opController.povUp().whileFalse(pulleySubsystem.StopCommand());
-        isItWorking = true;
-    }
+    
+    // if(switchState  == false) {
+    //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
+    //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
+    //     opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
+    //     opController.povDown().whileFalse(pulleySubsystem.StopCommand());
+    //     isItWorking = true;
+    // }else while(switchState  == true) {
+    //     pulleySubsystem.StopCommand();
+    //     isItWorking = false;
+    // }
 }
+
+// if(switchState  == false) {
+//     // opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
+//     // opController.povUp().whileFalse(pulleySubsystem.StopCommand());
+//     // opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
+//     // opController.povDown().whileFalse(pulleySubsystem.StopCommand());
+//     isItWorking = true;
+// }else if(switchState  == true) {
+//     pulleySubsystem.liftIntakeCommand();
+//     new WaitCommand(1);
+//     pulleySubsystem.StopCommand();
+
+//     isItWorking = false;
+// }
 
 //stops all modules. Called when the command isn't being ran. So when an input isn't recieved
     public void stopModules() {

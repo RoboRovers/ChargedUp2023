@@ -24,6 +24,7 @@ public class SwerveModule extends SubsystemBase {
     public RelativeEncoder steerMotorEncoder;
     public CANCoder absoluteEncoder;
     private boolean absoluteEncoderReversed;
+    public final SparkMaxPIDController drivePidController;
 
 
 
@@ -49,6 +50,7 @@ public class SwerveModule extends SubsystemBase {
     steerMotor.setOpenLoopRampRate(RAMP_RATE);
     steerMotor.setIdleMode(IdleMode.kBrake);
     turningPidController = steerMotor.getPIDController();
+    drivePidController = driveMotor.getPIDController();
 
     turningPidController.setP(Constants.ModuleConstants.kPTurning);
     //turningPidController.setI(0.00007);
@@ -56,8 +58,9 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.setPositionPIDWrappingEnabled(true);
     turningPidController.setPositionPIDWrappingMaxInput(1080); 
     turningPidController.setPositionPIDWrappingMinInput(720);
-    
 
+    drivePidController.setP(0.025);
+    
 
 
     //this.absoluteEncoderOffsetRad = absoluteEncoderOffsetRad;

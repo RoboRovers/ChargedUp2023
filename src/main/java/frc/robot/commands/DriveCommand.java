@@ -3,32 +3,26 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
-import com.revrobotics.CANSparkMax;
-
 import edu.wpi.first.math.filter.SlewRateLimiter;
 // could need this import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.subsystems.PulleySubsystem;
-import frc.robot.subsystems.SwerveModule;
 import frc.robot.subsystems.SwerveSubsystem;
 
 
 public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
-    private final PulleySubsystem pulleySubsystem;
     private final OI driveController;
-    private final CommandXboxController opController;
-    // private final OI driveStick;
-    // private final OI thetaStick;
+    private final OI driveStick;
+    private final OI thetaStick;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
     private boolean fieldOriented=true;
@@ -38,17 +32,15 @@ public class DriveCommand extends CommandBase {
      public double turningSpeed;
 
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem, OI driveStick, OI thetaStick) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.driveController = driveController;
-                this.pulleySubsystem = pulleySubsystem;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
                 addRequirements(swerveSubsystem);
-                this.opController = opController;
-                // this.driveStick = driveStick;
-                // this.thetaStick = thetaStick;
+                this.driveStick = driveStick;
+                this.thetaStick = thetaStick;
                 //   retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
     }
@@ -66,68 +58,80 @@ public class DriveCommand extends CommandBase {
      }catch (Exception i) {
 
      }
+
+     SwerveSubsystem.frontLeftModule.turningPidController.setP(0.01);
+     SwerveSubsystem.frontRightModule.turningPidController.setP(0.01);
+     SwerveSubsystem.backLeftModule.turningPidController.setP(0.01);
+     SwerveSubsystem.backRightModule.turningPidController.setP(0.01);
+
   
    
     }
     //Auto Balance Stuff
 
-public void autoBalance(double gyroPitch) {
-    double referencePitch = gyroPitch;
-    fieldOriented = true;
+// public void autoBalance(double gyroPitch) {
+//     double referencePitch = gyroPitch;
+//     fieldOriented = true;
  
  
-    while(gyroPitch > 5) {
-         while(gyroPitch > 10 || gyroPitch < -10) {      
-             try{Thread.sleep(20);}catch (Exception i) {}
-             if(referencePitch - gyroPitch < 0) {
-                 ySpeed = -0.2;
-             } else {
-                 ySpeed = 0.2;
-             }
+//     while(gyroPitch > 5) {
+//          while(gyroPitch > 10 || gyroPitch < -10) {      
+//              try{Thread.sleep(20);}catch (Exception i) {}
+//              if(referencePitch - gyroPitch < 0) {
+//                  ySpeed = -0.2;
+//                  referencePitch = gyroPitch;
+//                  try{Thread.sleep(20);}catch (Exception i) {}
+//              } else {
+//                  ySpeed = 0.2;
+//                  referencePitch = gyroPitch;
+//                  try{Thread.sleep(20);}catch (Exception i) {}
+//              }
  
-             if(gyroPitch > 20 || gyroPitch < -20) {
-                 if(ySpeed < 0){
-                     ySpeed = -0.4;
-                 } else {
-                     ySpeed = 0.4;
-                 }
-             }
+//              if(gyroPitch > 20 || gyroPitch < -20) {
+//                  if(ySpeed < 0){
+//                      ySpeed = -0.4;
+//                  } else {
+//                      ySpeed = 0.4;
+//                  }
+//                  referencePitch = gyroPitch;
+//                  try{Thread.sleep(20);}catch (Exception i) {}
+//              }
              
-             if(gyroPitch > 30 || gyroPitch < -30) {
-                 if(ySpeed < 0){
-                     ySpeed = -0.6;
-                 } else {
-                     ySpeed = 0.6;
-                 }
+//              if(gyroPitch > 30 || gyroPitch < -30) {
+//                  if(ySpeed < 0){
+//                      ySpeed = -0.6;
+//                  } else {
+//                      ySpeed = 0.6;
+//                  }
  
-                 referencePitch = gyroPitch;
-                 try{Thread.sleep(20);}catch (Exception i) {}
-             }
-            }
-            swerveSubsystem.stopModules();
-            System.out.print("Stuck here?");
-     }
-     swerveSubsystem.stopModules();
-     System.out.print("Finished Auto Balance");
+//                  referencePitch = gyroPitch;
+//                  try{Thread.sleep(20);}catch (Exception i) {}
+//              }
+//             }
+//             swerveSubsystem.stopModules();
+//             System.out.print("Stuck here?");
+//      }
+//      swerveSubsystem.stopModules();
+//      System.out.print("Finished Auto Balance");
 
-     //the below code might be needed
+//      //the below code might be needed
  
-     // while(gyroPitch > 6 || gyroPitch < -6) {
-     //     turningSpeed = 0; 
-     //     xSpeed = 0;
-     //     ySpeed = 0.2;       
-     //     try{
-     //         Thread.sleep(20);
-     //      }catch (Exception i) {}
-     //     if(gyroPitch > 6 || gyroPitch < -6) {
-     //         ySpeed = -0.2;       
-     //     } else {
-     //         ySpeed = 0.2;       
-     //     }
-     //   }
+//      // while(gyroPitch > 6 || gyroPitch < -6) {
+//      //     turningSpeed = 0; 
+//      //     xSpeed = 0;
+//      //     ySpeed = 0.2;       
+//      //     try{
+//      //         Thread.sleep(20);
+//      //      }catch (Exception i) {}
+//      //     if(gyroPitch > 6 || gyroPitch < -6) {
+//      //         ySpeed = -0.2;       
+//      //     } else {
+//      //         ySpeed = 0.2;       
+//      //     }
+//      //   }
  
  
- }
+//  }
    
 
 
@@ -152,22 +156,22 @@ public void autoBalance(double gyroPitch) {
 
 
 //Xbox joystick init and debugging code. Main drive method
-         xSpeed = driveController.controller.getLeftX()*-1;
-         ySpeed = driveController.controller.getLeftY()*-1;
-         turningSpeed = driveController.controller.getRightX()*-1;
-        SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
-        SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
-        SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
+        //  xSpeed = driveController.controller.getLeftX()*-1;
+        //  ySpeed = driveController.controller.getLeftY()*-1;
+        //  turningSpeed = driveController.controller.getRightX()*-1;
+        // SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
+        // SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
+        // SmartDashboard.putNumber("Right Stick X", driveController.controller.getRightX());
         SmartDashboard.putBoolean("fieldOriented", fieldOriented);
        
        
 //flight stick init and debugging code. Alt drive method
-       //  xSpeed = flightStick.flightStick.getX()*-1;
-       //  ySpeed = flightStick.flightStick.getY()*-1;
-       //  turningSpeed = flightStick.flightStick.getZ();
-       // SmartDashboard.putNumber("Left Stick X", flightStick.flightStick.getX());
-        //SmartDashboard.putNumber("Left Stick Y", flightStick.flightStick.getY());
-        // SmartDashboard.putNumber("turningSpeed", turningSpeed);
+        xSpeed = driveStick.driveStick.getX()*-1;
+        ySpeed = driveStick.driveStick.getY()*-1;
+        turningSpeed = thetaStick.thetastick.getZ();
+       SmartDashboard.putNumber("Left Stick X", driveStick.driveStick.getX());
+        SmartDashboard.putNumber("Left Stick Y", driveStick.driveStick.getY());
+        SmartDashboard.putNumber("turningSpeed", turningSpeed);
 
 
        
@@ -182,12 +186,13 @@ public void autoBalance(double gyroPitch) {
      
 
 // TODO: make this button more reliable. When this button is held down it will turn it on and off multiple times per second.
-if(driveController.povWest.getAsBoolean()){
+if(driveStick.driveStick.getTriggerPressed()){
     fieldOriented = !fieldOriented;
 }
+//driveController.povWest.getAsBoolean()
 
 if(driveController.startButton.getAsBoolean()) {
-    autoBalance(swerveSubsystem.getPitch());
+    //autoBalance(swerveSubsystem.getPitch());
 }
 
 

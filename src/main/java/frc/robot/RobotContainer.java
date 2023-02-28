@@ -13,13 +13,12 @@ import frc.robot.subsystems.SwerveSubsystem;
 import java.util.HashMap;
 import java.util.List;
 
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
+
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
 import frc.robot.Constants.OIConstants;
@@ -73,7 +72,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveController, opController, _pulley));
+            driveController, opController, _pulley, driveStick, thetaStick));
 
 
     _pulley.setDefaultCommand(
@@ -103,10 +102,10 @@ public class RobotContainer {
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-    // opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    // opController.povUp().whileFalse(_pulley.StopCommand());
-    // opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-    // opController.povDown().whileFalse(_pulley.StopCommand());
+     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+     opController.povUp().whileFalse(_pulley.StopCommand());
+     opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+     opController.povDown().whileFalse(_pulley.StopCommand());
 
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
@@ -182,7 +181,7 @@ List<PathPlannerTrajectory> RCubeMRPath = PathPlanner.loadPathGroup("R Cube, mid
 //RIGHT Side Grid LEFT POLE
 List<PathPlannerTrajectory> RLConeFLPath = PathPlanner.loadPathGroup("RL Cone, far left", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RLConeFRPath = PathPlanner.loadPathGroup("RL Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(4, 2));
 List<PathPlannerTrajectory> RLConeMLPath = PathPlanner.loadPathGroup("RL Cone, mid left", new PathConstraints(2, 1));
 //MID Grid RIGHT POLE paths
 List<PathPlannerTrajectory> MRConeFRPath = PathPlanner.loadPathGroup("MR Cone, far right", new PathConstraints(2, 1));
@@ -203,7 +202,7 @@ List<PathPlannerTrajectory> MLConeMLPath = PathPlanner.loadPathGroup("ML Cone, m
 List<PathPlannerTrajectory> LRConeFRPath = PathPlanner.loadPathGroup("LR Cone, far right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LRConeMRPath = PathPlanner.loadPathGroup("LR Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LRConeFLPath = PathPlanner.loadPathGroup("LR Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LRConeMLPath = PathPlanner.loadPathGroup("LR Cone, mid left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LRConeMLPath = PathPlanner.loadPathGroup("LR Cone, mid left", new PathConstraints(4, 2));
 //LEFT Grid MID SHELF paths
 List<PathPlannerTrajectory> LCubeFRPath = PathPlanner.loadPathGroup("L Cube, far right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LCubeMRPath = PathPlanner.loadPathGroup("L Cube, mid right", new PathConstraints(2, 1));
@@ -297,13 +296,23 @@ SequentialCommandGroup returnFLCommand = new SequentialCommandGroup(autoBuilder.
 SequentialCommandGroup returnMRCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnMR));
 SequentialCommandGroup returnMLCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(ReturnML));
 
-SequentialCommandGroup SpinCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(Spin).andThen(_pneumatics.extensionOutCommand().withTimeout(3).andThen(_pneumatics.intakeOpenCommand().withTimeout(2).andThen(_pneumatics.intakeCloseCommand()))));
-
-
-
-SequentialCommandGroup Test = new SequentialCommandGroup(autoBuilder.followPathGroup(RLConeMRPath).andThen(autoBuilder.followPathGroup(Spin).andThen(autoBuilder.followPathGroup(ReturnMR))));
-
+SequentialCommandGroup SpinCommand = new SequentialCommandGroup(autoBuilder.followPathGroup(Spin).andThen(_pneumatics.extensionOutCommand().andThen(new WaitCommand(3)).andThen(_pneumatics.intakeOpenCommand().andThen(new WaitCommand(3)).andThen(_pneumatics.intakeCloseCommand()))));
 SequentialCommandGroup RCubeFR2RCubeCommand = new SequentialCommandGroup(autoBuilder.fullAuto(RCubeFR2RCube));
+
+
+
+SequentialCommandGroup Test = new SequentialCommandGroup(
+// _pneumatics.extensionOutCommand()
+// .andThen(new WaitCommand(2))
+// .andThen(_pneumatics.intakeOpenCommand())
+// .andThen(new WaitCommand(2))
+// .andThen(_pneumatics.intakeCloseCommand())
+// .andThen(_pneumatics.extensionRetractCommand())
+// .andThen(new WaitCommand(2))
+(autoBuilder.followPathGroup(LRConeMLPath))
+.andThen(autoBuilder.followPathGroup(ReturnML))
+.andThen(autoBuilder.followPathGroup(ReturnFR)));
+
 
 
 
