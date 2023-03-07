@@ -95,8 +95,8 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 
 
     //4 is medium, 2.75 is pretty fast, >2 is to fast. <4 is to slow
-    public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1.75;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.89;
+    public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1.25;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.39;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 }

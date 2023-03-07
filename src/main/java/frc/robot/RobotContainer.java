@@ -13,13 +13,16 @@ import frc.robot.subsystems.SwerveSubsystem;
 import java.util.HashMap;
 import java.util.List;
 
-
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import frc.OI;
 import frc.robot.Constants.OIConstants;
 
@@ -46,16 +49,16 @@ public class RobotContainer {
   // all controllers will be refrenced here
 
   // init all our controllers and motors
-  private final OI driveController = new OI(OIConstants.kDriverControllerPort);
-  private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+  private final CommandXboxController driveController = new CommandXboxController(OIConstants.kDriverControllerPort);
+  private final OI driveControllerOI = new OI(OIConstants.kDriverControllerPort);
 
+  private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
+private CommandJoystick driveStick = new CommandJoystick(0);
 
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(_pulley);
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
 
-  private final OI driveStick = new OI(OIConstants.kDriverStickPort);
-   private final OI thetaStick = new OI(OIConstants.kDriverStickPort);
 
 
 
@@ -72,7 +75,7 @@ public class RobotContainer {
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveController, opController, _pulley, driveStick, thetaStick));
+            driveControllerOI, opController, _pulley));
 
 
     _pulley.setDefaultCommand(
@@ -102,14 +105,23 @@ public class RobotContainer {
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-     opController.povUp().whileFalse(_pulley.StopCommand());
-     opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-     opController.povDown().whileFalse(_pulley.StopCommand());
+    //  opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+    //  opController.povUp().whileFalse(_pulley.StopCommand());
+    //  opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+    //  opController.povDown().whileFalse(_pulley.StopCommand());
 
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
     opController.button(8).whileFalse(_pneumatics.flipperCloseCommand());
+
+
+
+    // driveStick.button(5).onTrue(_pneumatics.extensionOutCommand());
+    // driveStick.button(6).onTrue(_pneumatics.extensionRetractCommand());
+    // driveStick.trigger().whileTrue(_pneumatics.intakeOpenCommand());
+    // driveStick.trigger().whileFalse(_pneumatics.intakeOpenCommand());
+
+    // driveStick.axisGreaterThan(0, 1).whileTrue(_pulley.liftIntakeCommand());
 
     
         //full close reset
@@ -301,7 +313,7 @@ SequentialCommandGroup RCubeFR2RCubeCommand = new SequentialCommandGroup(autoBui
 
 
 
-SequentialCommandGroup Test = new SequentialCommandGroup(
+// SequentialCommandGroup Test = new SequentialCommandGroup(
 // _pneumatics.extensionOutCommand()
 // .andThen(new WaitCommand(2))
 // .andThen(_pneumatics.intakeOpenCommand())
@@ -309,7 +321,20 @@ SequentialCommandGroup Test = new SequentialCommandGroup(
 // .andThen(_pneumatics.intakeCloseCommand())
 // .andThen(_pneumatics.extensionRetractCommand())
 // .andThen(new WaitCommand(2))
-(autoBuilder.followPathGroup(LRConeMLPath))
+// .andThen(autoBuilder.followPathGroup(LRConeMLPath))
+// .andThen(autoBuilder.followPathGroup(ReturnML))
+// .andThen(autoBuilder.followPathGroup(ReturnFR)));
+
+// Try this out - Evan's code
+SequentialCommandGroup Test = new SequentialCommandGroup(
+_pneumatics.extensionOutCommand()
+.andThen(Commands.waitSeconds(2))
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(2))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(2))
+.andThen(autoBuilder.followPathGroup(LRConeMLPath))
 .andThen(autoBuilder.followPathGroup(ReturnML))
 .andThen(autoBuilder.followPathGroup(ReturnFR)));
 

@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.fasterxml.jackson.databind.deser.std.UntypedObjectDeserializer;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -106,10 +107,10 @@ public void stop() {
   CANCoderConfiguration config = new CANCoderConfiguration();
 
   //Get the absolute encoder values
-  public double getAbsoluteEncoderDeg() {
+  public double getAbsoluteEncoderDeg(double AEOffset) {
     double angle = absoluteEncoder.getAbsolutePosition();
     angle *= 180 / Math.PI;
-    return angle * (absoluteEncoderReversed ? -1 : 1);
+    return angle  * (absoluteEncoderReversed ? -1 : 1) - AEOffset;
   }
   
   //Motor calls
@@ -163,6 +164,7 @@ public void setDesiredState(SwerveModuleState state) {
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
 turningPidController.setReference(state.angle.getDegrees(), ControlType.kPosition);
+absoluteEncoder.setPosition(0);
 
 /*SmartDashboard debug stuff, printing out our drive and steer values for debugging. Uncomment as needed
   SmartDashboard.putNumber("Speed", getDriveVelocity());
@@ -216,22 +218,31 @@ turningPidController.setReference(state.angle.getDegrees(), ControlType.kPositio
 //YOU MUST 0 THE VALUES BEFORE DRIVING OR THE MOTORS WILL NOT FACE THE RIGHT DIRECTION 
 //I should have made a button that zeros them instead of turning the bot off and on multiple times, I need to make this automatic
 
-public void wheelFaceForward(double faceForwardOffset) {
-steerMotorEncoder.setPosition(getAbsoluteEncoderDeg());
+public void wheelFaceForward(double faceForwardOffset, double AEOffset) {
 
-try{
-  Thread.sleep(10);
-  turningPidController.setReference(faceForwardOffset, ControlType.kPosition);
-  // try{
-  //   Thread.sleep(10);
-  //   steerMotorEncoder.setPosition(0);
-  //       turningPidController.setReference(0, ControlType.kPosition);
-  // }catch (Exception P) {
+turningPidController.setReference(-getAbsoluteEncoderDeg(AEOffset), ControlType.kPosition);
 
-  // }
-}catch (Exception e) {
-  
+while(getAbsoluteEncoderDeg(AEOffset) < -1 || getAbsoluteEncoderDeg(AEOffset) > 1) {
+  turningPidController.setReference(-getAbsoluteEncoderDeg(AEOffset), ControlType.kPosition);
 }
+steerMotorEncoder.setPosition(getAbsoluteEncoderDeg(AEOffset));
+//turningPidController.setReference(0, ControlType.kPosition);
+
+//steerMotorEncoder.setPosition(getAbsoluteEncoderDeg(AEOffset));
+
+// try{
+//   Thread.sleep(10);
+//   turningPidController.setReference(0, ControlType.kPosition);
+//   // try{
+//   //   Thread.sleep(10);
+//   //   steerMotorEncoder.setPosition(0);
+//   //       turningPidController.setReference(0, ControlType.kPosition);
+//   // }catch (Exception P) {
+
+//   // }
+// }catch (Exception e) {
+  
+// }
 
  }
 
