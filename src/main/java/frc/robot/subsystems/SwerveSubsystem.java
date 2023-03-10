@@ -135,7 +135,7 @@ backRightModule.getPosition()
 
 
 
-    retractSwitchState = retractSwitch.get();
+   // retractSwitchState = retractSwitch.get();
      
        //retractSwitchCheck(retractSwitchState);
 
@@ -230,7 +230,6 @@ public void retractSwitchCheck(boolean switchState) {
         frontRightModule.setDesiredState(desiStates[0]);
         backLeftModule.setDesiredState(desiStates[3]);
         backRightModule.setDesiredState(desiStates[2]);
-
     }
 
 
@@ -243,36 +242,6 @@ public void faceAllFoward() {
     System.out.println("exacuted faceAll");
 }
 
- /* 
-static PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
-static PIDController yController = new PIDController(Constants.AutoConstants.kPYController, 0, 0);
-static PIDController thetaController = new PIDController(
-  Constants.AutoConstants.kPThetaController, 0, 0);
-
-public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    return new SequentialCommandGroup(
-         new InstantCommand(() -> {
-           // Reset odometry for the first path you run during auto
-           if(isFirstPath){
-               this.resetOdometry(traj.getInitialHolonomicPose());
-           }
-         }),
-    
-         new PPSwerveControllerCommand(
-             traj, 
-             this::getPose, // Pose supplier
-             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-             xController, // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-             yController, // Y controller (usually the same values as X controller)
-             thetaController, // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-             this::setModuleStates, // Module states consumer
-             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-             this // Requires this drive subsystem
-         )
-     );
-
- }*/
  
 
 }

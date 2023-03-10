@@ -58,12 +58,7 @@ public class DriveCommand extends CommandBase {
 
      try{
         Thread.sleep(100);
-        SwerveSubsystem.frontLeftModule.steerMotorEncoder.setPosition(0);
-        SwerveSubsystem.frontRightModule.steerMotorEncoder.setPosition(0);
-        SwerveSubsystem.backLeftModule.steerMotorEncoder.setPosition(0);
-        SwerveSubsystem.backRightModule.steerMotorEncoder.setPosition(0);
      }catch (Exception i) {
-
      }
 
      SwerveSubsystem.frontLeftModule.turningPidController.setP(0.005);
@@ -73,71 +68,7 @@ public class DriveCommand extends CommandBase {
 
   
    
-    }
-    //Auto Balance Stuff
 
-public void autoBalance(double gyroRoll) {
-    double referenceRoll = gyroRoll;
-    fieldOriented = true;
- 
- 
-    while(gyroRoll > 5) {
-         while(gyroRoll > 10 || gyroRoll < -10) {      
-             try{Thread.sleep(20);}catch (Exception i) {}
-             if(referenceRoll - gyroRoll < 0) {
-                 xSpeed = -0.2;
-                 referenceRoll = gyroRoll;
-                 try{Thread.sleep(20);}catch (Exception i) {}
-             } else {
-                 ySpeed = 0.2;
-                 referenceRoll = gyroRoll;
-                 try{Thread.sleep(20);}catch (Exception i) {}
-             }
- 
-             if(gyroRoll > 20 || gyroRoll < -20) {
-                 if(ySpeed < 0){
-                     ySpeed = -0.4;
-                 } else {
-                     ySpeed = 0.4;
-                 }
-                 referenceRoll = gyroRoll;
-                 try{Thread.sleep(20);}catch (Exception i) {}
-             }
-             
-             if(gyroRoll > 30 || gyroRoll < -30) {
-                 if(ySpeed < 0){
-                     ySpeed = -0.6;
-                 } else {
-                     ySpeed = 0.6;
-                 }
- 
-                 referenceRoll = gyroRoll;
-                 try{Thread.sleep(20);}catch (Exception i) {}
-             }
-            }
-            swerveSubsystem.stopModules();
-            System.out.print("Stuck here?");
-     }
-     swerveSubsystem.stopModules();
-     System.out.print("Finished Auto Balance");
-
-     //the below code might be needed
- 
-     // while(gyroRoll > 6 || gyroRoll < -6) {
-     //     turningSpeed = 0; 
-     //     xSpeed = 0;
-     //     ySpeed = 0.2;       
-     //     try{
-     //         Thread.sleep(20);
-     //      }catch (Exception i) {}
-     //     if(gyroRoll > 6 || gyroRoll < -6) {
-     //         ySpeed = -0.2;       
-     //     } else {
-     //         ySpeed = 0.2;       
-     //     }
-     //   }
- 
- 
  }
    
 
@@ -145,22 +76,6 @@ public void autoBalance(double gyroRoll) {
     @Override
     public void execute() {
 
-
-        // SmartDashboard.putBoolean("Retract State", retractSwitchState);
-
-        // while(retractSwitchState = true) {
-        //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
-        //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
-        // }
-       
-        //  if(retractSwitchState = false) {
-        //     opController.povUp().whileTrue(pulleySubsystem.liftIntakeCommand());
-        //     opController.povUp().whileFalse(pulleySubsystem.StopCommand());
-        //     opController.povDown().whileTrue(pulleySubsystem.dropIntakeCommand());
-        //     opController.povDown().whileFalse(pulleySubsystem.StopCommand());
-        // }
-
-        // boolean retractSwitchState = retractSwitch.get();
 
 
 //Xbox joystick init and debugging code. Main drive method

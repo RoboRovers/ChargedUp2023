@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -130,6 +132,8 @@ public CommandBase extensionOutCommand() {
     () -> {
       extensionOut();
       System.out.print("Extension Out Command Ran");
+      Commands.waitSeconds(2);
+      
     }
   );
 }
@@ -143,5 +147,7 @@ public CommandBase extensionOutCommand() {
   );
   
 }*/
+
+
 
   }

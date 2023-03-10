@@ -105,10 +105,10 @@ private CommandJoystick driveStick = new CommandJoystick(0);
     opController.rightTrigger().whileTrue(_pneumatics.intakeOpenCommand());
     opController.rightTrigger().whileFalse(_pneumatics.intakeCloseCommand());
 
-    //  opController.povUp().whileTrue(_pulley.liftIntakeCommand());
-    //  opController.povUp().whileFalse(_pulley.StopCommand());
-    //  opController.povDown().whileTrue(_pulley.dropIntakeCommand());
-    //  opController.povDown().whileFalse(_pulley.StopCommand());
+     opController.povUp().whileTrue(_pulley.liftIntakeCommand());
+     opController.povUp().whileFalse(_pulley.StopCommand());
+     opController.povDown().whileTrue(_pulley.dropIntakeCommand());
+     opController.povDown().whileFalse(_pulley.StopCommand());
 
     
     opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
@@ -124,45 +124,8 @@ private CommandJoystick driveStick = new CommandJoystick(0);
     // driveStick.axisGreaterThan(0, 1).whileTrue(_pulley.liftIntakeCommand());
 
     
-        //full close reset
-        //opController.button(7).onTrue(_pneumatics.extensionRetractCommand().andThen(_pneumatics.flipperCloseCommand()).withTimeout(2).andThen(_pulley.homeCommand()));
                
-    /* 
-          
-                 //auto mid shelf then reset
-           opController.a().toggleOnTrue((
-                _pneumatics.extensionOutCommand().
-                andThen(_pulley.midShelfCommand().
-                andThen(_pneumatics.intakeOpenCommand().
-               // andThen(pulleySubsystem.homeCommand().)
-                andThen(_pneumatics.extensionRetractCommand().
-                andThen(_pneumatics.intakeCloseCommand()))))));
-    
-           //mid pole command
-           opController.b().toggleOnTrue((
-                _pneumatics.extensionOutCommand().
-                andThen(_pulley.midPoleCommand().
-                andThen(_pneumatics.intakeOpenCommand().
-               // andThen(_pulley.homeCommand().)
-                andThen(_pneumatics.extensionRetractCommand().
-                andThen(_pneumatics.intakeCloseCommand()))))));
-    
-            opController.x().toggleOnTrue((
-                _pneumatics.extensionOutCommand().
-                andThen(_pulley.topShelfCommand().
-                andThen(_pneumatics.intakeOpenCommand().
-               // andThen(_pulley.homeCommand().)
-                andThen(_pneumatics.extensionRetractCommand().
-                andThen(_pneumatics.intakeCloseCommand()))))));
-    
-            opController.y().toggleOnTrue((
-                _pneumatics.extensionOutCommand().
-                andThen(_pulley.topPoleCommand().
-                andThen(_pneumatics.intakeOpenCommand().
-               // andThen(_pulley.homeCommand().)
-                andThen(_pneumatics.extensionRetractCommand().
-                andThen(_pneumatics.intakeCloseCommand()))))));
-                */
+   
   }
 
   public void configureAutoCommands() {

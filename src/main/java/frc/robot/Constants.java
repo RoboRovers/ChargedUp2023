@@ -71,32 +71,23 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final boolean kFrontRightDriveAbsoluteEncoderReversed = false;
     public static final boolean kBackRightDriveAbsoluteEncoderReversed = false;
 
-/*  public static final double kFrontLeftDriveAbsoluteEncoderOffsetRad = -191.15;
-    public static final double kBackLeftDriveAbsoluteEncoderOffsetRad = -3.22;
-    public static final double kFrontRightDriveAbsoluteEncoderOffsetRad = 0.61;
-    public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.28;
-*/
+
 
     public static final double kBRDegrees = 63.45;
     public static final double kBLDegrees = 4.62;
     public static final double kFLDegrees = 12.392;
     public static final double kFRDegrees = 298;
     
-/* 
-    public static final double kBRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kBLDegrees = kFLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kFLDegrees = kBLDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    public static final double kFRDegrees = kBRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
-    */
+
  
 
-    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.4196;
+    public static final double kPhysicalMaxSpeedMetersPerSecond = 4.47;
     public static final double kPhysicalMaxAngularSpeedRadiansPerSecond = 2 * 2 * Math.PI;
 
 
     //4 is medium, 2.75 is pretty fast, >2 is to fast. <4 is to slow
     public static final double kTeleDriveMaxSpeedMetersPerSecond = kPhysicalMaxSpeedMetersPerSecond / 1.25;
-    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.39;
+    public static final double kTeleDriveMaxAngularSpeedRadiansPerSecond = kPhysicalMaxAngularSpeedRadiansPerSecond / 1.3;
     public static final double kTeleDriveMaxAccelerationUnitsPerSecond = 3;
     public static final double kTeleDriveMaxAngularAccelerationUnitsPerSecond = 3;
 }
@@ -112,7 +103,7 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kTurningConversionFactor2Deg =  28.25;
     public static final double kDriveEncoderRPM2MeterPerSec = kDriveEncoderRot2Meter / 60;
     public static final double kTurningEncoderRPM2DegPerSec = kTurningConversionFactor2Deg / 60;
-    public static final double kPTurning = 0.01; //test a higher value 0.025 is to high
+    public static final double kPTurning = 0.01;
     public static final double kITurning = 0.00001;
     public static final double kDTurning = 0.001;
 }
@@ -120,16 +111,15 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
 //Max speed
     public static final class OIConstants {
       public static final int kDriverControllerPort = 1;
-      public static final int kOPControllerPort = 1;
+      public static final int kOPControllerPort = 2;
       public static final int kDriverStickPort = 0;
       public static final int kThetaStickPort = 3;
 
       public static final int kDriverYAxis = 1;
       public static final int kDriverXAxis = 0;
       public static final int kDriverRotAxis = 4;
-      public static final int kDriverFieldOrientedButtonIdx = 1;
 
-      public static final double kDeadband = 0.07;
+      public static final double kDeadband = 0.085;
   }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = DriveConstants.kPhysicalMaxSpeedMetersPerSecond / 1.75;

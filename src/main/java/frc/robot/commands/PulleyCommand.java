@@ -18,8 +18,8 @@ public PulleyCommand(PulleySubsystem pulleySubsystem) {
 
 @Override
 public void initialize() {
-    pulleySubsystem.autoHome();
-    System.out.print("Auto Home Complete");
+   // pulleySubsystem.autoHome();
+    //System.out.print("Auto Home Complete");
 }
 
 
@@ -28,4 +28,12 @@ public void initialize() {
     public void execute() {
     }
 
+
+
+    
+    @Override
+public boolean isFinished() {
+
+    return false;
+} 
 }
