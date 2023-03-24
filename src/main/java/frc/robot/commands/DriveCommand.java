@@ -34,6 +34,8 @@ public class DriveCommand extends CommandBase {
      public double xSpeed;
      public double turningSpeed;
      public CameraServer frontCamera;
+     public double lightsMode;
+
 
 
     public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
@@ -57,6 +59,8 @@ public class DriveCommand extends CommandBase {
     @Override
     public void initialize() {
      swerveSubsystem.faceAllFoward();
+     lightsMode = 2;
+
 
     //  try{
     //     Thread.sleep(100);
@@ -120,7 +124,7 @@ try{
 //left bumper = reset heading for gyro
         if(driveController.povEast.getAsBoolean())
         {
-            swerveSubsystem.zeroHeading();
+            swerveSubsystem.zeroHeadingButton();
         }
 
         // if(driveStick.getRawButtonPressed(4)) {
@@ -140,6 +144,31 @@ if(driveController.povWest.getAsBoolean()){
 if(driveController.startButton.getAsBoolean()) {
     //autoBalance(swerveSubsystem.getRoll());
 }
+
+
+if(driveController.buttonX.getAsBoolean() == true) {
+    lightsMode = lightsMode+1;
+}
+
+if(lightsMode == 1 && fieldOriented == true) {
+    swerveSubsystem.lights.set(0.57);
+   } else {
+    swerveSubsystem.lights.set(0.59);
+   }
+   
+   if(lightsMode == 2) {
+    swerveSubsystem.lights.set(0.69);
+   }
+   
+   if(lightsMode == 3) {
+    swerveSubsystem.lights.set(0.85);
+   }
+  
+   if(lightsMode == 4) {
+    lightsMode = 1;
+    }
+
+
 
 
 //if(opController.povLeft().onTrue(swerveSubsystem.fieldToggleCommand()) != null)
@@ -187,7 +216,7 @@ if(driveController.startButton.getAsBoolean()) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
                     ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
-                    swerveSubsystem.lights.set(0.57);
+                    //swerveSubsystem.lights.set(0.57);
 
                     
         } else {
@@ -196,7 +225,7 @@ if(driveController.startButton.getAsBoolean()) {
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
             chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
-            swerveSubsystem.lights.set(0.59);
+            //swerveSubsystem.lights.set(0.59);
 
         }
 

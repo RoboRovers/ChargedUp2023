@@ -91,10 +91,10 @@ public void midShelf() {
 
 //3' 10" || 46" || 16560 deg || 46 rotations
 public void topPole() {
-    pulleyPidController.setReference(4200, ControlType.kPosition); //3400
+    pulleyPidController.setReference(4800, ControlType.kPosition); //3400
 }
 public void topPoleDrop() {
-    pulleyPidController.setReference(3300, ControlType.kPosition); 
+    pulleyPidController.setReference(3800, ControlType.kPosition); 
 }
 
 

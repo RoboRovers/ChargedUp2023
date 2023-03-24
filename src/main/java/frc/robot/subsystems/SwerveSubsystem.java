@@ -96,8 +96,13 @@ backRightModule.getPosition()
     //used to zero the gyro and used to refrence where the far end of the field is during comp.
     public void zeroHeading() {
         gyro.reset();
-        //gyro.setAngleAdjustment(180);
+        gyro.setAngleAdjustment(180);
 
+    }
+
+    public void zeroHeadingButton() {
+        gyro.reset();
+        gyro.setAngleAdjustment(0);
     }
 
     //used for debugging and field centric

@@ -315,16 +315,43 @@ SequentialCommandGroup TopPollStay = new SequentialCommandGroup(s_Swerve.faceFor
 .andThen(_pulley.topPoleCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
-.andThen(Commands.waitSeconds(0.95))
+.andThen(Commands.waitSeconds(1.4))
 .andThen(_pulley.topPoleDropCommand())
 .andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.275))
 .andThen(_pneumatics.extensionRetractCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.intakeCloseCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand()));
 
+SequentialCommandGroup TopPollOverCharge = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.275))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand()));
+
+SequentialCommandGroup TopPoll2FL = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.27))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand()));
 
 //set even with a shelf and a foot width away from the boards
 SequentialCommandGroup TopCubeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
@@ -368,7 +395,7 @@ SequentialCommandGroup MidCubeStay = new SequentialCommandGroup(s_Swerve.faceFor
 .andThen(_pulley.homeCommand())
 );
 
-SequentialCommandGroup topCubeLeave = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+SequentialCommandGroup topRightCube2FR = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topShelfCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
@@ -380,8 +407,24 @@ SequentialCommandGroup topCubeLeave = new SequentialCommandGroup(s_Swerve.faceFo
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand())
 .andThen(Commands.waitSeconds(1))
-.andThen(autoBuilder.followPathGroup(RCubeFLPath))
+.andThen(autoBuilder.followPathGroup(RCubeFRPath))
 );
+
+SequentialCommandGroup topLeftCube2FL = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topShelfCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(autoBuilder.followPathGroup(LCubeFLPath))
+);
+
 
 SequentialCommandGroup topCubeOver = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topShelfCommand())
@@ -481,7 +524,9 @@ autonChooser.addOption("Mid Cube Stay", MidCubeStay);
 
 autonChooser.addOption("Mid Cone Stay", MidConeStay);
 
-autonChooser.addOption("Top Cube Leave", topCubeLeave);
+autonChooser.addOption("Right Cube High Leave 2 FR", topRightCube2FR);
+
+autonChooser.addOption("Left Cube High Leave 2 FL", topLeftCube2FL);
 
 autonChooser.addOption("High Cube Over Charge", topCubeOver);
 

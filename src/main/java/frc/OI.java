@@ -17,7 +17,7 @@ public class OI {
   public final Joystick driveStick;
   public final Joystick thetastick;
   public final POVButton povNorth, povEast, povSouth, povWest;
-  public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper;
+  public final JoystickButton buttonA, buttonB, buttonY, buttonX, startButton, backButton, rightBumper, leftBumper, rightStick;
 
   public OI(int constant){
     opController = new CommandXboxController(constant);
@@ -29,6 +29,8 @@ public class OI {
       buttonB = new JoystickButton(controller, Button.kB.value);
       buttonX = new JoystickButton(controller, Button.kX.value);
       buttonY = new JoystickButton(controller, Button.kY.value);
+      rightStick = new JoystickButton(controller, Button.kRightStick.value);
+
       //
       startButton = new JoystickButton(controller, Button.kStart.value);
       backButton = new JoystickButton(controller, Button.kBack.value);
@@ -43,6 +45,7 @@ public class OI {
       //
       driveStick = new Joystick(constant);
       thetastick = new Joystick(constant);
+
 
     }
   
