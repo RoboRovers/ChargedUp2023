@@ -160,10 +160,10 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
   
     //Extension number 7+2
  public static final int EXTENSION_IN = 1;
- public static final int EXTENSION_OUT = 5;
+ public static final int EXTENSION_OUT = 6;
  
- public static final int FLIPPER_IN = 0;
- public static final int FLIPPER_OUT = 6;
+//  public static final int FLIPPER_IN = 0;
+//  public static final int FLIPPER_OUT = 6;
  
    }
    public static final class PullyConstants {

@@ -33,7 +33,6 @@ public void initialize() {
 
         if(isPulleyDone2 = true && isScheduled()) {
             isFinished();
-            System.out.print("Finished Pneumatics Command");
         }
 
     }

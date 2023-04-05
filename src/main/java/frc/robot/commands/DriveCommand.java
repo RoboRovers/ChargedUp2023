@@ -2,6 +2,10 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
+
+import com.revrobotics.CANSparkMax.ControlType;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.cscore.UsbCamera;
 import edu.wpi.first.math.filter.SlewRateLimiter;
@@ -22,19 +26,21 @@ public class DriveCommand extends CommandBase {
 
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
+    public final CommandXboxController opController;
     public PulleySubsystem pulleySubsystem;
    
     private final Joystick driveStick;
     private final Joystick thetaStick;
 
     private final SlewRateLimiter xLimiter, yLimiter, turningLimiter;
-    private boolean fieldOriented=true;
+    private boolean fieldOriented=false;
      DigitalInput retractSwitch;
      public double ySpeed;
      public double xSpeed;
      public double turningSpeed;
      public CameraServer frontCamera;
      public double lightsMode;
+
 
 
 
@@ -48,6 +54,7 @@ public class DriveCommand extends CommandBase {
                 addRequirements(swerveSubsystem);
                 thetaStick = new Joystick(3);
                 driveStick = new Joystick(0);
+                this.opController = opController;
 
                 //   retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
             CameraServer.startAutomaticCapture();
@@ -61,32 +68,15 @@ public class DriveCommand extends CommandBase {
      swerveSubsystem.faceAllFoward();
      lightsMode = 2;
 
-
-    //  try{
-    //     Thread.sleep(100);
-    //     SwerveSubsystem.frontLeftModule.steerMotorEncoder.setPosition(0);
-    //     SwerveSubsystem.frontRightModule.steerMotorEncoder.setPosition(0);
-    //     SwerveSubsystem.backLeftModule.steerMotorEncoder.setPosition(0);
-    //     SwerveSubsystem.backRightModule.steerMotorEncoder.setPosition(0);
-    //  }catch (Exception i) {
-
-    //  }
-try{
-    Thread.sleep(10);
-}catch (Exception i) {
-
-}
-
-    //  SwerveSubsystem.frontLeftModule.turningPidController.setP(0.005);
-    //  SwerveSubsystem.frontRightModule.turningPidController.setP(0.005);
-    //  SwerveSubsystem.backLeftModule.turningPidController.setP(0.005);
-    //  SwerveSubsystem.backRightModule.turningPidController.setP(0.005);
-
    
     }
-    //Auto Balance Stuff
 
-
+// public void move77IN () {
+// SwerveSubsystem.frontLeftModule.drivePidController.setReference(1.958975, ControlType.kPosition);
+// SwerveSubsystem.frontRightModule.drivePidController.setReference(1.958975, ControlType.kPosition);
+// SwerveSubsystem.backLeftModule.drivePidController.setReference(1.958975, ControlType.kPosition);
+// SwerveSubsystem.backRightModule.drivePidController.setReference(1.958975, ControlType.kPosition);
+// }
    
 
 
@@ -99,8 +89,8 @@ try{
         }
 
 //Xbox joystick init and debugging code. Main drive method
-         xSpeed = driveController.controller.getLeftX()*-1;
-         ySpeed = driveController.controller.getLeftY()*-1;
+         xSpeed = driveController.controller.getLeftX();
+         ySpeed = driveController.controller.getLeftY();
          turningSpeed = driveController.controller.getRightX()*-1;
         // SmartDashboard.putNumber("Left Stick X", driveController.controller.getLeftX());
         // SmartDashboard.putNumber("Left Stick Y", driveController.controller.getLeftY());
@@ -122,10 +112,9 @@ try{
 //button mappings assiociated with the drive system or aspects of the drive system
 
 //left bumper = reset heading for gyro
-        if(driveController.povEast.getAsBoolean())
-        {
-            swerveSubsystem.zeroHeadingButton();
-        }
+    
+
+        
 
         // if(driveStick.getRawButtonPressed(4)) {
         //         swerveSubsystem.zeroHeading();
@@ -146,7 +135,7 @@ if(driveController.startButton.getAsBoolean()) {
 }
 
 
-if(driveController.buttonX.getAsBoolean() == true) {
+if(driveController.rightStick.getAsBoolean() == true) {
     lightsMode = lightsMode+1;
 }
 
@@ -215,7 +204,7 @@ if(lightsMode == 1 && fieldOriented == true) {
         if (fieldOriented) {
             // Relative to field
             chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(
-                    ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
+                    ySpeed * -1, xSpeed * -1, turningSpeed, swerveSubsystem.geRotation2d());
                     //swerveSubsystem.lights.set(0.57);
 
                     
@@ -224,7 +213,7 @@ if(lightsMode == 1 && fieldOriented == true) {
             //Y and X speeds are switched her to make forward on the stick foward. Not left or right
 
             // TO DO: see what Turning speed is in and if it needs to be changed to radians or whatever
-            chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
+            chassisSpeeds = new ChassisSpeeds(ySpeed * -1, xSpeed * -1, turningSpeed);
             //swerveSubsystem.lights.set(0.59);
 
         }

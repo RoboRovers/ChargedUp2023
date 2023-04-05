@@ -22,8 +22,8 @@ public void execute() {
     isDone2 = pneumaticsSubsystem.isDone;
 
     if(isDone2 = true && isScheduled()) {
-        isFinished();
-        System.out.print("Finished Pneumatics Command");
+       // isFinished();
+        //System.out.print("Finished Pneumatics Command");
     }
 
 
@@ -31,7 +31,7 @@ public void execute() {
 
 @Override
 public boolean isFinished() {
-return true;
+return false;
 }
 
 @Override

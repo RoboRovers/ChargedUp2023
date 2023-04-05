@@ -160,7 +160,7 @@ public void setDesiredState(SwerveModuleState state) {
         stop();
         return;
   }
- 
+//  state = SwerveModuleState.optimize(state, gState().angle);
 
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
@@ -172,7 +172,6 @@ absoluteEncoder.setPosition(0);
   SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
  */
-  //SmartDashboard.putNumber("what we are giving it" + steerMotor.getDeviceId(), state.angle.getDegrees());
 
 
 }

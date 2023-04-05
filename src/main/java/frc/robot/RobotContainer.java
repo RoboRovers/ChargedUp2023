@@ -122,8 +122,11 @@ private CommandJoystick driveStick = new CommandJoystick(0);
      opController.povDown().whileFalse(_pulley.StopCommand());
 
     
-    opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
-    opController.button(8).whileFalse(_pneumatics.flipperCloseCommand());
+    // opController.button(8).whileTrue(_pneumatics.flipperExtendCommand());
+    // opController.button(8).whileFalse(_pneumatics.flipperCloseCommand());
+
+
+    opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
 
 
 
@@ -140,13 +143,16 @@ private CommandJoystick driveStick = new CommandJoystick(0);
     .andThen(Commands.waitSeconds(1))
     .andThen(_pneumatics.extensionOutCommand()));
 
-    opController.y().toggleOnTrue(_pulley.topShelfCommand()
-    .andThen(Commands.waitSeconds(1))
-    .andThen(_pneumatics.extensionOutCommand()));
+    // opController.y().toggleOnTrue(_pulley.topShelfCommand()
+    // .andThen(Commands.waitSeconds(1))
+    // .andThen(_pneumatics.extensionOutCommand()));
 
-    opController.rightBumper().toggleOnTrue(_pulley.homeCommand()
-    .andThen(_pneumatics.extensionRetractCommand())
-    .andThen(_pneumatics.intakeCloseCommand()));
+     opController.y().onTrue(s_Swerve.balanceCommand());
+
+    opController.rightBumper().toggleOnTrue(_pneumatics.extensionRetractCommand()
+    .andThen(_pneumatics.intakeCloseCommand())
+    .andThen(Commands.waitSeconds(0.5))
+    .andThen(_pulley.homeCommand()));
 
     // driveStick.button(5).onTrue(_pneumatics.extensionOutCommand());
     // driveStick.button(6).onTrue(_pneumatics.extensionRetractCommand());
@@ -178,64 +184,64 @@ private CommandJoystick driveStick = new CommandJoystick(0);
   // This will load the file "FullAuto.path" and generate it with a max velocity of 4 m/s and a max acceleration of 3 m/s^2
 //RIGHT Side Grid RIGHT POLE paths
 List<PathPlannerTrajectory> RRConeFLPath = PathPlanner.loadPathGroup("RR Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RRConeMLPath = PathPlanner.loadPathGroup("RR Cone, mid left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RRConeMRPath = PathPlanner.loadPathGroup("RR Cone, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RRConeMLPath = PathPlanner.loadPathGroup("RR Cone, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RRConeMRPath = PathPlanner.loadPathGroup("RR Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RRConeFRPath = PathPlanner.loadPathGroup("RR Cone, far right", new PathConstraints(2, 1));
 //RIGHT Side Grid MID SHELF paths
-List<PathPlannerTrajectory> RCubeFLPath = PathPlanner.loadPathGroup("R Cube, far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RCubeFLPath = PathPlanner.loadPathGroup("R Cube, far left", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RCubeFRPath = PathPlanner.loadPathGroup("R Cube, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RCubeMLPath = PathPlanner.loadPathGroup("R Cube, mid left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RCubeMRPath = PathPlanner.loadPathGroup("R Cube, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RCubeMLPath = PathPlanner.loadPathGroup("R Cube, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RCubeMRPath = PathPlanner.loadPathGroup("R Cube, mid right", new PathConstraints(2, 1));
 //RIGHT Side Grid LEFT POLE
-List<PathPlannerTrajectory> RLConeFLPath = PathPlanner.loadPathGroup("RL Cone, far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RLConeFLPath = PathPlanner.loadPathGroup("RL Cone, far left", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> RLConeFRPath = PathPlanner.loadPathGroup("RL Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(4, 2));
-List<PathPlannerTrajectory> RLConeMLPath = PathPlanner.loadPathGroup("RL Cone, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> RLConeMRPath = PathPlanner.loadPathGroup("RL Cone, mid right", new PathConstraints(4, 2));
+// List<PathPlannerTrajectory> RLConeMLPath = PathPlanner.loadPathGroup("RL Cone, mid left", new PathConstraints(2, 1));
 //MID Grid RIGHT POLE paths
-List<PathPlannerTrajectory> MRConeFRPath = PathPlanner.loadPathGroup("MR Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MRConeMRPath = PathPlanner.loadPathGroup("MR Cone, mid right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MRConeFLPath = PathPlanner.loadPathGroup("MR Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MRConeMLPath = PathPlanner.loadPathGroup("MR Cone, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MRConeFRPath = PathPlanner.loadPathGroup("MR Cone, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MRConeMRPath = PathPlanner.loadPathGroup("MR Cone, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MRConeFLPath = PathPlanner.loadPathGroup("MR Cone, far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MRConeMLPath = PathPlanner.loadPathGroup("MR Cone, mid left", new PathConstraints(2, 1));
 //MID Grid MID SHELF paths
-List<PathPlannerTrajectory> MCubeFRPath = PathPlanner.loadPathGroup("M Cube, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MCubeMRPath = PathPlanner.loadPathGroup("M Cube, mid right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MCubeFLPath = PathPlanner.loadPathGroup("M Cube, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MCubeMLPath = PathPlanner.loadPathGroup("M Cube, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MCubeFRPath = PathPlanner.loadPathGroup("M Cube, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MCubeMRPath = PathPlanner.loadPathGroup("M Cube, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MCubeFLPath = PathPlanner.loadPathGroup("M Cube, far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MCubeMLPath = PathPlanner.loadPathGroup("M Cube, mid left", new PathConstraints(2, 1));
 //Mid Grid LEFT POLE paths
-List<PathPlannerTrajectory> MLConeFRPath = PathPlanner.loadPathGroup("ML Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MLConeMRPath = PathPlanner.loadPathGroup("ML Cone, mid right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MLConeFLPath = PathPlanner.loadPathGroup("ML Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> MLConeMLPath = PathPlanner.loadPathGroup("ML Cone, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MLConeFRPath = PathPlanner.loadPathGroup("ML Cone, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MLConeMRPath = PathPlanner.loadPathGroup("ML Cone, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MLConeFLPath = PathPlanner.loadPathGroup("ML Cone, far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> MLConeMLPath = PathPlanner.loadPathGroup("ML Cone, mid left", new PathConstraints(2, 1));
 //LEFT Grid RIGHT POLE paths
-List<PathPlannerTrajectory> LRConeFRPath = PathPlanner.loadPathGroup("LR Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LRConeMRPath = PathPlanner.loadPathGroup("LR Cone, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LRConeFRPath = PathPlanner.loadPathGroup("LR Cone, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LRConeMRPath = PathPlanner.loadPathGroup("LR Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LRConeFLPath = PathPlanner.loadPathGroup("LR Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LRConeMLPath = PathPlanner.loadPathGroup("LR Cone, mid left", new PathConstraints(4, 2));
+// List<PathPlannerTrajectory> LRConeMLPath = PathPlanner.loadPathGroup("LR Cone, mid left", new PathConstraints(4, 2));
 //LEFT Grid MID SHELF paths
-List<PathPlannerTrajectory> LCubeFRPath = PathPlanner.loadPathGroup("L Cube, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LCubeMRPath = PathPlanner.loadPathGroup("L Cube, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LCubeFRPath = PathPlanner.loadPathGroup("L Cube, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LCubeMRPath = PathPlanner.loadPathGroup("L Cube, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LCubeFLPath = PathPlanner.loadPathGroup("L Cube, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LCubeMLPath = PathPlanner.loadPathGroup("L Cube, mid left", new PathConstraints(2, 1));
-//LEFT Grid LEFT POLE paths
-List<PathPlannerTrajectory> LLConeFRPath = PathPlanner.loadPathGroup("LL Cone, far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LLConeMRPath = PathPlanner.loadPathGroup("LL Cone, mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LCubeMLPath = PathPlanner.loadPathGroup("L Cube, mid left", new PathConstraints(2, 1));
+//LEFT Grid LEFT POLE paths.
+// List<PathPlannerTrajectory> LLConeFRPath = PathPlanner.loadPathGroup("LL Cone, far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LLConeMRPath = PathPlanner.loadPathGroup("LL Cone, mid right", new PathConstraints(2, 1));
 List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LLConeMLPath = PathPlanner.loadPathGroup("LL Cone, mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> LLConeMLPath = PathPlanner.loadPathGroup("LL Cone, mid left", new PathConstraints(2, 1));
 //Just a few paths back tests
-List<PathPlannerTrajectory> ReturnFL = PathPlanner.loadPathGroup("back from far left", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> ReturnFR = PathPlanner.loadPathGroup("back from far right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> ReturnMR = PathPlanner.loadPathGroup("back from mid right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> ReturnML = PathPlanner.loadPathGroup("back from mid left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> ReturnFL = PathPlanner.loadPathGroup("back from far left", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> ReturnFR = PathPlanner.loadPathGroup("back from far right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> ReturnMR = PathPlanner.loadPathGroup("back from mid right", new PathConstraints(2, 1));
+// List<PathPlannerTrajectory> ReturnML = PathPlanner.loadPathGroup("back from mid left", new PathConstraints(2, 1));
 
-List<PathPlannerTrajectory> RCubeFR2RCube = PathPlanner.loadPathGroup("Complicated test 1", 2, 1);
+// List<PathPlannerTrajectory> RCubeFR2RCube = PathPlanner.loadPathGroup("Complicated test 1", 2, 1);
 
 List<PathPlannerTrajectory> Push = PathPlanner.loadPathGroup("push", 2, 1);
 
-List<PathPlannerTrajectory> overCharge = PathPlanner.loadPathGroup("overCharge", 2, 1);
+List<PathPlannerTrajectory> overCharge = PathPlanner.loadPathGroup("overCharge", 2, 1.75);
 
 List<PathPlannerTrajectory> Balance = PathPlanner.loadPathGroup("Manuel Set", 2, 1.5);
 
-List<PathPlannerTrajectory> markerTest = PathPlanner.loadPathGroup("Event Path Test", 2, 1);
+// List<PathPlannerTrajectory> markerTest = PathPlanner.loadPathGroup("Event Path Test", 2, 1);
 
 
 
@@ -267,10 +273,9 @@ SwerveAutoBuilder autoBuilder = new SwerveAutoBuilder(s_Swerve::getPose,
 
 
 
+//LOW POINT AUTOS
 
 
-
-// Try this out - Evan's code
 SequentialCommandGroup LowPointOver = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pneumatics.intakeOpenCommand())
 .andThen(Commands.waitSeconds(2))
@@ -284,12 +289,6 @@ SequentialCommandGroup LowPointLeave = new SequentialCommandGroup(s_Swerve.faceF
 .andThen(autoBuilder.followPathGroup(Push))
 .andThen(_pneumatics.intakeCloseCommand())
 .andThen(autoBuilder.followPathGroup(LCubeFLPath)));
-
-// .andThen(_pneumatics.extensionRetractCommand())
-// .andThen(Commands.waitSeconds(2))
-// .andThen(autoBuilder.followPathGroup(LRConeMLPath))
-// .andThen(autoBuilder.followPathGroup(ReturnML))
-// .andThen(autoBuilder.followPathGroup(ReturnFR));
 
 SequentialCommandGroup LowPointOverNBal = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pneumatics.intakeOpenCommand())
@@ -308,9 +307,15 @@ SequentialCommandGroup lowPointOverShortBal = new SequentialCommandGroup(s_Swerv
 .andThen(autoBuilder.followPathGroup(Balance))
 .andThen());
 
+SequentialCommandGroup balanceTest = new SequentialCommandGroup(s_Swerve.balanceCommand());
 
 
-//Straight on with poll and FLush against the board.
+
+
+
+//TOP POLE COMMANDS
+
+//Straight on with poll and Flush against the board.
 SequentialCommandGroup TopPollStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topPoleCommand())
 .andThen(Commands.waitSeconds(1))
@@ -325,21 +330,7 @@ SequentialCommandGroup TopPollStay = new SequentialCommandGroup(s_Swerve.faceFor
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand()));
 
-SequentialCommandGroup TopPollOverCharge = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
-.andThen(_pulley.topPoleCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.extensionOutCommand())
-.andThen(Commands.waitSeconds(1.4))
-.andThen(_pulley.topPoleDropCommand())
-.andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(0.275))
-.andThen(_pneumatics.extensionRetractCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.intakeCloseCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pulley.homeCommand()));
-
-SequentialCommandGroup TopPoll2FL = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+SequentialCommandGroup LLTopPoll2FL = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topPoleCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
@@ -351,7 +342,75 @@ SequentialCommandGroup TopPoll2FL = new SequentialCommandGroup(s_Swerve.faceForw
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.intakeCloseCommand())
 .andThen(Commands.waitSeconds(1))
-.andThen(_pulley.homeCommand()));
+.andThen(_pulley.homeCommand())
+.andThen(autoBuilder.followPathGroup(LLConeFLPath)));
+
+SequentialCommandGroup LRTopPoll2FL = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.27))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(autoBuilder.followPathGroup(LRConeFLPath)));
+
+SequentialCommandGroup RRTopPoll2FR = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.27))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(autoBuilder.followPathGroup(RRConeFRPath)));
+
+SequentialCommandGroup RLTopPoll2FR = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.27))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(autoBuilder.followPathGroup(RLConeFRPath)));
+
+SequentialCommandGroup midPolesOverCharge = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topPoleCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1.4))
+.andThen(_pulley.topPoleDropCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(0.27))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(autoBuilder.followPathGroup(overCharge)));
+
+
+
+
+
+
+//TOP CUBE AUTOS
 
 //set even with a shelf and a foot width away from the boards
 SequentialCommandGroup TopCubeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
@@ -364,34 +423,6 @@ SequentialCommandGroup TopCubeStay = new SequentialCommandGroup(s_Swerve.faceFor
 .andThen(_pneumatics.extensionRetractCommand())
 .andThen(_pneumatics.intakeCloseCommand())
 .andThen(Commands.waitSeconds(1))
-.andThen(_pulley.homeCommand())
-);
-
-SequentialCommandGroup MidConeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
-.andThen(_pulley.midPoleCommand())
-.andThen(Commands.waitSeconds(2))
-.andThen(_pneumatics.extensionOutCommand())
-.andThen(Commands.waitSeconds(3))
-.andThen(_pulley.midPoleDownCommand())
-.andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.extensionRetractCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.intakeCloseCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pulley.homeCommand()));
-
-
-SequentialCommandGroup MidCubeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
-.andThen(_pulley.midShelfCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.extensionOutCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.extensionRetractCommand())
-.andThen(Commands.waitSeconds(1))
-.andThen(_pneumatics.intakeCloseCommand())
 .andThen(_pulley.homeCommand())
 );
 
@@ -425,7 +456,6 @@ SequentialCommandGroup topLeftCube2FL = new SequentialCommandGroup(s_Swerve.face
 .andThen(autoBuilder.followPathGroup(LCubeFLPath))
 );
 
-
 SequentialCommandGroup topCubeOver = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topShelfCommand())
 .andThen(Commands.waitSeconds(1))
@@ -443,92 +473,110 @@ SequentialCommandGroup topCubeOver = new SequentialCommandGroup(s_Swerve.faceFor
 
 
 
-SequentialCommandGroup markerTestCommand = new SequentialCommandGroup(autoBuilder.fullAuto(markerTest));
+
+
+//MID COMMANDS
+
+SequentialCommandGroup MidConeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.midPoleCommand())
+.andThen(Commands.waitSeconds(2))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(3))
+.andThen(_pulley.midPoleDownCommand())
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand()));
+
+
+SequentialCommandGroup MidCubeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.midShelfCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(_pulley.homeCommand())
+);
+
+SequentialCommandGroup HighCubeAutoSet = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topShelfCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(autoBuilder.followPathGroup(overCharge))
+// .andThen(Commands.waitSeconds(0.5))
+.andThen(s_Swerve.autoBalanceCommand));
 
 
 
 
 
-SequentialCommandGroup Nothing = new SequentialCommandGroup(_pneumatics.flipperCloseCommand());
+
+
+
+
+
+
+
+
+SequentialCommandGroup Nothing = new SequentialCommandGroup(_pneumatics.extensionRetractCommand());
 
 
 //add command options
-      //Right Grid Right Cone Commands (JUST THE TRATECTORIES)
-// autonChooser.addOption("RRConeFRPath", RRConeFRCommand);
-// autonChooser.addOption("RRConeFLPath", RRConeFLCommand);
-// autonChooser.addOption("RRConeMRPath", RRConeMRCommand);
-// autonChooser.addOption("RRConeMLPath", RRConeMLCommand);
-//       //Right Grid Shelf Commands (JUST THE TRAJECTORIES)
-// autonChooser.addOption("RCubeFRPath", RCubeFRCommand);
-// autonChooser.addOption("RCubeFLPath", RCubeFLCommand);
-// autonChooser.addOption("RCubeMRPath", RCubeMRCommand);
-// autonChooser.addOption("RCubeMLPath", RCubeMLCommand);
-//       //Right Grid Left Pole Commands (JUST THE TRAJECTORIES)
-// autonChooser.addOption("RLConeFRPath", RLConeFRCommand);
-// autonChooser.addOption("RLConeFLPath", RLConeFLCommand);
-// autonChooser.addOption("RLConeMRPath", RLConeMRCommand);
-// autonChooser.addOption("RLConeMLPath", RLConeMLCommand);
-//       //Mid Grid Right Cone Commands (JUST THE TRAJECTORIES)
-// autonChooser.addOption("MRConeFRPath", MRConeFRCommand);
-// autonChooser.addOption("MRConeFLPath", MRConeFLCommand);
-// autonChooser.addOption("MRConeMRPath", MRConeMRCommand);
-// autonChooser.addOption("MRConeMLPath", MRConeMLCommand);
-//       //Mid Grid Shelf Commands  (JUST THE TRAJECTORIES)
-// autonChooser.addOption("MCubeFRPath", MCubeFRCommand);
-// autonChooser.addOption("MCubeFLPath", MCubeFLCommand);
-// autonChooser.addOption("MCubeMRPath", MCubeMRCommand);
-// autonChooser.addOption("MCubeMLPath", MCubeMLCommand);
-//       //Mid Grid Left Cone Commands  (JUST THE TRAJECTORIES)
-// autonChooser.addOption("MLConeFRPath", MLConeFRCommand);
-// autonChooser.addOption("MLConeFLPath", MLConeFLCommand);
-// autonChooser.addOption("MLConeMRPath", MLConeMRCommand);
-// autonChooser.addOption("MLConeMLPath", MLConeMLCommand);
-//       //Left Grid Right Cone Commands   (JUST THE TRAJECTORIES)
-// autonChooser.addOption("LRConeFRPath", LRConeFRCommand);
-// autonChooser.addOption("LRConeFLPath", LRConeFLCommand);
-// autonChooser.addOption("LRConeMRPath", LRConeMRCommand);
-// autonChooser.addOption("LRConeMLPath", LRConeMLCommand);
-//       //Left Grid Shelf Commands   (JUST THE TRAJECTORIES)
-// autonChooser.addOption("LCubeFRPath", LCubeFRCommand);
-// autonChooser.addOption("LCubeFLPath", LCubeFLCommand);
-// autonChooser.addOption("LCubeMRPath", LCubeMRCommand);
-// autonChooser.addOption("LCubeMLPath", LCubeMLCommand);
-//       //Left Grid Left Cone Commands   (JUST THE TRAJECTORIES)
-// autonChooser.addOption("LLConeFRPath", LLConeFRCommand);
-// autonChooser.addOption("LLConeFLPath", LLConeFLCommand);
-// autonChooser.addOption("LLConeMRPath", LLConeMRCommand);
-// autonChooser.addOption("LLConeMLPath", LLConeMLCommand);
-//       //return commands
-// autonChooser.addOption("Return from mid right", returnMRCommand);
-// autonChooser.addOption("Return from far right", returnFRCommand);
-// autonChooser.addOption("Return from mid left", returnMLCommand);
-// autonChooser.addOption("Return from far left", returnFLCommand);
+
+      //low points
+      autonChooser.addOption("Low Point + Over", LowPointOver);
+      autonChooser.addOption("Low Point + Leave", LowPointLeave);
+      autonChooser.addOption("Low Point + Over + Balance", LowPointOverNBal);
+      autonChooser.addOption("manuel", lowPointOverShortBal);
+
+
+      //High Commands
+          //polls
+          autonChooser.addOption("High Poll Stay", TopPollStay);
+          autonChooser.addOption("High Polls over charge station", midPolesOverCharge);
+          autonChooser.addOption("Human side station, left pole, to far right piece", RLTopPoll2FR);
+          autonChooser.addOption("Human side station, Right pole, to far right piece", RRTopPoll2FR);
+          autonChooser.addOption("Judge side station, left poll, to far judge side piece", LLTopPoll2FL);
+          autonChooser.addOption("Judge side station, right poll, to far judge side piece", LRTopPoll2FL);
 
 
 
-autonChooser.addOption("Low Point + Over", LowPointOver);
+          //Cubes
+          autonChooser.addOption("Right Cube High Leave 2 FR", topRightCube2FR);
+          autonChooser.addOption("Left Cube High Leave 2 FL", topLeftCube2FL);
+          autonChooser.addOption("High Cube Stay", TopCubeStay);
+          autonChooser.addOption("High Cube Over Charge", topCubeOver);
+          
 
-autonChooser.addOption("Low Point + Leave", LowPointLeave);
+          //Mid Piece Autos
+          autonChooser.addOption("Mid Cube Stay", MidCubeStay);
+          autonChooser.addOption("Mid Cone Stay", MidConeStay);
 
-autonChooser.addOption("Low Point + Over + Balance", LowPointOverNBal);
 
-autonChooser.addOption("manuel", lowPointOverShortBal);
+          //NOTHING
+          autonChooser.addOption("Nothing", Nothing);
 
-autonChooser.addOption("Nothing", Nothing);
 
-autonChooser.addOption("High Poll Stay", TopPollStay);
 
-autonChooser.addOption("High Cube Stay", TopCubeStay);
+          autonChooser.addOption("Auto Balance Test", balanceTest);
 
-autonChooser.addOption("Mid Cube Stay", MidCubeStay);
+          autonChooser.addOption("Score high and Bal", HighCubeAutoSet);
 
-autonChooser.addOption("Mid Cone Stay", MidConeStay);
-
-autonChooser.addOption("Right Cube High Leave 2 FR", topRightCube2FR);
-
-autonChooser.addOption("Left Cube High Leave 2 FL", topLeftCube2FL);
-
-autonChooser.addOption("High Cube Over Charge", topCubeOver);
 
 }
  

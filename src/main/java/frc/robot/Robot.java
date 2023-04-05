@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -18,7 +19,6 @@ import frc.robot.subsystems.SwerveSubsystem;
  */
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
- // public SwerveSubsystem swerveSubsystem;
 
   private RobotContainer m_robotContainer;
 
@@ -32,7 +32,6 @@ public class Robot extends TimedRobot {
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
 
-    //swerveSubsystem = new SwerveSubsystem(null);
   }
 
   /**
@@ -62,7 +61,6 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
   
-    //swerveSubsystem.faceAllFoward();
 
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 

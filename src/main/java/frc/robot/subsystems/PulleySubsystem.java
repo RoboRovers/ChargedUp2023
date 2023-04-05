@@ -79,35 +79,36 @@ public double pulleyEncoderValue() {
 
 //2' 11" || 35" || 12600 deg || 35 rotations
 public void topShelf() {
-pulleyPidController.setReference(3600, ControlType.kPosition); 
+pulleyPidController.setReference(2700, ControlType.kPosition); 
 }
 
 
 //1' 11" || 23" || 8280 deg || 23 rotations
 public void midShelf() {
-    pulleyPidController.setReference(2000, ControlType.kPosition);
+    pulleyPidController.setReference(1500, ControlType.kPosition);
 
 }
 
 //3' 10" || 46" || 16560 deg || 46 rotations
 public void topPole() {
-    pulleyPidController.setReference(4800, ControlType.kPosition); //3400
+    pulleyPidController.setReference(3100, ControlType.kPosition); //3400
 }
 public void topPoleDrop() {
-    pulleyPidController.setReference(3800, ControlType.kPosition); 
+    pulleyPidController.setReference(2500, ControlType.kPosition); 
 }
 
 
 
 //2' 10" || 34" || 12240 deg || 34 rotations
 public void midPole() {
-    pulleyPidController.setReference(3500, ControlType.kPosition); //2900
+    pulleyPidController.setReference(2000, ControlType.kPosition); //2900
 }
 public void midPoleDown () {
-    pulleyPidController.setReference(2700, ControlType.kPosition);
+    pulleyPidController.setReference(1500, ControlType.kPosition);
 }
 
 
+//For auto Pickup
 public void autoOutUp() {
     pulleyPidController.setReference(1000, ControlType.kPosition);
 }

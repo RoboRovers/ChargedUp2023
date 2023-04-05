@@ -4,8 +4,10 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
@@ -24,7 +26,8 @@ public double ySpeed;
 public double turningSpeed;
 PIDController balanceController;
 Timer balanceTimer;
-Timer isDoneTimer;
+// Timer isDoneTimer;
+// public boolean balanceDone;
 
 
 
@@ -41,29 +44,31 @@ public AutoBalanceCommand(SwerveSubsystem swerveSubsystem, OI driveController, C
 @Override
 public void initialize() {
 
-    balanceController = new PIDController(0.008, 0, 0);
+    balanceController = new PIDController(0.0425, 0, 0.03);
     balanceTimer = new Timer();
-    isDoneTimer = new Timer();
+    // balanceDone = false;
+    balanceTimer.start();
 
 }
 
 @Override
 public void execute() {
 
-
-balanceTimer.start();
+SmartDashboard.putNumber("Balance Timer", balanceTimer.get());
 
 swerveSubsystem.getRoll();
 
-ySpeed = 0;
+xSpeed = 0;
 turningSpeed = 0;
 
-//xSpeed = balanceController.calculate(swerveSubsystem.getRoll(), 0);
-balanceController.setTolerance(1.5);
+ySpeed = (balanceController.calculate(swerveSubsystem.getRoll(), 0));
+balanceController.setTolerance(10);
+
+
 
 ChassisSpeeds chassisSpeeds;
 
-chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpeed, swerveSubsystem.geRotation2d());
+chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
                     swerveSubsystem.lights.set(0.57);
 
 
@@ -71,26 +76,32 @@ chassisSpeeds = ChassisSpeeds.fromFieldRelativeSpeeds(ySpeed, xSpeed, turningSpe
                     swerveSubsystem.setModuleStates(moduleStates);
 
 
-while(swerveSubsystem.getRoll() > -2 || swerveSubsystem.getRoll() < 2) {
-    isDoneTimer.start();
-    if(isDoneTimer.hasElapsed(3)) {
 
-        isFinished();
-        //end the command
-    } else {
-        isDoneTimer.stop();
-        isDoneTimer.reset();
-    }
+if(swerveSubsystem.getRoll() < 3 && swerveSubsystem.getRoll() > -3) {
+    turningSpeed = 0.01;
+    Commands.waitSeconds(0.5);
+    swerveSubsystem.stopModules();
 }
-if(balanceTimer.hasElapsed(10)) {
-    isFinished();
+
+if(swerveSubsystem.getRoll() < -50 || swerveSubsystem.getRoll() > 50) {
+    swerveSubsystem.stopModules();
+    
 }
+
+
+
+// if(balanceTimer.hasElapsed(15)) {
+// balanceDone = true;
+// }
+
+
 
     }
 
      public void autoBalance() {
        initialize();
         execute();
+        System.out.print("Execute ran");
     }
 
     
@@ -98,13 +109,14 @@ if(balanceTimer.hasElapsed(10)) {
 
 @Override
 public boolean isFinished() {
-    return true;
+    // return balanceDone;
+    return false;
 } 
 
 @Override
 public void end(boolean interrupted) {
     balanceTimer.stop();
-    isDoneTimer.stop();
+    // isDoneTimer.stop();
     swerveSubsystem.stopModules();
 }
 

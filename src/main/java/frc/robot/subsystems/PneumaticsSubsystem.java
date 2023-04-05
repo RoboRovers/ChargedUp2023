@@ -4,6 +4,7 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
@@ -17,12 +18,15 @@ public class PneumaticsSubsystem extends SubsystemBase {
     //Extension pneumatics
     private static DoubleSolenoid _extension = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.EXTENSION_IN, Constants.PneumaticsConstants.EXTENSION_OUT);
     //FLipper pneumatics
-    private static DoubleSolenoid _flipper = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.FLIPPER_IN, Constants.PneumaticsConstants.FLIPPER_OUT);
+    // private static DoubleSolenoid _flipper = new DoubleSolenoid(1, PneumaticsModuleType.CTREPCM, Constants.PneumaticsConstants.FLIPPER_IN, Constants.PneumaticsConstants.FLIPPER_OUT);
+   
+    private Compressor mainCompressor = new Compressor(1, PneumaticsModuleType.CTREPCM);
     /** Creates a new Pnuematics. */
     public PneumaticsSubsystem() {
       _intakeLeft.set(Value.kForward);
       _extension.set(Value.kReverse);
-      _flipper.set(Value.kReverse);
+      // _flipper.set(Value.kReverse);
+      
     }
   
     
@@ -51,12 +55,12 @@ public class PneumaticsSubsystem extends SubsystemBase {
       intakeState = true;
     }
 
-    public void flipperClose() {
-      _flipper.set(Value.kReverse);
-    }
-    public void flipperExtend() {
-      _flipper.set(Value.kForward);
-    }
+    // public void flipperClose() {
+    //   _flipper.set(Value.kReverse);
+    // }
+    // public void flipperExtend() {
+    //   _flipper.set(Value.kForward);
+    // }
 
     public boolean extensionState = false;
 
@@ -106,25 +110,25 @@ public CommandBase intakeCloseCommand() {
   );
 }   
 
-public CommandBase flipperCloseCommand() {
-  return runOnce(
-    () -> {
-      isDone = false;
-      flipperClose();
-      isDone = true;
-    }
-  );
-}
+// public CommandBase flipperCloseCommand() {
+//   return runOnce(
+//     () -> {
+//       isDone = false;
+//       flipperClose();
+//       isDone = true;
+//     }
+//   );
+// }
 
-public CommandBase flipperExtendCommand() {
-  return runOnce(
-    () -> {
-      isDone = false;
-      flipperExtend();
-      isDone = true;
-    }
-  );
-}
+// public CommandBase flipperExtendCommand() {
+//   return runOnce(
+//     () -> {
+//       isDone = false;
+//       flipperExtend();
+//       isDone = true;
+//     }
+//   );
+// }
 
 public CommandBase extensionRetractCommand() {
   return runOnce(

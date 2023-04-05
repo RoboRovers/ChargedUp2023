@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 
@@ -100,10 +101,20 @@ backRightModule.getPosition()
 
     }
 
+
     public void zeroHeadingButton() {
         gyro.reset();
         gyro.setAngleAdjustment(0);
     }
+
+    public CommandBase zeroHeadingCommand() {
+        return runOnce(
+            () -> {
+                zeroHeadingButton();
+            }
+        );
+    }
+
 
     //used for debugging and field centric
     public double getHeading() {
@@ -136,19 +147,19 @@ backRightModule.getPosition()
     }
 
 
-    public void balanceMethod() {
-        autoBalanceCommand.autoBalance();
-    }
-
     public CommandBase balanceCommand() {
-        return runOnce(
-            () -> {
-                balanceMethod();
-            }
-        ); 
-            
+        // return runOnce(
+        //     () -> {
+        //         System.out.print("COMMAND RAN");
+        //         autoBalanceCommand.initialize();
+        //         Commands.waitSeconds(0.5);
+        //         autoBalanceCommand.execute();
+        //     }
+        // ); 
+            return new AutoBalanceCommand(this, driveController, opController, pulleySubsystem);
         }
 
+    
     
  
     @Override
@@ -172,7 +183,7 @@ backRightModule.getPosition()
 // SmartDashboard.putBoolean("Retract Switch State", retractSwitchState);
 // SmartDashboard.putBoolean("Is the check running", isItWorking);
 
-SmartDashboard.putNumber("Roll value", getRoll());
+ SmartDashboard.putNumber("Roll value", getRoll());
 
         
       
@@ -282,37 +293,6 @@ public void faceAllFoward() {
    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     System.out.println("exacuted faceAll");
 }
-
- /* 
-static PIDController xController = new PIDController(Constants.AutoConstants.kPXController, 0, 0);
-static PIDController yController = new PIDController(Constants.AutoConstants.kPYController, 0, 0);
-static PIDController thetaController = new PIDController(
-  Constants.AutoConstants.kPThetaController, 0, 0);
-
-public Command followTrajectoryCommand(PathPlannerTrajectory traj, boolean isFirstPath) {
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-    return new SequentialCommandGroup(
-         new InstantCommand(() -> {
-           // Reset odometry for the first path you run during auto
-           if(isFirstPath){
-               this.resetOdometry(traj.getInitialHolonomicPose());
-           }
-         }),
-    
-         new PPSwerveControllerCommand(
-             traj, 
-             this::getPose, // Pose supplier
-             Constants.DriveConstants.kDriveKinematics, // SwerveDriveKinematics
-             xController, // X controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-             yController, // Y controller (usually the same values as X controller)
-             thetaController, // Rotation controller. Tune these values for your robot. Leaving them 0 will only use feedforwards.
-             this::setModuleStates, // Module states consumer
-             false, // Should the path be automatically mirrored depending on alliance color. Optional, defaults to true
-             this // Requires this drive subsystem
-         )
-     );
-
- }*/
  
 
 }
