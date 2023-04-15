@@ -20,11 +20,13 @@ import java.util.function.BooleanSupplier;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.revrobotics.AbsoluteEncoder;
+import com.revrobotics.CANSparkMax.ControlType;
 
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.AutoBalanceCommand;
+import frc.robot.commands.DriveCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 
@@ -84,7 +86,6 @@ backRightModule.getPosition()
         driveStick = new Joystick(0);
         autoBalanceCommand = new AutoBalanceCommand(this, driveController, opController, pulleySubsystem);
 
-
         new Thread(() -> {
             try {
                 Thread.sleep(1000);
@@ -114,6 +115,9 @@ backRightModule.getPosition()
             }
         );
     }
+
+        
+
 
 
     //used for debugging and field centric
@@ -148,22 +152,22 @@ backRightModule.getPosition()
 
 
     public CommandBase balanceCommand() {
-        // return runOnce(
-        //     () -> {
-        //         System.out.print("COMMAND RAN");
-        //         autoBalanceCommand.initialize();
-        //         Commands.waitSeconds(0.5);
-        //         autoBalanceCommand.execute();
-        //     }
-        // ); 
             return new AutoBalanceCommand(this, driveController, opController, pulleySubsystem);
         }
 
-    
+    public CommandBase fieldOrrientCommand() {
+        return runOnce(
+            () -> {
+                
+            }
+        );
+    }
     
  
     @Override
     public void periodic() {
+
+
 
         // frontLeftModule.steerMotorEncoder.setPosition(frontLeftModule.getAbsoluteEncoderDeg()-Constants.DriveConstants.kFLDegrees);
         // frontRightModule.steerMotorEncoder.setPosition(frontRightModule.getAbsoluteEncoderDeg()-Constants.DriveConstants.kFRDegrees);
@@ -210,10 +214,10 @@ backRightModule.getPosition()
     //     SmartDashboard.putNumber("Front Left AE Value", frontLeftModule.getAbsoluteEncoderDeg(12.392));
     //     SmartDashboard.putNumber("Front Right AE Value", frontRightModule.getAbsoluteEncoderDeg(298.2));
     //    //RE Degrees Reading
-    //     SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
-    //     SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
-    //     SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
-    //     SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Back left RE Value", backLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Back Right RE Value", backRightModule.getSteerPosition());
+        SmartDashboard.putNumber("Front left RE Value", frontLeftModule.getSteerPosition());
+        SmartDashboard.putNumber("Front Right RE Value", frontRightModule.getSteerPosition());
 
     //    SmartDashboard.putNumber("Front Left Drive Position", frontLeftModule.getDrivePosition());
     //    SmartDashboard.putNumber("Front Right Drive Position", frontRightModule.getDrivePosition());
@@ -221,7 +225,6 @@ backRightModule.getPosition()
     //    SmartDashboard.putNumber("Back Right Drive Position", backRightModule.getDrivePosition());
 
     //    SmartDashboard.putNumber("kP Value" + SwerveModule.steerMotor.getDeviceId(), SwerveModule.getPIDController().getP());
-
 
     }
     
@@ -277,6 +280,14 @@ public void retractSwitchCheck(boolean switchState) {
 
     }
 
+    public void lockWheels() {
+        frontLeftModule.turningPidController.setReference(45, ControlType.kPosition);
+        frontRightModule.turningPidController.setReference(45, ControlType.kPosition);
+        backLeftModule.turningPidController.setReference(45, ControlType.kPosition);
+        backRightModule.turningPidController.setReference(45, ControlType.kPosition);
+
+    }
+
     public CommandBase faceForwardCommand() {
         return runOnce(
             () -> {
@@ -293,6 +304,7 @@ public void faceAllFoward() {
    backLeftModule.wheelFaceForward(Constants.DriveConstants.kBLDegrees);
     System.out.println("exacuted faceAll");
 }
+
  
 
 }

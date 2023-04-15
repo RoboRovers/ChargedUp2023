@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.OI;
 import frc.robot.Constants;
+import frc.robot.subsystems.ForkLiftSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 
@@ -19,20 +20,20 @@ public class AutoBalanceCommand extends DriveCommand{
     
 public SwerveSubsystem swerveSubsystem;
 public PulleySubsystem pulleySubsystem;
+public static ForkLiftSubsystem forkLiftSubsystem;
 public OI driveController;
 public CommandXboxController opController;
+public static CommandXboxController miscController;
 public double xSpeed;
 public double ySpeed;
 public double turningSpeed;
 PIDController balanceController;
-Timer balanceTimer;
-// Timer isDoneTimer;
-// public boolean balanceDone;
+public boolean balanceDone = false;
 
 
 
 public AutoBalanceCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
-        super(swerveSubsystem, driveController, opController, pulleySubsystem);
+        super(swerveSubsystem, driveController, opController, pulleySubsystem, forkLiftSubsystem, miscController);
         this.swerveSubsystem = swerveSubsystem;
         this.pulleySubsystem = pulleySubsystem;
 
@@ -44,17 +45,14 @@ public AutoBalanceCommand(SwerveSubsystem swerveSubsystem, OI driveController, C
 @Override
 public void initialize() {
 
-    balanceController = new PIDController(0.0425, 0, 0.03);
-    balanceTimer = new Timer();
-    // balanceDone = false;
-    balanceTimer.start();
+    balanceController = new PIDController(0.0375, 0, 0.02);
+  
 
 }
 
 @Override
 public void execute() {
 
-SmartDashboard.putNumber("Balance Timer", balanceTimer.get());
 
 swerveSubsystem.getRoll();
 
@@ -62,7 +60,7 @@ xSpeed = 0;
 turningSpeed = 0;
 
 ySpeed = (balanceController.calculate(swerveSubsystem.getRoll(), 0));
-balanceController.setTolerance(10);
+balanceController.setTolerance(1);
 
 
 
@@ -77,26 +75,27 @@ chassisSpeeds = new ChassisSpeeds(ySpeed, xSpeed, turningSpeed);
 
 
 
-if(swerveSubsystem.getRoll() < 3 && swerveSubsystem.getRoll() > -3) {
-    turningSpeed = 0.01;
-    Commands.waitSeconds(0.5);
-    swerveSubsystem.stopModules();
-}
+
 
 if(swerveSubsystem.getRoll() < -50 || swerveSubsystem.getRoll() > 50) {
     swerveSubsystem.stopModules();
-    
+}
+
+if(balanceController.atSetpoint()) {
+    balanceDone = true;
+    //lock wheels
+    // swerveSubsystem.stopModules();
 }
 
 
 
-// if(balanceTimer.hasElapsed(15)) {
-// balanceDone = true;
-// }
 
 
 
     }
+
+
+   
 
      public void autoBalance() {
        initialize();
@@ -109,15 +108,14 @@ if(swerveSubsystem.getRoll() < -50 || swerveSubsystem.getRoll() > 50) {
 
 @Override
 public boolean isFinished() {
-    // return balanceDone;
-    return false;
+    return balanceDone;
+    // return false;
 } 
 
 @Override
 public void end(boolean interrupted) {
-    balanceTimer.stop();
-    // isDoneTimer.stop();
     swerveSubsystem.stopModules();
+    swerveSubsystem.lockWheels();
 }
 
 

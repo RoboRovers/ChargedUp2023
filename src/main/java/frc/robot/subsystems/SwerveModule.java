@@ -6,8 +6,10 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.fasterxml.jackson.databind.deser.SettableBeanProperty.Delegating;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -60,7 +62,6 @@ public class SwerveModule extends SubsystemBase {
     turningPidController.setPositionPIDWrappingMinInput(720);
 
     drivePidController.setP(0.025);
-    turningPidController.setP(0.04);
 
 
 
@@ -124,7 +125,7 @@ public void stop() {
   }
     //Get the Steer values. Value is in degrees.
   public double getSteerPosition() {
-     return steerMotorEncoder.getPosition() % 360;
+     return Math.abs(steerMotorEncoder.getPosition() % 360);
   }
   public double getSteerVelocity() {
     return steerMotorEncoder.getVelocity();
@@ -135,12 +136,16 @@ public void stop() {
   }
   
  
+
  //Motor encoder conversions and useful info
   //2.844444444444444 * 1 = ticks. Degrees to ticks
   //1 degree equals 2.844444444444444 ticks
   //1 tick equals 0.3515625 degrees. 
   //Ticks * 0.3515625 equals degrees
   //Motors are in ticks by default 1024 ticks equals 360 deg
+
+
+
 
 
   
@@ -160,7 +165,12 @@ public void setDesiredState(SwerveModuleState state) {
         stop();
         return;
   }
-//  state = SwerveModuleState.optimize(state, gState().angle);
+//  state = optimizer(state, gState().angle);
+
+//  SmartDashboard.putString("States [" + steerMotor.getDeviceId() + "[", state.toString());
+
+
+ 
 
 //call our drive motor and steer motor. Steer motor is multiplied by 3 to get 90deg instead of 30deg when strafing direct right/left
  driveMotor.set(state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
@@ -169,12 +179,45 @@ absoluteEncoder.setPosition(0);
 
 /*SmartDashboard debug stuff, printing out our drive and steer values for debugging. Uncomment as needed
   SmartDashboard.putNumber("Speed", getDriveVelocity());
-  SmartDashboard.putString("Swerve[" + absoluteEncoder.getDeviceID() + "] state", state.toString());
   SmartDashboard.putNumber("Drive Speed" + driveMotor.getDeviceId(), state.speedMetersPerSecond / Constants.DriveConstants.kPhysicalMaxSpeedMetersPerSecond);
  */
 
 
 }
+public SwerveModuleState optimizer( SwerveModuleState desiredState, Rotation2d currentAngle) {
+  var delta = desiredState.angle.minus(currentAngle);
+  // SmartDashboard.putString("Delta Value [" + steerMotor.getDeviceId() + "]", delta.toString());
+
+  if (Math.abs(delta.getDegrees()) > 90) {
+    return new SwerveModuleState(
+        -desiredState.speedMetersPerSecond,
+        desiredState.angle.rotateBy(Rotation2d.fromDegrees(180.0)));
+  } else {
+    return new SwerveModuleState(desiredState.speedMetersPerSecond, desiredState.angle);
+  }
+
+
+}
+
+
+
+// public SwerveModuleState optimizer2(SwerveModuleState desiredState, Rotation2d currentAngle) {
+//    var deltaDegrees = desiredState.angle.minus(currentAngle);
+  
+// if(deltaDegrees.getDegrees() < 0) {
+//   Math.abs(deltaDegrees.getDegrees());
+//   return new SwerveModuleState(
+//     -desiredState.speedMetersPerSecond,
+//     desiredState.angle.
+
+//   );
+// }
+
+
+//     return new SwerveModuleState(desiredState.speedMetersPerSecond,desiredState.angle.rotateBy(currentAngle.plus(deltaDegrees)));
+
+  
+// }
 
   
 
@@ -203,7 +246,6 @@ try{
  }catch (Exception e) {
   
  }
- turningPidController.setP(0.005);
 
  }
 

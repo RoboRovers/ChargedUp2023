@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.OI;
 import frc.robot.Constants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.subsystems.ForkLiftSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
 import edu.wpi.first.math.controller.PIDController;
@@ -27,8 +28,10 @@ public class DriveCommand extends CommandBase {
     private final SwerveSubsystem swerveSubsystem;
     private final OI driveController;
     public final CommandXboxController opController;
+    public final CommandXboxController miscController;
     public PulleySubsystem pulleySubsystem;
-   
+    public ForkLiftSubsystem forkLiftSubsystem;
+
     private final Joystick driveStick;
     private final Joystick thetaStick;
 
@@ -44,10 +47,11 @@ public class DriveCommand extends CommandBase {
 
 
 
-    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem) {
+    public DriveCommand(SwerveSubsystem swerveSubsystem, OI driveController, CommandXboxController opController, PulleySubsystem pulleySubsystem, ForkLiftSubsystem forkLiftSubsystem, CommandXboxController miscController) {
                 this.swerveSubsystem = swerveSubsystem;
                 this.pulleySubsystem = pulleySubsystem;
                 this.driveController = driveController;
+                this.miscController = miscController;
                 this.xLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.yLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAccelerationUnitsPerSecond);
                 this.turningLimiter = new SlewRateLimiter(Constants.DriveConstants.kTeleDriveMaxAngularAccelerationUnitsPerSecond);
@@ -130,14 +134,13 @@ if(driveController.povWest.getAsBoolean()){
 //     fieldOriented = !fieldOriented;
 // }
 
-if(driveController.startButton.getAsBoolean()) {
-    //autoBalance(swerveSubsystem.getRoll());
-}
 
 
-if(driveController.rightStick.getAsBoolean() == true) {
+
+if(driveController.rightStick.getAsBoolean()) {
     lightsMode = lightsMode+1;
 }
+
 
 if(lightsMode == 1 && fieldOriented == true) {
     swerveSubsystem.lights.set(0.57);
@@ -225,6 +228,17 @@ if(lightsMode == 1 && fieldOriented == true) {
         // 6. Output each module states to wheels
         swerveSubsystem.setModuleStates(moduleStates);
     }
+
+
+    // public void lightToggle() {
+    //     lightsMode = lightsMode+1;
+    // }
+
+
+    
+
+    
+
 
     @Override
     public void end(boolean interrupted) {
