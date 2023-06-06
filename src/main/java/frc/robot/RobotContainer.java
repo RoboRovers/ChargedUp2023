@@ -116,10 +116,10 @@ private CommandJoystick driveStick = new CommandJoystick(0);
 
 
 
-    // driveStick.button(5).onTrue(_pneumatics.extensionOutCommand());
-    // driveStick.button(6).onTrue(_pneumatics.extensionRetractCommand());
-    // driveStick.trigger().whileTrue(_pneumatics.intakeOpenCommand());
-    // driveStick.trigger().whileFalse(_pneumatics.intakeOpenCommand());
+   // driveStick.button(5).onTrue(_pneumatics.extensionOutCommand());
+   // driveStick.button(6).onTrue(_pneumatics.extensionRetractCommand());
+   // driveStick.trigger().whileTrue(_pneumatics.intakeOpenCommand());
+    //driveStick.trigger().whileFalse(_pneumatics.intakeOpenCommand());
 
     // driveStick.axisGreaterThan(0, 1).whileTrue(_pulley.liftIntakeCommand());
 

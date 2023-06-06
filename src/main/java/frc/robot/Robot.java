@@ -57,8 +57,8 @@ public class Robot extends TimedRobot {
   @Override
   public void autonomousInit() {
     //swerveSubsystem.faceAllFoward();
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
-
+   // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = null;
     // schedule the autonomous command (example)
     if (m_autonomousCommand != null) {
       m_autonomousCommand.schedule();

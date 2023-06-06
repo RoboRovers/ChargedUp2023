@@ -27,8 +27,8 @@ public class PneumaticsSubsystem extends SubsystemBase {
     
     public boolean intakeState = true;
 
-  
-    /*public void intakeToggle() {
+  /* 
+    public void intakeToggle() {
         _intakeLeft.toggle(); 
        
        if(intakeState = true) {
@@ -37,7 +37,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
        else if(intakeState = false) {
         intakeState = true;
        }       
-    }*/
+    } */
   
     public void intakeOpen(){
       _intakeLeft.set(Value.kReverse);
@@ -68,7 +68,7 @@ public class PneumaticsSubsystem extends SubsystemBase {
        extensionState = true;
     }
 
-    /*
+   /*  
     public void extensionToggle(){
       _extension.toggle();
       if(extensionState = true) {
@@ -77,13 +77,13 @@ public class PneumaticsSubsystem extends SubsystemBase {
        else if(extensionState = false) {
         extensionState = true;
        }
-    }*/
-
+    }
+*/
 
 //all commands for the pneumatic subsystem
 
 public CommandBase intakeOpenCommand() {
-  return run(
+  return runOnce(
     () -> {
       intakeOpen();
       System.out.print("Intake Open Command Ran");
@@ -92,7 +92,7 @@ public CommandBase intakeOpenCommand() {
 }
 
 public CommandBase intakeCloseCommand() {
-  return run(
+  return runOnce(
     () -> {
       intakeClose();
       System.out.print("Intake Close Command Ran");
@@ -101,7 +101,7 @@ public CommandBase intakeCloseCommand() {
 }   
 
 public CommandBase flipperCloseCommand() {
-  return run(
+  return runOnce(
     () -> {
       flipperClose();
     }
@@ -109,7 +109,7 @@ public CommandBase flipperCloseCommand() {
 }
 
 public CommandBase flipperExtendCommand() {
-  return run(
+  return runOnce(
     () -> {
       flipperExtend();
     }
@@ -133,8 +133,8 @@ public CommandBase extensionOutCommand() {
     }
   );
 }
-
-/*public CommandBase extensionToggleCommand() {
+/* 
+public CommandBase extensionToggleCommand() {
   return runOnce(
     () -> {
         extensionToggle();
@@ -142,6 +142,6 @@ public CommandBase extensionOutCommand() {
     }
   );
   
-}*/
-
+}
+*/
   }

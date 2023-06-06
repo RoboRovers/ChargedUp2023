@@ -77,10 +77,10 @@ public static final SwerveDriveKinematics kDriveKinematics = new SwerveDriveKine
     public static final double kBackRightDriveAbsoluteEncoderOffsetRad = -4.28;
 */
 
-    public static final double kBRDegrees = 63.45;
-    public static final double kBLDegrees = 4.62;
-    public static final double kFLDegrees = 12.392;
-    public static final double kFRDegrees = 298;
+    public static final double kBRDegrees = 332.31;
+    public static final double kBLDegrees = 295.92;
+    public static final double kFLDegrees = 72.685;
+    public static final double kFRDegrees = 278.31;
     
 /* 
     public static final double kBRDegrees = kFRDriveAbsoluteEncoderOffsetRad *180 / Math.PI;
