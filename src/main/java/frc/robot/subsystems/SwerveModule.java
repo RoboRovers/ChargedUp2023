@@ -8,6 +8,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.ctre.phoenix.sensors.CANCoderConfiguration;
+import com.fasterxml.jackson.databind.deser.SettableBeanProperty.Delegating;
 import com.revrobotics.*;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
@@ -193,6 +194,27 @@ public SwerveModuleState optimizer( SwerveModuleState desiredState, Rotation2d c
 
 
 }
+
+
+
+
+// public SwerveModuleState optimizer2(SwerveModuleState desiredState, Rotation2d currentAngle) {
+//    var deltaDegrees = desiredState.angle.minus(currentAngle);
+  
+// if(deltaDegrees.getDegrees() < 0) {
+//   Math.abs(deltaDegrees.getDegrees());
+//   return new SwerveModuleState(
+//     -desiredState.speedMetersPerSecond,
+//     desiredState.angle.
+
+//   );
+// }
+
+
+//     return new SwerveModuleState(desiredState.speedMetersPerSecond,desiredState.angle.rotateBy(currentAngle.plus(deltaDegrees)));
+
+  
+// }
 
   
 
