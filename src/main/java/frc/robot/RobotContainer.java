@@ -8,6 +8,7 @@ import frc.robot.commands.AutoBalanceCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.PneumaticsCommands;
 import frc.robot.commands.PulleyCommand;
+import frc.robot.subsystems.ForkLiftSubsystem;
 import frc.robot.subsystems.PneumaticsSubsystem;
 import frc.robot.subsystems.PulleySubsystem;
 import frc.robot.subsystems.SwerveSubsystem;
@@ -55,12 +56,15 @@ public class RobotContainer {
   // init all our controllers and motors
   private final CommandXboxController driveController = new CommandXboxController(OIConstants.kDriverControllerPort);
   private final OI driveControllerOI = new OI(OIConstants.kDriverControllerPort);
+private final CommandXboxController miscController = new CommandXboxController(Constants.OIConstants.kliftController);
 
   private final CommandXboxController opController = new CommandXboxController(OIConstants.kOPControllerPort);
-private CommandJoystick driveStick = new CommandJoystick(0);
-
+  private CommandJoystick driveStick = new CommandJoystick(0);
+  
   public SwerveSubsystem s_Swerve = new SwerveSubsystem(_pulley);
   public static PneumaticsSubsystem _pneumatics = new PneumaticsSubsystem();
+  public ForkLiftSubsystem s_forkLift = new ForkLiftSubsystem(Constants.ForkLiftConstants.forkLiftMotorNum);
+  public DriveCommand d_Command = new DriveCommand(s_Swerve, driveControllerOI, opController, _pulley, s_forkLift, miscController); 
   public static PulleySubsystem _pulley = new PulleySubsystem(Constants.PullyConstants.pulleyMotorNum);
 
 
@@ -79,7 +83,7 @@ private CommandJoystick driveStick = new CommandJoystick(0);
     s_Swerve.setDefaultCommand(
         new DriveCommand(
             s_Swerve,
-            driveControllerOI, opController, _pulley));
+            driveControllerOI, opController, _pulley, s_forkLift, miscController));
 
 
     _pulley.setDefaultCommand(
@@ -128,8 +132,6 @@ private CommandJoystick driveStick = new CommandJoystick(0);
 
     opController.povRight().toggleOnTrue(s_Swerve.zeroHeadingCommand());
 
-
-
    // opController.a().toggleOnTrue(s_Swerve.balanceCommand());
 
     opController.b().toggleOnTrue(_pulley.autoGrabUpCommand()
@@ -161,10 +163,14 @@ private CommandJoystick driveStick = new CommandJoystick(0);
 
     // driveStick.axisGreaterThan(0, 1).whileTrue(_pulley.liftIntakeCommand());
 
+    miscController.x().whileTrue(s_forkLift.liftForkCommand());
+    miscController.b().whileTrue(s_forkLift.dropForkCommand());
+    miscController.b().whileFalse(s_forkLift.stopForkLiftCommand());
+    miscController.x().whileFalse(s_forkLift.stopForkLiftCommand());       
     
-        //full close reset
-               
-    
+    // opController.button(8).toggleOnTrue(s_Swerve.faceForwardCommand());
+
+
   }
 
   public void configureAutoCommands() {
@@ -225,7 +231,7 @@ List<PathPlannerTrajectory> LCubeFLPath = PathPlanner.loadPathGroup("L Cube, far
 //LEFT Grid LEFT POLE paths.
 // List<PathPlannerTrajectory> LLConeFRPath = PathPlanner.loadPathGroup("LL Cone, far right", new PathConstraints(2, 1));
 // List<PathPlannerTrajectory> LLConeMRPath = PathPlanner.loadPathGroup("LL Cone, mid right", new PathConstraints(2, 1));
-List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, far left", new PathConstraints(2, 1));
+List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, far left", new PathConstraints(3, 2));
 // List<PathPlannerTrajectory> LLConeMLPath = PathPlanner.loadPathGroup("LL Cone, mid left", new PathConstraints(2, 1));
 //Just a few paths back tests
 // List<PathPlannerTrajectory> ReturnFL = PathPlanner.loadPathGroup("back from far left", new PathConstraints(2, 1));
@@ -237,11 +243,14 @@ List<PathPlannerTrajectory> LLConeFLPath = PathPlanner.loadPathGroup("LL Cone, f
 
 List<PathPlannerTrajectory> Push = PathPlanner.loadPathGroup("push", 2, 1);
 
-List<PathPlannerTrajectory> overCharge = PathPlanner.loadPathGroup("overCharge", 2, 1.75);
+List<PathPlannerTrajectory> tipChargeMid = PathPlanner.loadPathGroup("Tip Charge", 8, 6);
 
 List<PathPlannerTrajectory> Balance = PathPlanner.loadPathGroup("Manuel Set", 2, 1.5);
 
 // List<PathPlannerTrajectory> markerTest = PathPlanner.loadPathGroup("Event Path Test", 2, 1);
+
+List<PathPlannerTrajectory> overCharge2 = PathPlanner.loadPathGroup("OverCharge2", 3, 1.5);
+List<PathPlannerTrajectory> BackOnCharge = PathPlanner.loadPathGroup("BackOnCharge", 4, 2.5);
 
 
 
@@ -281,7 +290,7 @@ SequentialCommandGroup LowPointOver = new SequentialCommandGroup(s_Swerve.faceFo
 .andThen(Commands.waitSeconds(2))
 .andThen(autoBuilder.followPathGroup(Push))
 .andThen(_pneumatics.intakeCloseCommand())
-.andThen(autoBuilder.followPathGroup(overCharge)));
+.andThen(autoBuilder.followPathGroup(tipChargeMid)));
 
 SequentialCommandGroup LowPointLeave = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pneumatics.intakeOpenCommand())
@@ -295,7 +304,7 @@ SequentialCommandGroup LowPointOverNBal = new SequentialCommandGroup(s_Swerve.fa
 .andThen(Commands.waitSeconds(2))
 .andThen(autoBuilder.followPathGroup(Push))
 .andThen(_pneumatics.intakeCloseCommand())
-.andThen(autoBuilder.followPathGroup(overCharge))
+.andThen(autoBuilder.followPathGroup(tipChargeMid))
 .andThen());
 
 SequentialCommandGroup lowPointOverShortBal = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
@@ -303,7 +312,7 @@ SequentialCommandGroup lowPointOverShortBal = new SequentialCommandGroup(s_Swerv
 .andThen(Commands.waitSeconds(2))
 .andThen(autoBuilder.followPathGroup(Push))
 .andThen(_pneumatics.intakeCloseCommand())
-.andThen(autoBuilder.followPathGroup(overCharge))
+.andThen(autoBuilder.followPathGroup(tipChargeMid))
 .andThen(autoBuilder.followPathGroup(Balance))
 .andThen());
 
@@ -390,7 +399,7 @@ SequentialCommandGroup RLTopPoll2FR = new SequentialCommandGroup(s_Swerve.faceFo
 .andThen(_pulley.homeCommand())
 .andThen(autoBuilder.followPathGroup(RLConeFRPath)));
 
-SequentialCommandGroup midPolesOverCharge = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+SequentialCommandGroup midPolestipChargeMid = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topPoleCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
@@ -403,7 +412,7 @@ SequentialCommandGroup midPolesOverCharge = new SequentialCommandGroup(s_Swerve.
 .andThen(_pneumatics.intakeCloseCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand())
-.andThen(autoBuilder.followPathGroup(overCharge)));
+.andThen(autoBuilder.followPathGroup(tipChargeMid)));
 
 
 
@@ -415,29 +424,29 @@ SequentialCommandGroup midPolesOverCharge = new SequentialCommandGroup(s_Swerve.
 //set even with a shelf and a foot width away from the boards
 SequentialCommandGroup TopCubeStay = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topShelfCommand())
-.andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.5))
 .andThen(_pneumatics.extensionRetractCommand())
-.andThen(_pneumatics.intakeCloseCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.5))
 .andThen(_pulley.homeCommand())
+.andThen(Commands.waitSeconds(0.75))
+.andThen(_pneumatics.intakeCloseCommand())
 );
 
 SequentialCommandGroup topRightCube2FR = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
 .andThen(_pulley.topShelfCommand())
-.andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.extensionOutCommand())
 .andThen(Commands.waitSeconds(1))
 .andThen(_pneumatics.intakeOpenCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.5))
 .andThen(_pneumatics.extensionRetractCommand())
-.andThen(_pneumatics.intakeCloseCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.5))
 .andThen(_pulley.homeCommand())
-.andThen(Commands.waitSeconds(1))
+.andThen(Commands.waitSeconds(0.5))
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(0.5))
 .andThen(autoBuilder.followPathGroup(RCubeFRPath))
 );
 
@@ -468,7 +477,7 @@ SequentialCommandGroup topCubeOver = new SequentialCommandGroup(s_Swerve.faceFor
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand())
 .andThen(Commands.waitSeconds(1))
-.andThen(autoBuilder.followPathGroup(overCharge))
+.andThen(autoBuilder.followPathGroup(tipChargeMid))
 );
 
 
@@ -517,11 +526,27 @@ SequentialCommandGroup HighCubeAutoSet = new SequentialCommandGroup(s_Swerve.fac
 .andThen(Commands.waitSeconds(1))
 .andThen(_pulley.homeCommand())
 .andThen(Commands.waitSeconds(1))
-.andThen(autoBuilder.followPathGroup(overCharge))
-// .andThen(Commands.waitSeconds(0.5))
+.andThen(autoBuilder.followPathGroup(tipChargeMid))
+.andThen(Commands.waitSeconds(0.5))
 .andThen(s_Swerve.autoBalanceCommand));
 
-
+SequentialCommandGroup HighCubeLeaveBal = new SequentialCommandGroup(s_Swerve.faceForwardCommand()
+.andThen(_pulley.topShelfCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionOutCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.intakeOpenCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pneumatics.extensionRetractCommand())
+.andThen(_pneumatics.intakeCloseCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(_pulley.homeCommand())
+.andThen(Commands.waitSeconds(1))
+.andThen(autoBuilder.followPathGroup(tipChargeMid))
+.andThen(autoBuilder.followPathGroup(overCharge2))
+.andThen(autoBuilder.followPathGroup(BackOnCharge)));
+// .andThen(Commands.waitSeconds(0.75))
+// .andThen(s_Swerve.autoBalanceCommand));
 
 
 
@@ -539,26 +564,26 @@ SequentialCommandGroup Nothing = new SequentialCommandGroup(_pneumatics.extensio
 //add command options
 
       //low points
-      autonChooser.addOption("Low Point + Over", LowPointOver);
-      autonChooser.addOption("Low Point + Leave", LowPointLeave);
-      autonChooser.addOption("Low Point + Over + Balance", LowPointOverNBal);
-      autonChooser.addOption("manuel", lowPointOverShortBal);
+      // autonChooser.addOption("Low Point + Over", LowPointOver);
+      // autonChooser.addOption("Low Point + Leave", LowPointLeave);
+      // autonChooser.addOption("Low Point + Over + Balance", LowPointOverNBal);
+      // autonChooser.addOption("manuel", lowPointOverShortBal);
 
 
       //High Commands
           //polls
           autonChooser.addOption("High Poll Stay", TopPollStay);
-          autonChooser.addOption("High Polls over charge station", midPolesOverCharge);
-          autonChooser.addOption("Human side station, left pole, to far right piece", RLTopPoll2FR);
-          autonChooser.addOption("Human side station, Right pole, to far right piece", RRTopPoll2FR);
-          autonChooser.addOption("Judge side station, left poll, to far judge side piece", LLTopPoll2FL);
-          autonChooser.addOption("Judge side station, right poll, to far judge side piece", LRTopPoll2FL);
+          // autonChooser.addOption("High Polls over charge station", midPolestipChargeMid);
+          autonChooser.addOption("Human side station, Judge side pole, to far right piece", RLTopPoll2FR);
+          autonChooser.addOption("Human side station, human side pole, to far right piece", RRTopPoll2FR);
+          autonChooser.addOption("Judge side station, judge side poll, to far judge side piece", LLTopPoll2FL);
+          autonChooser.addOption("Judge side station, human poll, to far judge side piece", LRTopPoll2FL);
 
 
 
           //Cubes
-          autonChooser.addOption("Right Cube High Leave 2 FR", topRightCube2FR);
-          autonChooser.addOption("Left Cube High Leave 2 FL", topLeftCube2FL);
+          autonChooser.addOption("Human Side Cube High Leave 2 FR", topRightCube2FR);
+          autonChooser.addOption("Judge side Cube High Leave 2 FL", topLeftCube2FL);
           autonChooser.addOption("High Cube Stay", TopCubeStay);
           autonChooser.addOption("High Cube Over Charge", topCubeOver);
           
@@ -573,9 +598,10 @@ SequentialCommandGroup Nothing = new SequentialCommandGroup(_pneumatics.extensio
 
 
 
-          autonChooser.addOption("Auto Balance Test", balanceTest);
+          // autonChooser.addOption("Auto Balance Test", balanceTest);
 
           autonChooser.addOption("Score high and Bal", HighCubeAutoSet);
+          autonChooser.addOption("Score high, Over Charge, and Bal", HighCubeLeaveBal);
 
 
 }

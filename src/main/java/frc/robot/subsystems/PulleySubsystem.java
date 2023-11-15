@@ -10,6 +10,7 @@ import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import frc.robot.Constants;
+import frc.robot.commands.DriveCommand;
 
 
 
@@ -23,18 +24,22 @@ private SparkMaxPIDController pulleyPidController;
 DigitalInput extendLimitSwitch;
 DigitalInput retractLimitSwitch;
 
+// public DriveCommand driveCommand;
+
 public boolean retractSwitchState;
 public boolean isPulleyDone = false;
 
 
 public PulleySubsystem(int pulleyMotorNum) {
 
+// this.driveCommand = driveCommand;
+
 //int motor
 pulleyMotor = new CANSparkMax(pulleyMotorNum, MotorType.kBrushless);
 pulleyMotor.restoreFactoryDefaults();
 pulleyMotor.setIdleMode(IdleMode.kBrake);
-pulleyMotor.setSmartCurrentLimit(40);
-pulleyMotor.setOpenLoopRampRate(0.5);
+pulleyMotor.setSmartCurrentLimit(60);
+pulleyMotor.setOpenLoopRampRate(0.3);
 // retractLimitSwitch = new DigitalInput(Constants.PullyConstants.retractSwitchstatePort);
 
 
@@ -157,7 +162,7 @@ public CommandBase homeCommand() {
 public CommandBase liftIntakeCommand() {
     return run(
         () -> {
-            pulleyMotor.set(2);
+            pulleyMotor.set(5);
         }
     );
 }
@@ -173,7 +178,7 @@ public CommandBase topPoleDropCommand() {
 public CommandBase dropIntakeCommand() {
     return run(
         () -> {
-            pulleyMotor.set(-2);
+            pulleyMotor.set(-5);
         }
     );
 }
